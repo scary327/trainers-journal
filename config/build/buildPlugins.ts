@@ -1,3 +1,4 @@
+import ESLintPlugin from 'eslint-webpack-plugin'
 import { Configuration, DefinePlugin } from "webpack";
 import webpack from "webpack";
 import { BuildOptions } from "./types/types";
@@ -7,6 +8,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+
 
 export function buildPlugins(options: BuildOptions): Configuration['plugins'] {
 
@@ -24,6 +26,7 @@ export function buildPlugins(options: BuildOptions): Configuration['plugins'] {
         plugins.push(new webpack.ProgressPlugin());
         plugins.push(new ForkTsCheckerWebpackPlugin())
         plugins.push(new ReactRefreshWebpackPlugin())
+        plugins.push(new ESLintPlugin())
     }
 
     if (isProd) {
