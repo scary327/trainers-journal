@@ -1,14 +1,14 @@
-import js from "@eslint/js"
-import globals from "globals"
-import tseslint from "typescript-eslint"
-import eslintReact from "eslint-plugin-react"
-import eslintReactHooks from "eslint-plugin-react-hooks"
-import eslintReactRefresh from "eslint-plugin-react-refresh"
-import prettierPlugin from "eslint-plugin-prettier"
-import eslintConfigPrettier from "eslint-config-prettier"
+const js = require("@eslint/js");
+const globals = require("globals");
+const tseslint = require("typescript-eslint");
+const eslintReact = require("eslint-plugin-react");
+const eslintReactHooks = require("eslint-plugin-react-hooks");
+const eslintReactRefresh = require("eslint-plugin-react-refresh");
+const prettierPlugin = require("eslint-plugin-prettier");
+const eslintConfigPrettier = require("eslint-config-prettier");
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
-export default tseslint.config(
+module.exports = tseslint.config(
     {
         plugins: {
             "@typescript-eslint": tseslint.plugin,
@@ -19,7 +19,7 @@ export default tseslint.config(
         }
     },
     {
-        ignores: ["dist", "node_modules", "coverage", "eslint.config.js"]
+        ignores: ["build", "!node_modules/", "coverage", "eslint.config.js"]
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,
@@ -49,4 +49,4 @@ export default tseslint.config(
             "max-params": ["error", 3]
         }
     }
-)
+);

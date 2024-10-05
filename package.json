@@ -1,18 +1,23 @@
 {
 	"name": "trainers-journal",
 	"version": "0.0.1",
+	"type": "commonjs",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
 		"start": "webpack serve --open",
 		"build:dev": "webpack --env mode=development",
 		"build:prod": "webpack --env mode=production",
-		"build:mobile": "webpack --env mode=production --env platform=mobile",
-		"build:desktop": "webpack --env mode=production --env platform=desktop",
-		"typecheck": "tsc"
+		"build:mobile": "tsc && webpack --env mode=production --env platform=mobile",
+		"build:desktop": "tsc && webpack --env mode=production --env platform=desktop",
+		"typecheck": "tsc",
+		"lint": "eslint src/**/*.{tsx,ts}",
+		"lint:fix": "eslint src/**/*.{tsx,ts} --fix",
+		"format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+		"prepare": "husky"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "white duke",
 	"license": "ISC",
 	"devDependencies": {
 		"@eslint/js": "^9.11.1",
@@ -37,6 +42,7 @@
 		"fork-ts-checker-webpack-plugin": "^9.0.2",
 		"globals": "^15.10.0",
 		"html-webpack-plugin": "^5.6.0",
+		"husky": "^9.1.6",
 		"mini-css-extract-plugin": "^2.9.1",
 		"prettier": "^3.3.3",
 		"react-refresh": "^0.14.2",
@@ -46,6 +52,7 @@
 		"style-loader": "^4.0.0",
 		"ts-loader": "^9.5.1",
 		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.6.2",
 		"typescript-eslint": "^8.8.0",
 		"webpack": "^5.95.0",
