@@ -5,6 +5,9 @@ import path from "path";
 
 import { register as tsNodeRegister } from "ts-node";
 import { register as tsConfigPathsRegister } from "tsconfig-paths";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 tsNodeRegister({
     project: "tsconfig.json"
@@ -27,11 +30,11 @@ export default (env: EnvVariables) => {
         src: path.resolve(__dirname, "src")
     };
     const config: webpack.Configuration = buildWebpack({
-        port: env.port ?? 3000,
-        mode: env.mode ?? "development",
+        port: env.port ?? (process.env.PORT ? Number(process.env.PORT) : 3000),
+        mode: env.mode ?? (process.env.MODE as BuildMode) ?? "development",
         paths,
-        analyzer: env.analyzer ?? false,
-        platform: env.platform ?? "desktop"
+        analyzer: env.analyzer ?? process.env.ANALYZER === "true",
+        platform: env.platform ?? (process.env.PLATFORM as BuildPlatform) ?? "desktop"
     });
     return config;
 };

@@ -19,7 +19,7 @@ module.exports = tseslint.config(
         }
     },
     {
-        ignores: ["build", "!node_modules/", "coverage", "eslint.config.js"]
+        ignores: ["build", "node_modules", "coverage", "eslint.config.js"]
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,

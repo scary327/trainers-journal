@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
+        "types": ["node", "jest"],
         "outDir": "./dist/",
         "noImplicitAny": true,
-        "noEmit": true,
-        "skipLibCheck": true,
-        "module": "ESNext",
+        "noEmit": true, //пропускать сгенерированные файлы
+        "skipLibCheck": true, //пропускать проверку библиотеки
+        "module": "CommonJS",
         "target": "ES6",
+        "strictNullChecks": true, //присвоить null или undefined только тем переменным в которых они были объявлены
         "jsx": "react-jsx",
         "allowJs": true,
         "moduleResolution": "node",
+        "typeRoots": ["node_modules/@types"],
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "baseUrl": ".",
@@ -18,7 +21,7 @@
     },
     "ts-node": {
         "compilerOptions": {
-            "module": "CommonJS"
+            "module": "CommonJS" //выполнять ts-node в CommonJS
         }
     }
 }

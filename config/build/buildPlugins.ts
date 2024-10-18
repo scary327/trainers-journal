@@ -15,7 +15,10 @@ export function buildPlugins(options: BuildOptions): Configuration["plugins"] {
 
     const plugins: Configuration["plugins"] = [
         new HtmlWebpackPlugin({
+            inject: true,
             template: options.paths.html,
+            scriptLoading: "blocking",
+            minify: false,
             favicon: path.resolve(options.paths.public, "favicon.ico"),
             title: "Журнал Тренера"
         }),

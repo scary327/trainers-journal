@@ -5,13 +5,22 @@ import ReactRefreshTypeScript from "react-refresh-typescript";
 
 export function buildLoaders(options: BuildOptions): ModuleOptions["rules"] {
     const isDev = options.mode === "development";
-    const isProd = options.mode === "production";
+    // const isProd = options.mode === "production";
 
     const cssLoaderWithModules = {
         loader: "css-loader",
         options: {
             modules: {
                 localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64:8]"
+            }
+        }
+    };
+
+    const postCssLoader = {
+        loader: "postcss-loader",
+        options: {
+            postcssOptions: {
+                plugins: ["autoprefixer", "tailwindcss"]
             }
         }
     };
@@ -23,9 +32,16 @@ export function buildLoaders(options: BuildOptions): ModuleOptions["rules"] {
             isDev ? "style-loader" : MiniCssExtractPlugin.loader,
             // Translates CSS into CommonJS
             cssLoaderWithModules,
+            //добавлен postCssLoader для работы tailwind
+            postCssLoader,
             // Compiles Sass to CSS
             "sass-loader"
         ]
+    };
+
+    const cssLoader = {
+        test: /\.css$/i,
+        use: [isDev ? "style-loader" : MiniCssExtractPlugin.loader, "css-loader", postCssLoader]
     };
 
     const tsLoader = {
@@ -77,6 +93,7 @@ export function buildLoaders(options: BuildOptions): ModuleOptions["rules"] {
         svgLoader,
         assetLoader,
         scssLoader,
+        cssLoader,
         tsLoader
     ];
 }

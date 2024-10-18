@@ -1,4 +1,5 @@
 import { useNavigate, useRouteError } from "react-router-dom";
+import { URLS } from "@/app/routers/app.urls";
 
 export const ErrorElement = () => {
     const err = useRouteError();
@@ -9,7 +10,7 @@ export const ErrorElement = () => {
     return (
         <div>
             <h1>Произошла непредвиденная ошибка</h1>
-            <button onClick={() => navigate("/")}>Вернуться на главную страницу</button>
+            <button onClick={() => navigate(URLS.MAIN)}>Вернуться на главную страницу</button>
         </div>
     );
 };

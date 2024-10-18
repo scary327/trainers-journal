@@ -1,0 +1,3 @@
+.value_container {
+    @apply font-bold text-red-600 underline text-3xl;
+}

@@ -8,7 +8,7 @@ import { BuildOptions } from "./types/types";
 export function buildWebpack(options: BuildOptions): webpack.Configuration {
     const { mode, paths } = options;
     const isDev = mode === "development";
-    const isProd = mode === "production";
+    // const isProd = mode === "production";
 
     return {
         mode: mode ?? "development",
