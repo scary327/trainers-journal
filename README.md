@@ -32,6 +32,8 @@
 
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+
 ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
 
 ![Radix UI](https://img.shields.io/badge/radix%20ui-161618.svg?style=for-the-badge&logo=radix-ui&logoColor=white)
@@ -54,10 +56,10 @@
 	├── types/ - глобальные типы приложений
     └── src/ - Корневая папка с кодом
         ├── app/ - Настройки приложения
-			 ├── providers/
-			 ├── routers/
-			 ├── styles/ - глобальные стили
-			 └── App.tsx
+			├── providers/
+			├── routers/
+			├── styles/ - глобальные стили
+			└── App.tsx
         ├── pages/ - Полноценные страницы
         ├── widgets/ - Самодостаточные блоки
         ├── features/ - Действия пользователя

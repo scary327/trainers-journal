@@ -1,0 +1,7 @@
+.container {
+    @apply grid gap-y-3 items-center pb-[10px] py-[24px] text-[14px] font-inter-regular;
+
+    width: 100%;
+    grid-template-columns: 4fr 3fr 2fr 3fr 6fr;
+    border-bottom: 1px solid #999999;
+}

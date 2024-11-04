@@ -1,0 +1,73 @@
+.button {
+    @apply cursor-pointer font-inter-medium text-sm rounded-lg py-[12px] px-[24px];
+
+    border: 2px solid transparent;
+    outline: none;
+
+    &:disabled {
+        @apply cursor-not-allowed;
+    }
+}
+
+.primary,
+.primary-small {
+    @apply text-white bg-blue-medium;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &:active {
+        @apply bg-white text-blue-medium;
+
+        border-color: #3358d4;
+        opacity: 1;
+    }
+}
+
+.primary-small {
+    @apply text-[12px] px-[22px] py-[2px];
+}
+
+.secondary,
+.cancel {
+    @apply text-blue-medium bg-white;
+
+    border: 2px solid #3358d4;
+
+    &:hover {
+        @apply bg-blue-light;
+    }
+
+    &:active {
+        @apply bg-blue-medium text-white;
+
+        border-color: #3358d4;
+    }
+}
+
+.cancel {
+    @apply text-gray-text border-gray-text text-[12px] px-[22px] py-[2px] bg-white;
+
+    &:hover {
+        @apply border-error-red text-error-red bg-white;
+    }
+
+    &:active {
+        @apply text-white bg-error-red;
+    }
+}
+
+.empty {
+    @apply text-blue-medium font-inter-regular;
+
+    &:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+    }
+
+    &:active {
+        @apply text-blue-dark;
+    }
+}

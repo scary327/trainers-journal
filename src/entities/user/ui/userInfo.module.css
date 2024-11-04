@@ -1,0 +1,33 @@
+.container {
+    @apply bg-white px-[30px] py-[20px] w-[65%] flex justify-between items-center rounded-[20px];
+}
+
+.main_container {
+    @apply flex gap-x-[45px] items-center;
+}
+
+.avatar {
+    @apply w-[124px] h-[124px] rounded-full bg-blue-light;
+}
+
+.list {
+    @apply flex flex-col gap-y-[10px];
+}
+
+.list_item {
+    @apply flex flex-col gap-y-[5px];
+}
+
+.item_title {
+    @apply font-inter-regular text-[14px] text-gray-text;
+}
+
+.item_value {
+    @apply font-inter-medium text-[16px] text-black;
+}
+
+.button {
+    @apply self-end text-[16px];
+
+    padding: 0;
+}

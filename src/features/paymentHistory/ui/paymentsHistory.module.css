@@ -1,0 +1,21 @@
+.container {
+    @apply w-[65%] flex flex-col px-[30px] py-[20px] bg-white rounded-[20px];
+}
+
+.title {
+    @apply text-[18px] font-inter-bold text-blue-dark;
+
+    margin-bottom: 30px;
+}
+
+.table_header {
+    @apply grid items-center text-gray-text text-[14px] font-inter-regular;
+
+    width: calc(100% - 15px);
+    margin-bottom: 10px;
+    grid-template-columns: 4fr 3fr 2fr 3fr 6fr;
+}
+
+.table {
+    @apply max-h-[225px] w-full overflow-y-auto scrollbar-webkit;
+}

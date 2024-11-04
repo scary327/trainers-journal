@@ -1,0 +1,95 @@
+.text_10_r {
+    @apply font-inter-regular text-[10px] leading-tight;
+}
+
+.text_10_m {
+    @apply font-inter-medium text-[10px] leading-tight;
+}
+
+.text_10_b {
+    @apply font-inter-bold text-[10px] leading-tight;
+}
+
+.text_12_r {
+    @apply font-inter-regular text-[12px] leading-tight;
+}
+
+.text_12_m {
+    @apply font-inter-medium text-[12px] leading-tight;
+}
+
+.text_12_b {
+    @apply font-inter-bold text-[12px] leading-tight;
+}
+
+.text_14_r {
+    @apply font-inter-regular text-[14px] leading-tight;
+}
+
+.text_14_m {
+    @apply font-inter-medium text-[14px] leading-tight;
+}
+
+.text_14_b {
+    @apply font-inter-bold text-[14px] leading-tight;
+}
+
+.text_14_r {
+    @apply font-inter-regular text-[14px] leading-tight;
+}
+
+.text_14_m {
+    @apply font-inter-medium text-[14px] leading-tight;
+}
+
+.text_14_b {
+    @apply font-inter-bold text-[14px] leading-tight;
+}
+
+.text_16_r {
+    @apply font-inter-regular text-[16px] leading-tight;
+}
+
+.text_16_m {
+    @apply font-inter-medium text-[16px] leading-tight;
+}
+
+.text_16_b {
+    @apply font-inter-bold text-[16px] leading-tight;
+}
+
+.text_18_r {
+    @apply font-inter-regular text-[18px] leading-tight;
+}
+
+.text_18_m {
+    @apply font-inter-medium text-[18px] leading-tight;
+}
+
+.text_18_b {
+    @apply font-inter-bold text-[18px] leading-tight;
+}
+
+.text_20_r {
+    @apply font-inter-regular text-[20px] leading-tight;
+}
+
+.text_20_m {
+    @apply font-inter-medium text-[20px] leading-tight;
+}
+
+.text_20_b {
+    @apply font-inter-bold text-[20px] leading-tight;
+}
+
+.text_24_r {
+    @apply font-inter-regular text-[24px] leading-tight;
+}
+
+.text_24_m {
+    @apply font-inter-medium text-[24px] leading-tight;
+}
+
+.text_24_b {
+    @apply font-inter-bold text-[24px] leading-tight;
+}

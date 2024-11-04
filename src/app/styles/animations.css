@@ -1,0 +1,56 @@
+/* анимация hover подчеркивания, пример в header*/
+.hover-underline-animation {
+    display: inline-block;
+    position: relative;
+}
+
+.hover-underline-animation::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+    transform-origin: bottom center;
+    transition: transform 0.25s ease-out;
+}
+
+.hover-underline-animation:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom center;
+}
+
+.hover-underline-animation:active::after {
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.2s ease-in;
+}
+
+/*skeleton*/
+.skeleton {
+    background-color: #e1e9ff; /* Используем blue-light */
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%; /* Начальная точка за пределами контейнера */
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
+}

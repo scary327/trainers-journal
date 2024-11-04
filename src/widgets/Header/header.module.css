@@ -1,0 +1,29 @@
+.header_container {
+    @apply px-10 flex justify-between items-center w-full h-[80px] text-white font-inter-medium;
+}
+
+.header_title {
+    @apply font-inter-bold text-[32px] cursor-pointer;
+}
+
+.header_list {
+    @apply flex text-[14px] items-center gap-x-[50px];
+}
+
+.header_link,
+.header_logout {
+    transition: transform 0.2s ease-in-out;
+    user-select: none;
+
+    &:active {
+        transform: scale(1.1);
+    }
+}
+
+.header_user {
+    @apply flex items-center text-[18px] gap-x-[20px];
+}
+
+.header_logout {
+    @apply text-[16px] underline;
+}

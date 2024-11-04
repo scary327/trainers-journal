@@ -3,5 +3,7 @@ export const URLS = {
     AUTH: {
         LOGIN: "/login",
         REGISTRATION: "/registration"
-    }
+    },
+    PROFILE: "/profile",
+    USERS: "/users"
 };
