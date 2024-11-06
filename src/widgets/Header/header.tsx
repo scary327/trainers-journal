@@ -41,6 +41,7 @@ export const Header = () => {
                             className={classnames(styles.header_link, "hover-underline-animation")}
                             to={item.path}
                             draggable="false"
+                            key={item.name}
                         >
                             {item.name}
                         </Link>

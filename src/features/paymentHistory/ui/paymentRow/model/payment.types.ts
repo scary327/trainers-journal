@@ -1,6 +1,6 @@
 export interface IPayment {
     id: string;
-    userId: string; //получить фио и группу по id
+    userId: string;
     fullName: string;
     group: string;
     checkPhoto?: string;

@@ -1,0 +1,13 @@
+.container {
+    @apply bg-blue-medium rounded-[12px] flex items-center gap-x-[14px] py-[2px] pr-[20px] pl-[2px] cursor-pointer;
+
+    border: 1px solid #3358d4;
+}
+
+.input {
+    @apply font-inter-medium text-[14px] text-blue-dark py-[12px] pl-[10px] rounded-[10px] outline-none;
+
+    &:focus {
+        outline: none;
+    }
+}

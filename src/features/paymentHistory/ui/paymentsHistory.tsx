@@ -1,20 +1,16 @@
-import { RootState } from "@/app/store";
-import { setLoading, setPayments } from "@/entities/payment/model/payment.reducer";
-import { IPayment } from "@/entities/payment/model/payment.types";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { IPayment } from "@/features/paymentHistory/ui/paymentRow/model/payment.types";
+import { useEffect, useState } from "react";
 
 import * as styles from "./paymentsHistory.module.css";
-import { PaymentRow } from "@/entities/payment/ui/paymentRow";
+import { PaymentRow } from "./paymentRow/ui/paymentRow";
 
 export const PaymentHistory = () => {
-    const payments = useSelector((state: RootState) => state.payment.payments);
-    const loading = useSelector((state: RootState) => state.payment.loading);
-    const dispatch = useDispatch();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [payments, setPayments] = useState<IPayment[]>([]);
 
     useEffect(() => {
         const fetchPayments = async () => {
-            dispatch(setLoading(true));
+            setLoading(true);
 
             const fetchedPayments: IPayment[] = [
                 {
@@ -65,13 +61,13 @@ export const PaymentHistory = () => {
             ];
 
             setTimeout(() => {
-                dispatch(setPayments(fetchedPayments));
-                dispatch(setLoading(false));
+                setPayments(fetchedPayments);
+                setLoading(false);
             }, 1000);
         };
 
         fetchPayments();
-    }, [dispatch]);
+    }, []);
 
     const tableHeaderItems = ["ФИО", "Группа", "Сумма"];
 
