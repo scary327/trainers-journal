@@ -1,9 +1,5 @@
 .content {
     @apply bg-blue-light flex flex-col gap-y-[20px] px-[40px] pt-[10px] pb-[20px];
-
-    outline: 2px solid #3358d4;
-    border-radius: 0px 0px 10px 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .row_content {

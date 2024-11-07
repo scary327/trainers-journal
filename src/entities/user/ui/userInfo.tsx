@@ -6,7 +6,7 @@ import AvatarSVG from "@/shared/icons/avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { useEffect } from "react";
-import { setLoading, setUser } from "../model/user.reducer";
+import { setLoading } from "../model/user.reducer";
 import { classnames } from "@/shared/lib";
 
 export const UserInfo = () => {
@@ -17,15 +17,7 @@ export const UserInfo = () => {
     useEffect(() => {
         const fetchUser = async () => {
             dispatch(setLoading(true));
-            const userData = {
-                fullName: "Колосов Александр Константинович",
-                email: "loh@example.com",
-                kyu: 6,
-                phoneNumber: "79031234567",
-                avatar: ""
-            };
             setTimeout(() => {
-                dispatch(setUser(userData));
                 dispatch(setLoading(false));
             }, 1000);
         };

@@ -1,5 +1,6 @@
 import { IPayment } from "@/features/paymentHistory/ui/paymentRow/model/payment.types";
 import { useEffect, useState } from "react";
+import CheckPNG from "/assets/check.png";
 
 import * as styles from "./paymentsHistory.module.css";
 import { PaymentRow } from "./paymentRow/ui/paymentRow";
@@ -19,7 +20,7 @@ export const PaymentHistory = () => {
                     fullName: "Пепегин Пепега Клоунич",
                     group: "Клоунская",
                     amount: 300,
-                    checkPhoto: "",
+                    checkPhoto: CheckPNG,
                     status: "на рассмотрении"
                 },
                 {

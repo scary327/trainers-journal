@@ -27,7 +27,9 @@ export const Dropdown = ({ header, content }: DropdownProps) => {
                     )}
                 </button>
             </div>
-            {isOpen && content}
+            <div className={classnames(styles.dropdown_content, { [styles.open]: isOpen })}>
+                {content}
+            </div>
         </div>
     );
 };

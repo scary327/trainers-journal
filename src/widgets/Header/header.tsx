@@ -1,14 +1,17 @@
-import { classnames } from "@/shared/lib";
+import { classnames, formatUserName } from "@/shared/lib";
 import * as styles from "./header.module.css";
 import { Link } from "react-router-dom";
 import { URLS } from "@/app/routers/app.urls";
-
-interface IUser {
-    name: string;
-    surname: string;
-}
+import { Button } from "@/shared/ui";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { clearUser } from "@/entities/user/model/user.reducer";
 
 export const Header = () => {
+    const user = useSelector((state: RootState) => state.user.user);
+    const userParsedName = formatUserName(user.fullName);
+    const dispatch = useDispatch();
+
     const navigateList = [
         {
             name: "Пользователи",
@@ -24,9 +27,8 @@ export const Header = () => {
         }
     ];
 
-    const user: IUser | undefined = {
-        name: "Александр",
-        surname: "Колосов"
+    const logout = () => {
+        dispatch(clearUser());
     };
 
     return (
@@ -49,24 +51,28 @@ export const Header = () => {
                 </ul>
             </div>
             <div className={styles.header_user}>
-                {user ? (
+                {user.fullName ? (
                     <>
                         <Link
                             className={classnames(styles.header_link, "hover-underline-animation")}
                             to={URLS.PROFILE}
                             draggable="false"
                         >
-                            {user.surname} {user.name.slice(0, 1)}.
+                            {userParsedName}
                         </Link>
-                        <Link draggable="false" className={styles.header_logout} to="/">
+                        <button
+                            draggable="false"
+                            onClick={() => logout()}
+                            className={styles.header_logout}
+                        >
                             выйти
-                        </Link>
+                        </button>
                     </>
                 ) : (
-                    <>
-                        <button>Войти</button>
-                        <button>Регистрация</button>
-                    </>
+                    <div className="flex gap-x-[10px]">
+                        <Button variant="primary">Войти</Button>
+                        <Button variant="secondary">Регистрация</Button>
+                    </div>
                 )}
             </div>
         </header>

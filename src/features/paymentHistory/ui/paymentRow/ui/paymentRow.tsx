@@ -54,7 +54,11 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
             </div>
             <Modal visible={openModal} onClose={() => setOpenModal(false)}>
                 {payment.checkPhoto ? (
-                    <img src={payment.checkPhoto} alt="фото чека" className="px-5 py-3" />
+                    <img
+                        src={payment.checkPhoto}
+                        alt="фото чека"
+                        className="px-5 py-3 max-h-[80vh]"
+                    />
                 ) : (
                     <p className="px-5 py-3">Нет фото чека</p>
                 )}

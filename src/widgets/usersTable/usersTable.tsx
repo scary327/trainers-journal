@@ -1,5 +1,5 @@
 import { IStudentDetails, IStudentHeader } from "@/features/Dropdown/types/types";
-import * as styles from "./userTable.module.css";
+import * as styles from "./usersTable.module.css";
 import { Button, Search, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
