@@ -1,0 +1,42 @@
+.container {
+    @apply relative inline-block font-inter-regular;
+}
+
+.input {
+    @apply w-full py-[14px] pl-[10px] text-[16px] rounded-[4px] outline-none border-gray-text border-[2px];
+
+    &:focus {
+        @apply border-blue-medium;
+        outline: none;
+    }
+}
+
+.label {
+    @apply absolute left-[8px] top-[16px] text-gray-text text-[16px] pointer-events-none;
+
+    transition: 0.2s ease;
+}
+
+.label.focused {
+    @apply text-gray-text text-[12px] top-[1px];
+}
+
+.error {
+    border-color: #f44336; /* Red color for error */
+}
+
+.helperText {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+.errorText {
+    color: #f44336; /* Red color for error text */
+}
+
+.password_toggle {
+    @apply absolute right-[12px] top-[14px] text-center;
+    font-size: 16px;
+    outline: none;
+}

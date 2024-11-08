@@ -1,0 +1,35 @@
+.container {
+    @apply flex flex-col w-[24vw] py-[20px] bg-white gap-y-[30px] items-center;
+
+    height: calc(100vh - 80px);
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.container.open {
+    transform: translateX(0); /* выдвинуто */
+}
+
+.form_container {
+    @apply flex flex-col gap-y-[30px] w-[80%] p-[10px] items-center;
+
+    overflow-y: auto;
+}
+
+.close {
+    @apply absolute top-0 left-[-50px] cursor-pointer bg-blue-medium p-[10px];
+
+    border-radius: 10px 0 0 10px;
+    border: 2px solid #3358d4;
+    z-index: 0;
+
+    &:hover {
+        @apply bg-blue-light text-blue-medium;
+    }
+}

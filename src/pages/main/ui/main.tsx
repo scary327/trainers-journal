@@ -1,4 +1,4 @@
-import { Loader, Modal } from "@/shared/ui";
+import { Input, Loader, Modal } from "@/shared/ui";
 import * as styles from "./main.module.css";
 import { useState } from "react";
 import { Button } from "@/shared/ui/";
@@ -11,7 +11,7 @@ export const Main = () => {
 
     return (
         <div className={styles.main}>
-            <div className="flex gap-x-4 p-9">
+            <div className="flex p-9 gap-x-4">
                 <Button variant="primary" onClick={openModal}>
                     Open modal
                 </Button>
@@ -22,8 +22,11 @@ export const Main = () => {
                     Open modal
                 </Button>
             </div>
-            <div className="flex gap-x-4">
-                <Loader />
+            <div className="flex flex-col w-[20%] gap-y-[30px] p-9">
+                <div className="flex gap-x-4">
+                    <Loader />
+                </div>
+                <Input label="Password" type="password" />
             </div>
             <Modal visible={isOpenModal} onClose={closeModal}>
                 <div className="w-[300px] h-[300px] text-center">Modal</div>

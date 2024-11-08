@@ -10,8 +10,11 @@ interface IStudents {
     studentInfo: IStudentHeader;
     studentDetails: IStudentDetails;
 }
+interface IProps {
+    openSlideOut?: () => void;
+}
 
-export const UsersTable = () => {
+export const UsersTable = ({ openSlideOut }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -68,7 +71,7 @@ export const UsersTable = () => {
                 <Button variant="primary" className="flex items-center gap-x-[10px]">
                     Фильтры <FilterSVG className="w-[20px] h-[20px]" />
                 </Button>
-                <Button variant="primary" className="whitespace-nowrap">
+                <Button variant="primary" className="whitespace-nowrap" onClick={openSlideOut}>
                     Добавить пользователя
                 </Button>
             </div>

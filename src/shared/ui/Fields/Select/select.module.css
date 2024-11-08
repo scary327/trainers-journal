@@ -1,0 +1,34 @@
+.select_container {
+    @apply w-full;
+}
+
+.input_wrapper {
+    @apply flex items-center relative w-full;
+}
+
+.input {
+    @apply grow;
+}
+
+.arrow_toggle {
+    @apply absolute top-[18px] right-[10px] cursor-pointer;
+}
+
+.arrow_toggle_error {
+    @apply text-error-red;
+}
+
+.options_container {
+    @apply max-h-[200px];
+
+    overflow-y: auto;
+}
+
+.option {
+    @apply cursor-pointer bg-white py-[13px] px-[24px];
+    user-select: none;
+
+    &:hover {
+        @apply bg-blue-light rounded-[12px];
+    }
+}
