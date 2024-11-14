@@ -5,5 +5,6 @@ export const URLS = {
         REGISTRATION: "/registration"
     },
     PROFILE: "/profile",
-    USERS: "/users"
+    USERS: "/users",
+    CALENDAR: "/calendar"
 };

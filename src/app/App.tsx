@@ -12,6 +12,7 @@ export const App = () => {
         phoneNumber: "79031234567",
         avatar: ""
     };
+    console.log(user);
     localStorage.setItem("user", JSON.stringify(user));
     return (
         <Providers>

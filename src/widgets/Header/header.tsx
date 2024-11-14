@@ -23,7 +23,7 @@ export const Header = () => {
         },
         {
             name: "Календарь",
-            path: "/"
+            path: URLS.CALENDAR
         }
     ];
 

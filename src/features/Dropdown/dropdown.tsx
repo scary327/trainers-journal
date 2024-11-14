@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import * as styles from "./dropdown.module.css";
 import ArrowDownSVG from "@/shared/icons/arrowDown.svg";
 import { classnames } from "@/shared/lib";
 
 interface DropdownProps {
-    header: React.ReactNode;
-    content: React.ReactNode;
+    header: ReactNode;
+    content: ReactNode;
 }
 
 export const Dropdown = ({ header, content }: DropdownProps) => {
@@ -16,7 +16,7 @@ export const Dropdown = ({ header, content }: DropdownProps) => {
     };
 
     return (
-        <div className={styles.dropdown} onClick={() => toggleDropdown()}>
+        <div onClick={() => toggleDropdown()}>
             <div className={classnames(styles.dropdown_header, { [styles.open]: isOpen })}>
                 {header}
                 <button className={styles.dropdown_button}>

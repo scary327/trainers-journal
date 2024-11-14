@@ -4,3 +4,4 @@ export * from "./Button/button";
 export * from "./PageTitle/pageTitle";
 export * from "./Typography/typography";
 export * from "./Fields";
+export * from "./SlideOutMenu/slideOutMenu";

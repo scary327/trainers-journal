@@ -1,9 +1,9 @@
-import { Button, Input, Select, Typography } from "@/shared/ui";
-import * as styles from "./slideOutMenu.module.css";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useRef, useState } from "react";
-import { classnames, useOnClickOutside } from "@/shared/lib";
-// import CloseSVG from "@/shared/icons/closeSlideOut.svg";
+import { classnames } from "@/shared/lib";
+import { Typography, Select, Button, Input } from "@/shared/ui";
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import * as styles from "./slideOutContent.module.css";
 
 interface IRegisterForm {
     surname: string;
@@ -16,17 +16,11 @@ interface IRegisterForm {
     password: string;
 }
 
-interface SlideOutMenuProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-export const SlideOutMenu = ({ isOpen, onClose }: SlideOutMenuProps) => {
-    const title: string = "Регистрация пользователя";
+export const SlideOutContent = () => {
+    const slideOutTitle: string = "Регистрация пользователя";
 
     const [kyuValue, setKyuValue] = useState<string>("");
     const [genderValue, setGenderValue] = useState<string>("");
-
     const inputItems = {
         surname: "Фамилия",
         name: "Имя",
@@ -65,13 +59,9 @@ export const SlideOutMenu = ({ isOpen, onClose }: SlideOutMenuProps) => {
         reset();
     };
 
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useOnClickOutside(containerRef, () => onClose());
-
     return (
-        <div className={classnames(styles.container, { [styles.open]: isOpen })} ref={containerRef}>
-            <Typography variant="text_16_b">{title}</Typography>
+        <>
+            <Typography variant="text_16_b">{slideOutTitle}</Typography>
             <form
                 className={classnames(styles.form_container, "scrollbar-webkit")}
                 onSubmit={handleSubmit(onSubmit)}
@@ -114,9 +104,6 @@ export const SlideOutMenu = ({ isOpen, onClose }: SlideOutMenuProps) => {
                     Зарегистрировать
                 </Button>
             </form>
-            {/* <button onClick={onClose} className={styles.close}>
-                <CloseSVG className="w-[30px] h-[30px] text-white" />
-            </button> */}
-        </div>
+        </>
     );
 };

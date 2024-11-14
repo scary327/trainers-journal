@@ -15,21 +15,3 @@
 .container.open {
     transform: translateX(0); /* выдвинуто */
 }
-
-.form_container {
-    @apply flex flex-col gap-y-[30px] w-[80%] p-[10px] items-center;
-
-    overflow-y: auto;
-}
-
-.close {
-    @apply absolute top-0 left-[-50px] cursor-pointer bg-blue-medium p-[10px];
-
-    border-radius: 10px 0 0 10px;
-    border: 2px solid #3358d4;
-    z-index: 0;
-
-    &:hover {
-        @apply bg-blue-light text-blue-medium;
-    }
-}
