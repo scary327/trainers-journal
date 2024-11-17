@@ -1,1 +1,1 @@
-export { CalendarPage as default } from './ui/calendarPage'
+export { CalendarPage as default } from "./ui/calendarPage";

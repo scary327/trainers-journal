@@ -11,15 +11,21 @@ export const Main = () => {
 
     return (
         <div className={styles.main}>
-            <div className="flex p-9 gap-x-4">
+            <div className="flex p-9 gap-x-4 items-center">
                 <Button variant="primary" onClick={openModal}>
-                    Open modal
+                    primary
                 </Button>
                 <Button variant="secondary" onClick={openModal}>
-                    Open modal
+                    secondary
                 </Button>
                 <Button variant="empty" onClick={openModal}>
-                    Open modal
+                    empty
+                </Button>
+                <Button variant="primary-small" onClick={openModal}>
+                    принять
+                </Button>
+                <Button variant="cancel" onClick={openModal}>
+                    отменить
                 </Button>
             </div>
             <div className="flex flex-col w-[20%] gap-y-[30px] p-9">
