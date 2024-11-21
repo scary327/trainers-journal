@@ -1,0 +1,38 @@
+.container {
+    @apply flex flex-col items-center w-full bg-white;
+
+    border-radius: 0 0 10px 10px;
+}
+
+.table_grid {
+    @apply grid w-full items-center text-center;
+
+    grid-template-columns: 80px repeat(7, 1fr);
+    border-bottom: 1px solid #c2c2c2;
+}
+
+.table_header {
+    border-bottom: 1px solid #3358d4;
+}
+
+.table_content {
+    @apply w-full flex flex-col items-center;
+
+    & .table_item {
+        @apply h-[80px] text-center;
+    }
+}
+
+.table_last_grid {
+    @apply w-full h-[20px];
+
+    border-radius: 0 0 10px 10px;
+}
+
+.table_item {
+    @apply p-[10px];
+
+    &:not(:first-child) {
+        border-left: 1px solid #c2c2c2;
+    }
+}

@@ -50,3 +50,20 @@ export const formatWeekRangeIntl = (weekDates: Date[]): string => {
 
     return `${firstDayStr} - ${lastDayStr}`;
 };
+
+/**
+ * Форматирует дни недели в виде "пн 11.11".
+ * @param weekDates - Массив из 7 дат для выбранной недели.
+ */
+export const formatWeekDays = (weekDates: Date[]): string[] => {
+    const dayNames = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+
+    return weekDates.map((date) => {
+        const dayName = dayNames[date.getDay()];
+        const formattedDate = date.toLocaleDateString("ru-RU", {
+            day: "2-digit",
+            month: "2-digit"
+        });
+        return `${dayName} ${formattedDate}`;
+    });
+};
