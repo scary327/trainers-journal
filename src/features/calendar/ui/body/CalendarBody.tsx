@@ -4,34 +4,18 @@ import { selectCurrentWeek } from "../../model/calendar.slice";
 import { formatWeekDays } from "../../utils";
 import { Typography } from "@/shared/ui";
 import { classnames } from "@/shared/lib";
+import { IClassTime, IClass } from "../../types";
+import { Workout } from "../workout/workout";
 
 interface BodyHeaderProps {
-    formatedWeek: string[];
+    formattedWeek: string[];
 }
 
-interface IClassTime {
-    name: string;
-    timeStart: string;
-    timeEnd: string;
-}
-
-interface IStudentClass {
-    fullName: string;
-    kyu: number;
-    status: boolean;
-}
-
-interface IClass {
-    name: string;
-    date: string;
-    students: IStudentClass[];
-}
-
-const BodyHeader = ({ formatedWeek }: BodyHeaderProps) => {
+const BodyHeader = ({ formattedWeek }: BodyHeaderProps) => {
     return (
         <div className={classnames(styles.table_grid, styles.table_header)}>
             <div />
-            {formatedWeek.map((day, index) => (
+            {formattedWeek.map((day, index) => (
                 <Typography className={styles.table_item} variant="text_14_r" key={index}>
                     {day}
                 </Typography>
@@ -42,7 +26,7 @@ const BodyHeader = ({ formatedWeek }: BodyHeaderProps) => {
 
 export const CalendarBody = () => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
-    const formatedWeek = formatWeekDays(currentWeek);
+    const formattedWeek = formatWeekDays(currentWeek);
 
     const classTime: IClassTime[] = [
         {
@@ -77,24 +61,65 @@ export const CalendarBody = () => {
         }
     ];
 
-    const classList: IClass[] = [];
+    const classList: IClass[] = [
+        {
+            start: "2024-11-22T11:30:00",
+            end: "2024-11-22T12:30:00",
+            group: "Йога",
+            teacher: "Иван Иванов",
+            students: []
+        },
+        {
+            start: "2024-11-20T14:30:00",
+            end: "2024-11-20T15:30:00",
+            group: "Пилатес",
+            teacher: "Анна Смирнова",
+            students: []
+        }
+    ];
+
+    //функция для проверки, попадает ли тренировка в заданный день и время
+    const getClassForCell = (day: Date, time: IClassTime) => {
+        const filteredClasses = classList.filter((cls) => {
+            const startDate = new Date(cls.start);
+            const isSameDay = startDate.toDateString() === day.toDateString();
+            const isSameTime = startDate.toTimeString().slice(0, 5) === time.timeStart;
+            return isSameDay && isSameTime;
+        });
+        return filteredClasses;
+    };
 
     return (
         <div className={styles.container}>
-            <BodyHeader formatedWeek={formatedWeek} />
+            <BodyHeader formattedWeek={formattedWeek} />
             <div className={styles.table_content}>
-                {classTime.map((item, index) => (
+                {classTime.map((time, index) => (
                     <div className={styles.table_grid} key={index}>
                         <div>
-                            <Typography variant="text_12_r">{item.name}</Typography>
-                            <Typography variant="text_12_r">{item.timeStart}</Typography>
-                            <Typography variant="text_12_r">{item.timeEnd}</Typography>
+                            <Typography variant="text_12_r">{time.name}</Typography>
+                            <Typography variant="text_12_r">{time.timeStart}</Typography>
+                            <Typography variant="text_12_r">{time.timeEnd}</Typography>
                         </div>
-                        {Array.from({ length: formatedWeek.length }).map((_, index) => (
-                            <div className={styles.table_item} key={index}>
-                                <Typography variant="text_12_r">--</Typography>
-                            </div>
-                        ))}
+                        {currentWeek.map((day, dayIndex) => {
+                            const classesForCell = getClassForCell(day, time);
+                            return (
+                                <div
+                                    className={classnames(
+                                        styles.table_item,
+                                        classesForCell.length > 0 ? styles.has_item : ""
+                                    )}
+                                    key={dayIndex}
+                                >
+                                    {classesForCell.length > 0 ? (
+                                        classesForCell.map((cls, clsIndex) => (
+                                            <Workout workout={cls} key={clsIndex} />
+                                        ))
+                                    ) : (
+                                        <Typography variant="text_12_r">--</Typography>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
                 <div className={styles.table_last_grid} />

@@ -30,8 +30,6 @@
 }
 
 .table_item {
-    @apply p-[10px];
-
     &:not(:first-child) {
         border-left: 1px solid #c2c2c2;
     }
