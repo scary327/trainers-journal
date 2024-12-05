@@ -7,6 +7,8 @@ const Main = lazy(() => import("@/pages/main/"));
 const Profile = lazy(() => import("@/pages/profile/"));
 const UserPage = lazy(() => import("@/pages/userPage/"));
 const CalendarPage = lazy(() => import("@/pages/calendarPage"));
+const Auth = lazy(() => import("@/pages/auth/"));
+const Groups = lazy(() => import("@/pages/groups/"));
 
 export const PublicRoutes: Route[] = [
     {
@@ -24,5 +26,13 @@ export const PublicRoutes: Route[] = [
     {
         path: URLS.CALENDAR,
         element: React.createElement(CalendarPage)
+    },
+    {
+        path: URLS.LOGIN,
+        element: React.createElement(Auth)
+    },
+    {
+        path: URLS.GROUPS,
+        element: React.createElement(Groups)
     }
 ];

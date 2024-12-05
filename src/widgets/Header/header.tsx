@@ -19,7 +19,7 @@ export const Header = () => {
         },
         {
             name: "Группы",
-            path: "/"
+            path: URLS.GROUPS
         },
         {
             name: "Календарь",

@@ -3,7 +3,7 @@
 }
 
 .input {
-    @apply w-full py-[14px] pl-[10px] text-[16px] rounded-[4px] outline-none border-gray-text border-[2px];
+    @apply w-full py-[14px] pl-[10px] text-[16px] rounded-[10px] outline-none border-gray-text border-[2px];
 
     &:focus {
         @apply border-blue-medium;

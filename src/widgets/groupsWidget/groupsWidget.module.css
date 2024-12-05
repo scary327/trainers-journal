@@ -1,0 +1,15 @@
+.container {
+    @apply w-[65vw] flex flex-col bg-white py-[33px] px-[56px] rounded-[20px];
+}
+
+.table {
+    @apply flex w-[90%] flex-col gap-y-[20px] mt-[40px] self-center;
+}
+
+.table_row {
+    @apply grid w-full text-center py-[4px] px-[12px];
+
+    justify-items: center;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid #ccc;
+}

@@ -1,0 +1,26 @@
+.container {
+    @apply flex flex-col gap-y-[5px] items-start w-full bg-blue-light h-[95%];
+
+    border-radius: 0 0 10px 10px;
+}
+
+.workout_header {
+    @apply bg-blue-medium text-white self-center w-full;
+}
+
+.container.past {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+.workout_header.past {
+    @apply bg-gray-text;
+}
+
+.container.current {
+    @apply bg-blue-light;
+}
+
+.workout_header.current {
+    @apply bg-blue-dark;
+}

@@ -63,15 +63,22 @@ export const CalendarBody = () => {
 
     const classList: IClass[] = [
         {
-            start: "2024-11-22T11:30:00",
-            end: "2024-11-22T12:30:00",
+            start: "2024-12-03T11:30:00",
+            end: "2024-12-03T12:30:00",
             group: "Йога",
             teacher: "Иван Иванов",
             students: []
         },
         {
-            start: "2024-11-20T14:30:00",
-            end: "2024-11-20T15:30:00",
+            start: "2024-12-03T16:00:00",
+            end: "2024-12-03T17:00:00",
+            group: "Йога2",
+            teacher: "Иван Иванов",
+            students: []
+        },
+        {
+            start: "2024-12-04T14:30:00",
+            end: "2024-12-04T15:30:00",
             group: "Пилатес",
             teacher: "Анна Смирнова",
             students: []
