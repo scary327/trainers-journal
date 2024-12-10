@@ -1,7 +1,7 @@
 import { PageTitle } from "@/shared/ui";
 
 import * as styles from "./profile.module.css";
-import { UserInfo } from "@/entities/";
+import { UserData, UserInfo } from "@/entities/";
 import { PaymentHistory } from "@/features";
 
 export const Profile = () => {
@@ -11,7 +11,10 @@ export const Profile = () => {
         <div className={styles.container}>
             <PageTitle title={title} />
             <div className={styles.main_container}>
-                <UserInfo />
+                <div className={styles.userinfo_container}>
+                    <UserInfo />
+                    <UserData />
+                </div>
                 <PaymentHistory />
             </div>
         </div>

@@ -3,3 +3,7 @@
 
     border-top: 1px solid #999999;
 }
+
+.userinfo_container {
+    @apply flex gap-x-[20px] items-center w-[65%];
+}

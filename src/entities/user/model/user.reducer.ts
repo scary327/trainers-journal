@@ -10,11 +10,13 @@ const initialState: UserState = {
     user: localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user")!)
         : {
-              fullName: "",
-              email: "",
+              fullName: "Королев Алесандр Васильевич",
+              email: "apapa@gmail.com",
               kyu: 6,
-              phoneNumber: "",
-              avatar: ""
+              phoneNumber: "77777777777",
+              avatar: "",
+              login: "sanya222",
+              password: "popopo"
           },
     loading: false
 };

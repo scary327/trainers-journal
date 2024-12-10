@@ -1,1 +1,1 @@
-export * from "./ui/userInfo";
+export * from "./ui";

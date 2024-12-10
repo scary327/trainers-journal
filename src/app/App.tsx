@@ -1,4 +1,4 @@
-import { RouterProvider, useNavigate } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import { appRouter } from "@/app/routers/app.router";
 import { Providers } from "./providers";
 import "./styles/global.css";

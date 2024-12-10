@@ -1,5 +1,5 @@
 .container {
-    @apply bg-white px-[30px] py-[20px] w-[65%] flex justify-between items-center rounded-[20px];
+    @apply bg-white px-[30px] py-[20px] w-full flex justify-between items-center rounded-[20px];
 }
 
 .main_container {

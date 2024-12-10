@@ -1,6 +1,5 @@
 import { Button, Input, Modal, Typography } from "@/shared/ui";
 import * as styles from "./auth.module.css";
-import { classnames } from "@/shared/lib";
 import { useState } from "react";
 
 const InlineLogo = () => (

@@ -1,13 +1,13 @@
 import { Button } from "@/shared/ui";
-import { IUser } from "../model/user.types";
 import * as styles from "./userInfo.module.css";
 
 import AvatarSVG from "@/shared/icons/avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { useEffect } from "react";
-import { setLoading } from "../model/user.reducer";
 import { classnames } from "@/shared/lib";
+import { setLoading } from "../../model/user.reducer";
+import { IUser } from "../../model/user.types";
 
 export const UserInfo = () => {
     const user: IUser = useSelector((state: RootState) => state.user.user);

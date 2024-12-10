@@ -1,7 +1,5 @@
 export interface IClassTime {
-    name: string;
-    timeStart: string;
-    timeEnd: string;
+    start: string;
 }
 
 export interface IStudentClass {

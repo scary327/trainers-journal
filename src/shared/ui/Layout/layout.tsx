@@ -4,10 +4,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import * as styles from "./layout.module.css";
 import { Header } from "@/widgets";
 import { URLS } from "@/app/routers/app.urls";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import { setUser } from "@/entities/user/model/user.reducer";
-import { IUser } from "@/entities/user/model/user.types";
 
 export const Loader = () => {
     return (
