@@ -1,0 +1,7 @@
+.container {
+    @apply relative bg-white py-[14px] px-[10px] text-[16px] rounded-[10px] outline-none border-gray-text border-[2px] text-gray-text hover:text-blue-dark hover:border-blue-dark;
+}
+
+.calendarWrapper {
+    @apply absolute top-[10px] right-[10px] cursor-pointer;
+}

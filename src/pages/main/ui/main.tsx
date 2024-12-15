@@ -2,6 +2,7 @@ import { Input, Loader, Modal } from "@/shared/ui";
 import * as styles from "./main.module.css";
 import { useState } from "react";
 import { Button } from "@/shared/ui/";
+import { DateInput } from "@/shared/ui/Fields/DateInput/dateInput";
 
 export const Main = () => {
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -33,6 +34,9 @@ export const Main = () => {
                     <Loader />
                 </div>
                 <Input label="Password" type="password" />
+            </div>
+            <div>
+                <DateInput />
             </div>
             <Modal visible={isOpenModal} onClose={closeModal}>
                 <div className="w-[300px] h-[300px] text-center">Modal</div>

@@ -12,9 +12,10 @@ interface IStudents {
 }
 interface IProps {
     openSlideOut?: () => void;
+    openFilter?: () => void;
 }
 
-export const UsersTable = ({ openSlideOut }: IProps) => {
+export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -68,7 +69,11 @@ export const UsersTable = ({ openSlideOut }: IProps) => {
         <div className={styles.container}>
             <div className={styles.filter_container}>
                 <Search />
-                <Button variant="primary" className="flex items-center gap-x-[10px]">
+                <Button
+                    variant="primary"
+                    className="flex items-center gap-x-[10px]"
+                    onClick={openFilter}
+                >
                     Фильтры <FilterSVG className="w-[20px] h-[20px]" />
                 </Button>
                 <Button variant="primary" className="whitespace-nowrap" onClick={openSlideOut}>

@@ -30,7 +30,7 @@ export const CalendarBody = () => {
 
     const generateClassTime = (): IClassTime[] => {
         const times: IClassTime[] = [];
-        let startTime = new Date();
+        const startTime = new Date();
         startTime.setHours(6, 0, 0, 0); // Начало в 6:00
         const endTime = new Date();
         endTime.setHours(23, 0, 0, 0); // Конец в 23:00
