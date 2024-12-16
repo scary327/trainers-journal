@@ -1,6 +1,5 @@
 export const URLS = {
-    MAIN: "/",
-    LOGIN: "/login",
+    LOGIN: "/",
     GROUPS: "/groups",
     PROFILE: "/profile",
     USERS: "/users",

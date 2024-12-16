@@ -1,10 +1,10 @@
-import { IStudentDetails, IStudentHeader } from "@/features/Dropdown/types/types";
 import * as styles from "./usersTable.module.css";
 import { Button, Search, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useEffect, useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader } from "@/features";
+import { IStudentHeader, IStudentDetails } from "@/shared/types";
 
 interface IStudents {
     studentInfo: IStudentHeader;

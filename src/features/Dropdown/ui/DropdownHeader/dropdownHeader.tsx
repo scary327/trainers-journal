@@ -1,5 +1,5 @@
+import { IStudentHeader } from "@/shared/types";
 import { Typography } from "@/shared/ui";
-import { IStudentHeader } from "../../types/types";
 
 interface DropdownHeaderProps {
     student: IStudentHeader;

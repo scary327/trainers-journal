@@ -4,6 +4,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import * as styles from "./layout.module.css";
 import { Header } from "@/widgets";
 import { URLS } from "@/app/routers/app.urls";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export const Loader = () => {
     return (
@@ -16,17 +18,12 @@ export const Loader = () => {
 export const Layout = () => {
     const location = useLocation();
     const isLogin = location.pathname === URLS.LOGIN;
-
-    const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
+    const user = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
 
     useEffect(() => {
-        //изменить на !user
-        if (false) {
-            navigate(URLS.LOGIN);
-        }
-    }, [user, navigate]);
+        if (isLogin && user.isAuth) navigate(URLS.PROFILE);
+    }, []);
 
     return (
         <Suspense

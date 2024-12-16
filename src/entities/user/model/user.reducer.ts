@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "./user.types";
 
 interface UserState {
+    isAuth: boolean;
     user: IUser;
     loading: boolean;
 }
@@ -10,15 +11,17 @@ const initialState: UserState = {
     user: localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user")!)
         : {
-              fullName: "Королев Алесандр Васильевич",
-              email: "apapa@gmail.com",
-              kyu: 6,
+              role: "trainer",
+              fullName: "Коновалов Александр Александрович",
+              email: "apapapa@gmail.com",
+              kyu: 5,
               phoneNumber: "77777777777",
               avatar: "",
-              login: "sanya222",
-              password: "popopo"
+              login: "sanya228",
+              password: "imbadprogrammer"
           },
-    loading: false
+    loading: false,
+    isAuth: true
 };
 
 const userSlice = createSlice({

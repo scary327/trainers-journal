@@ -2,7 +2,7 @@ import { classnames, formatUserName } from "@/shared/lib";
 import * as styles from "./header.module.css";
 import { Link } from "react-router-dom";
 import { URLS } from "@/app/routers/app.urls";
-import { Button } from "@/shared/ui";
+import { Button, Typography } from "@/shared/ui";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { clearUser } from "@/entities/user/model/user.reducer";
@@ -34,9 +34,7 @@ export const Header = () => {
     return (
         <header className={classnames(styles.header_container, "gradient")}>
             <div className="flex items-center gap-x-14">
-                <Link to="/" draggable="false" className={styles.header_title}>
-                    TJ
-                </Link>
+                <Typography variant="text_24_b">TJ</Typography>
                 <ul className={styles.header_list}>
                     {navigateList.map((item) => (
                         <Link

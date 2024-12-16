@@ -1,7 +1,7 @@
 import { Typography } from "@/shared/ui";
 import * as styles from "./workout.module.css";
-import { IClass } from "../../types";
 import { classnames } from "@/shared/lib";
+import { IClass } from "@/shared/types";
 
 interface IWorkoutProps {
     workout: IClass;

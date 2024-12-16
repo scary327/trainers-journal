@@ -41,7 +41,7 @@ export const UserData = () => {
             </div>
         </div>
     ) : (
-        <div className="skeleton w-[300px] h-[80px] rounded-[20px] mb-[30px]" />
+        <div className="skeleton w-[200px] h-[80px] rounded-[20px] mb-[30px]" />
     );
 
     return (

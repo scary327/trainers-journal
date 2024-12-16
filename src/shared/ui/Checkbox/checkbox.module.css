@@ -1,0 +1,7 @@
+.button {
+    @apply bg-blue-light p-[3px] border-blue-medium border-[2px] w-[24px] h-[24px] rounded-[4px];
+}
+
+.button_check {
+    @apply bg-blue-medium text-white p-[2px];
+}

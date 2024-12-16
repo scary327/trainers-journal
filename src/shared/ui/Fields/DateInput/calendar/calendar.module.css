@@ -1,0 +1,33 @@
+.calendar {
+    @apply bg-white relative p-[8px] gap-y-[10px] flex flex-col items-center rounded-[10px] border-[2px] border-blue-dark;
+}
+
+.calendar_header {
+    @apply w-full flex justify-between items-center border-blue-dark border-b-2 border-spacing-1;
+}
+
+.button_container {
+    @apply flex gap-x-[8px] items-center;
+}
+
+.calendar_grid {
+    @apply grid w-full;
+
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar_day {
+    @apply px-[2px];
+}
+
+.selected {
+    @apply bg-blue-dark text-white rounded-[4px];
+}
+
+.in_range {
+    @apply bg-blue-light;
+}
+
+.year_selector {
+    @apply absolute right-0 top-[50px];
+}

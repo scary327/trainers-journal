@@ -1,0 +1,21 @@
+.container {
+    @apply flex flex-col gap-y-[40px] w-[80%] items-center;
+
+    overflow-y: auto;
+}
+
+.main {
+    @apply flex flex-col gap-y-[30px];
+}
+
+.section {
+    @apply flex flex-col gap-y-[10px];
+}
+
+.list {
+    @apply flex flex-col gap-y-[10px] max-h-[200px] overflow-auto;
+}
+
+.check_row {
+    @apply flex items-center gap-x-[10px];
+}

@@ -1,5 +1,6 @@
 import { useNavigate, useRouteError } from "react-router-dom";
 import { URLS } from "@/app/routers/app.urls";
+import { Button } from "@/shared/ui";
 
 export const ErrorElement = () => {
     const err = useRouteError();
@@ -10,7 +11,9 @@ export const ErrorElement = () => {
     return (
         <div>
             <h1>Произошла непредвиденная ошибка</h1>
-            <button onClick={() => navigate(URLS.MAIN)}>Вернуться на главную страницу</button>
+            <Button variant="empty" onClick={() => window.history.back()}>
+                Вернуться
+            </Button>
         </div>
     );
 };

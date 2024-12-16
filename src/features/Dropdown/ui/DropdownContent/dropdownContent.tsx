@@ -1,4 +1,4 @@
-import { IStudentDetails } from "../../types/types";
+import { IStudentDetails } from "@/shared/types";
 import * as styles from "./dropdownContent.module.css";
 import { Item } from "./item/item";
 

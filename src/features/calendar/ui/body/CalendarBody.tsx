@@ -4,8 +4,8 @@ import { selectCurrentWeek } from "../../model/calendar.slice";
 import { formatWeekDays } from "../../utils";
 import { Typography } from "@/shared/ui";
 import { classnames } from "@/shared/lib";
-import { IClassTime, IClass } from "../../types";
 import { Workout } from "../workout/workout";
+import { IClassTime, IClass } from "@/shared/types";
 
 interface BodyHeaderProps {
     formattedWeek: string[];

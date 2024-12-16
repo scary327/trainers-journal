@@ -2,10 +2,6 @@
     @apply px-10 flex justify-between items-center w-full h-[80px] text-white font-inter-medium;
 }
 
-.header_title {
-    @apply font-inter-bold text-[32px] cursor-pointer;
-}
-
 .header_list {
     @apply flex text-[14px] items-center gap-x-[50px];
 }
