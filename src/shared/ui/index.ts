@@ -6,3 +6,4 @@ export * from "./Typography/typography";
 export * from "./Fields";
 export * from "./SlideOutMenu/slideOutMenu";
 export * from "./Checkbox/checkbox";
+export * from "./PrivateRoute/privateRoute";

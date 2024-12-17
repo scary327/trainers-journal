@@ -12,7 +12,7 @@ export const Header = () => {
     const userParsedName = formatUserName(user.fullName);
     const dispatch = useDispatch();
 
-    const navigateList = [
+    const navigateTrainerList = [
         {
             name: "Пользователи",
             path: URLS.USERS
@@ -27,6 +27,16 @@ export const Header = () => {
         }
     ];
 
+    const navigateStudentList = [
+        {
+            name: "Календарь",
+            path: URLS.STUDENT_CALENDAR
+        }
+    ];
+
+    const currentList = user.role === "trainer" ? navigateTrainerList : navigateStudentList;
+    const currentProfileLink = user.role === "trainer" ? URLS.PROFILE : URLS.STUDENT_PROFILE;
+
     const logout = () => {
         dispatch(clearUser());
     };
@@ -36,7 +46,7 @@ export const Header = () => {
             <div className="flex items-center gap-x-14">
                 <Typography variant="text_24_b">TJ</Typography>
                 <ul className={styles.header_list}>
-                    {navigateList.map((item) => (
+                    {currentList.map((item) => (
                         <Link
                             className={classnames(styles.header_link, "hover-underline-animation")}
                             to={item.path}
@@ -53,7 +63,7 @@ export const Header = () => {
                     <>
                         <Link
                             className={classnames(styles.header_link, "hover-underline-animation")}
-                            to={URLS.PROFILE}
+                            to={currentProfileLink}
                             draggable="false"
                         >
                             {userParsedName}
@@ -68,8 +78,7 @@ export const Header = () => {
                     </>
                 ) : (
                     <div className="flex gap-x-[10px]">
-                        <Button variant="primary">Войти</Button>
-                        <Button variant="secondary">Регистрация</Button>
+                        <Button variant="empty">Войти</Button>
                     </div>
                 )}
             </div>

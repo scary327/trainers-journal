@@ -3,5 +3,8 @@ export const URLS = {
     GROUPS: "/groups",
     PROFILE: "/profile",
     USERS: "/users",
-    CALENDAR: "/calendar"
+    CALENDAR: "/calendar",
+
+    STUDENT_CALENDAR: "/student-calendar",
+    STUDENT_PROFILE: "/student-profile"
 };

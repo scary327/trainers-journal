@@ -6,10 +6,12 @@ import * as styles from "./CalendarHeader.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { nextWeek, prevWeek, selectCurrentWeek } from "../../model/calendar.slice";
 import { formatWeekRangeIntl } from "../../utils";
+import { RootState } from "@/app/store";
 
 export const CalendarHeader = () => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const weekHeaderStr = formatWeekRangeIntl(currentWeek);
+    const userRole = useSelector((state: RootState) => state.user.user.role);
 
     const dispatch = useDispatch();
 
@@ -39,14 +41,16 @@ export const CalendarHeader = () => {
                     </Typography>
                 </div>
             </div>
-            <div className="flex gap-x-[30px]">
-                <Button variant="primary" className="border-white">
-                    Дублировать расписание
-                </Button>
-                <Button variant="primary" className="border-white">
-                    Добавить тренировку
-                </Button>
-            </div>
+            {userRole === "trainer" && (
+                <div className="flex gap-x-[30px]">
+                    <Button variant="primary" className="border-white">
+                        Дублировать расписание
+                    </Button>
+                    <Button variant="primary" className="border-white">
+                        Добавить тренировку
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };

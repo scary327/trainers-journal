@@ -1,6 +1,10 @@
 import { Button, Input, Modal, Typography } from "@/shared/ui";
 import * as styles from "./auth.module.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { Navigate } from "react-router-dom";
+import { URLS } from "@/app/routers/app.urls";
 
 const InlineLogo = () => (
     <svg
@@ -52,6 +56,7 @@ const InlineLogo = () => (
 export const Auth = () => {
     const [firstModal, setFirstModal] = useState<boolean>(false);
     const [secondModal, setSecondModal] = useState<boolean>(false);
+    const user = useSelector((state: RootState) => state.user);
 
     const handleFirstModal = () => {
         setSecondModal(false);
@@ -62,6 +67,11 @@ export const Auth = () => {
         setFirstModal(false);
         setSecondModal(true);
     };
+
+    if (user.isAuth) {
+        const link = user.user.role === "trainer" ? URLS.PROFILE : URLS.STUDENT_PROFILE;
+        return <Navigate to={link} />;
+    }
 
     return (
         <>

@@ -11,7 +11,7 @@ const initialState: UserState = {
     user: localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user")!)
         : {
-              role: "trainer",
+              role: "student",
               fullName: "Коновалов Александр Александрович",
               email: "apapapa@gmail.com",
               kyu: 5,
