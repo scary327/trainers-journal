@@ -30,7 +30,7 @@ const initialState: UserState = {
               token: ""
           },
     loading: false,
-    isAuth: false,
+    isAuth: localStorage.getItem("user") ? true : false,
     errorMessage: ""
 };
 

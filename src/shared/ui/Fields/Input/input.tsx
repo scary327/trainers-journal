@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         });
 
         const labelClasses = classnames(styles.label, {
-            [styles.focused]: isFocused || hasValue
+            [styles.focused]: isFocused || hasValue || !!props.defaultValue
         });
 
         const handleTogglePassword = () => {

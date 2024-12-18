@@ -4,21 +4,19 @@ import { GroupsWidget } from "@/widgets";
 import { getGroups } from "@/entities/api/services/";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const Groups = () => {
     const title = "Группы";
     const groups = useSelector((state: RootState) => state.groups.groups);
-    const [loading, setLoading] = useState<boolean>(false);
+    const loading = useSelector((state: RootState) => state.groups.isLoading);
     const dispatch = useDispatch<AppDispatch>();
 
     const userName = useSelector((state: RootState) => state.user.user.userName);
 
     useEffect(() => {
         const fetchGroups = async () => {
-            setLoading(true);
             dispatch(getGroups(userName));
-            setLoading(false);
         };
 
         fetchGroups();

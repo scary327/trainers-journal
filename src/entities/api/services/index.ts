@@ -5,3 +5,4 @@ export * from "./getGroups";
 export * from "./postGroup";
 export * from "./getUserInfo";
 export * from "./putUserInfo";
+export * from "./putGroup";

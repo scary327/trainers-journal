@@ -17,7 +17,7 @@
     transition: 0.2s ease;
 }
 
-.label.focused {
+.focused {
     @apply text-gray-text text-[12px] top-[1px];
 }
 

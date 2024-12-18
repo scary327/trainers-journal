@@ -17,7 +17,9 @@ export const StudentProfile = () => {
                         <UserContacts />
                     </div>
                 </div>
-                <PaymentHistory />
+                <div className="w-[65%]">
+                    <PaymentHistory />
+                </div>
             </div>
         </div>
     );

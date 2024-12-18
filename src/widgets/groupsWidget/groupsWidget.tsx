@@ -7,6 +7,7 @@ import { NewGroupContent } from "./newGroupContent/newGroupContent";
 import { deleteGroup } from "@/entities/api/services";
 import { AppDispatch } from "@/app/store";
 import { useDispatch } from "react-redux";
+import { EditGroup } from "./editGroup/editGroup";
 
 interface GroupsWidgetProps {
     groupList: IGroup[];
@@ -18,6 +19,8 @@ export const GroupsWidget = ({ groupList }: GroupsWidgetProps) => {
     const tableHeader = ["Номер группы", "Цена", "Участника", "", ""];
 
     const [openSlideOut, setOpenSlideOut] = useState<boolean>(false);
+    const [editGroupOpen, setEditGroupOpen] = useState<boolean>(false);
+    const [currentGroup, setCurrentGroup] = useState<IGroup>({} as IGroup);
     const dispatch = useDispatch<AppDispatch>();
 
     const handleDeleteGroup = (id: string) => {
@@ -44,7 +47,14 @@ export const GroupsWidget = ({ groupList }: GroupsWidgetProps) => {
                             <Typography variant="text_14_m">{item.name}</Typography>
                             <Typography variant="text_14_m">{item.costPractice}</Typography>
                             <Typography variant="text_14_m">{item.numberStudents}</Typography>
-                            <Button className="max-w-[150px]" variant="primary-small">
+                            <Button
+                                className="max-w-[150px]"
+                                onClick={() => {
+                                    setEditGroupOpen(true);
+                                    setCurrentGroup(item);
+                                }}
+                                variant="primary-small"
+                            >
                                 Редактировать
                             </Button>
                             <Button
@@ -60,6 +70,9 @@ export const GroupsWidget = ({ groupList }: GroupsWidgetProps) => {
             </div>
             <SlideOutMenu isOpen={openSlideOut} onClose={() => setOpenSlideOut(false)}>
                 <NewGroupContent />
+            </SlideOutMenu>
+            <SlideOutMenu isOpen={editGroupOpen} onClose={() => setEditGroupOpen(false)}>
+                <EditGroup group={currentGroup} />
             </SlideOutMenu>
         </>
     );

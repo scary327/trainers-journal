@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteGroup, getGroups, postGroup } from "@/entities/api/services";
+import { deleteGroup, getGroups, postGroup, putGroup } from "@/entities/api/services";
 import { IGroup } from "@/shared/types";
 
 interface IGroupSlice {
@@ -53,6 +53,20 @@ const groupSlice = createSlice({
                 state.groups = state.groups.filter((group) => group.id != action.payload.id);
             })
             .addCase(deleteGroup.rejected, (state, action) => {
+                state.errorMessage = action.error.message || "Неизвестная ошибка";
+                state.isLoading = false;
+            })
+            // Put
+            .addCase(putGroup.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(putGroup.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.groups = state.groups.map((group) =>
+                    group.id === action.payload.id ? action.payload : group
+                );
+            })
+            .addCase(putGroup.rejected, (state, action) => {
                 state.errorMessage = action.error.message || "Неизвестная ошибка";
                 state.isLoading = false;
             });

@@ -16,20 +16,22 @@ export const Dropdown = ({ header, content }: DropdownProps) => {
     };
 
     return (
-        <div onClick={() => toggleDropdown()}>
-            <div className={classnames(styles.dropdown_header, { [styles.open]: isOpen })}>
-                {header}
-                <button className={styles.dropdown_button}>
-                    {isOpen ? (
-                        <ArrowDownSVG className={classnames(styles.arrow, "rotate-180")} />
-                    ) : (
-                        <ArrowDownSVG className={classnames(styles.arrow, "rotate-0")} />
-                    )}
-                </button>
+        <>
+            <div onClick={() => toggleDropdown()}>
+                <div className={classnames(styles.dropdown_header, { [styles.open]: isOpen })}>
+                    {header}
+                    <button className={styles.dropdown_button}>
+                        {isOpen ? (
+                            <ArrowDownSVG className={classnames(styles.arrow, "rotate-180")} />
+                        ) : (
+                            <ArrowDownSVG className={classnames(styles.arrow, "rotate-0")} />
+                        )}
+                    </button>
+                </div>
+                <div className={classnames(styles.dropdown_content, { [styles.open]: isOpen })}>
+                    {content}
+                </div>
             </div>
-            <div className={classnames(styles.dropdown_content, { [styles.open]: isOpen })}>
-                {content}
-            </div>
-        </div>
+        </>
     );
 };

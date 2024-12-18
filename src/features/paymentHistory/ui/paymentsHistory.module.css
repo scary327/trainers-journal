@@ -1,5 +1,5 @@
 .container {
-    @apply w-[65%] flex flex-col px-[30px] py-[20px] bg-white rounded-[20px];
+    @apply w-full flex flex-col px-[30px] py-[20px] bg-white rounded-[20px];
 }
 
 .title {

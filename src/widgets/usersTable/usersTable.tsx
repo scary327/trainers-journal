@@ -1,12 +1,13 @@
 import * as styles from "./usersTable.module.css";
-import { Button, Search, Typography } from "@/shared/ui";
+import { Button, Modal, Search, SlideOutMenu, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useEffect, useState } from "react";
-import { Dropdown, DropdownContent, DropdownHeader } from "@/features";
+import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
 import { IStudentHeader, IStudentDetails } from "@/shared/types";
+import { EditMenu } from "./editMenu/editMenu";
 
-interface IStudents {
+export interface IStudents {
     studentInfo: IStudentHeader;
     studentDetails: IStudentDetails;
 }
@@ -20,6 +21,10 @@ export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [students, setStudents] = useState<IStudents[]>([]);
+
+    const [payment, setPayment] = useState<IStudents | boolean>(false);
+    const [editStudent, setEditStudent] = useState<boolean>(false);
+    const [currentStudent, setCurrentStudent] = useState<IStudents>({} as IStudents);
 
     const studentInfo: IStudentHeader = {
         fullName: "Смирнов Алексей Александрович",
@@ -59,41 +64,59 @@ export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
         students.map((student, index) => (
             <Dropdown
                 key={index}
-                header={<DropdownHeader key={index} student={student.studentInfo} />}
+                header={
+                    <DropdownHeader
+                        onPayment={() => setPayment(student)}
+                        onEdit={() => {
+                            setEditStudent(true);
+                            setCurrentStudent(student);
+                        }}
+                        key={index}
+                        student={student.studentInfo}
+                    />
+                }
                 content={<DropdownContent key={index} studentDetails={student.studentDetails} />}
             />
         ))
     );
 
     return (
-        <div className={styles.container}>
-            <div className={styles.filter_container}>
-                <Search />
-                <Button
-                    variant="primary"
-                    className="flex items-center gap-x-[10px]"
-                    onClick={openFilter}
-                >
-                    Фильтры <FilterSVG className="w-[20px] h-[20px]" />
-                </Button>
-                <Button variant="primary" className="whitespace-nowrap" onClick={openSlideOut}>
-                    Добавить пользователя
-                </Button>
-            </div>
-            <div className={styles.table_container}>
-                <div className={styles.table_header}>
-                    {tableItems.map((item, index) => (
-                        <Typography
-                            variant="text_14_r"
-                            key={index}
-                            className="text-gray-text whitespace-nowrap"
-                        >
-                            {item}
-                        </Typography>
-                    ))}
+        <>
+            <div className={styles.container}>
+                <div className={styles.filter_container}>
+                    <Search />
+                    <Button
+                        variant="primary"
+                        className="flex items-center gap-x-[10px]"
+                        onClick={openFilter}
+                    >
+                        Фильтры <FilterSVG className="w-[20px] h-[20px]" />
+                    </Button>
+                    <Button variant="primary" className="whitespace-nowrap" onClick={openSlideOut}>
+                        Добавить пользователя
+                    </Button>
                 </div>
-                <div className={styles.table_body}>{tableBody}</div>
+                <div className={styles.table_container}>
+                    <div className={styles.table_header}>
+                        {tableItems.map((item, index) => (
+                            <Typography
+                                variant="text_14_r"
+                                key={index}
+                                className="text-gray-text whitespace-nowrap"
+                            >
+                                {item}
+                            </Typography>
+                        ))}
+                    </div>
+                    <div className={styles.table_body}>{tableBody}</div>
+                </div>
             </div>
-        </div>
+            <Modal visible={!!payment} onClose={() => setPayment(false)}>
+                <PaymentHistory />
+            </Modal>
+            <SlideOutMenu isOpen={editStudent} onClose={() => setEditStudent(false)}>
+                <EditMenu student={currentStudent} />
+            </SlideOutMenu>
+        </>
     );
 };
