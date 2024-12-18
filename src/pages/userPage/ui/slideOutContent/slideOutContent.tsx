@@ -1,9 +1,10 @@
 import { classnames } from "@/shared/lib";
 import { Typography, Select, Button, Input } from "@/shared/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import * as styles from "./slideOutContent.module.css";
+import { IStudents } from "@/widgets";
 
 interface IRegisterForm {
     surname: string;
@@ -16,8 +17,14 @@ interface IRegisterForm {
     password: string;
 }
 
-export const SlideOutContent = () => {
-    const slideOutTitle: string = "Регистрация пользователя";
+interface IEditMenuProps {
+    student: IStudents | null;
+}
+
+export const SlideOutContent = ({ student }: IEditMenuProps) => {
+    const slideOutTitle: string = student
+        ? "Редактирование пользователя"
+        : "Регистрация пользователя";
 
     const [kyuValue, setKyuValue] = useState<string>("");
     const [genderValue, setGenderValue] = useState<string>("");
@@ -53,6 +60,18 @@ export const SlideOutContent = () => {
     ];
 
     const { register, handleSubmit, reset } = useForm<IRegisterForm>();
+
+    useEffect(() => {
+        if (student) {
+            // Если student не null, устанавливаем значения по умолчани
+            reset({
+                surname: "pepega",
+                name: "pepega"
+            });
+        } else {
+            reset(); // Сброс значений формы, если student равен null
+        }
+    }, [student, reset]);
 
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         console.log(data);

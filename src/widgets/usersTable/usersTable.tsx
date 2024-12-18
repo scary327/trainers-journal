@@ -1,30 +1,28 @@
 import * as styles from "./usersTable.module.css";
-import { Button, Modal, Search, SlideOutMenu, Typography } from "@/shared/ui";
+import { Button, Modal, Search, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useEffect, useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
 import { IStudentHeader, IStudentDetails } from "@/shared/types";
-import { EditMenu } from "./editMenu/editMenu";
 
 export interface IStudents {
     studentInfo: IStudentHeader;
     studentDetails: IStudentDetails;
 }
 interface IProps {
-    openSlideOut?: () => void;
     openFilter?: () => void;
+    openEdit?: (student: IStudents | null) => void;
 }
 
-export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
+export const UsersTable = ({ openFilter, openEdit }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
     const [loading, setLoading] = useState<boolean>(false);
     const [students, setStudents] = useState<IStudents[]>([]);
 
     const [payment, setPayment] = useState<IStudents | boolean>(false);
-    const [editStudent, setEditStudent] = useState<boolean>(false);
-    const [currentStudent, setCurrentStudent] = useState<IStudents>({} as IStudents);
+    //const [editStudent, setEditStudent] = useState<boolean>(false);
 
     const studentInfo: IStudentHeader = {
         fullName: "Смирнов Алексей Александрович",
@@ -68,8 +66,7 @@ export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
                     <DropdownHeader
                         onPayment={() => setPayment(student)}
                         onEdit={() => {
-                            setEditStudent(true);
-                            setCurrentStudent(student);
+                            openEdit?.(student);
                         }}
                         key={index}
                         student={student.studentInfo}
@@ -92,7 +89,11 @@ export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
                     >
                         Фильтры <FilterSVG className="w-[20px] h-[20px]" />
                     </Button>
-                    <Button variant="primary" className="whitespace-nowrap" onClick={openSlideOut}>
+                    <Button
+                        variant="primary"
+                        className="whitespace-nowrap"
+                        onClick={() => openEdit?.(null)}
+                    >
                         Добавить пользователя
                     </Button>
                 </div>
@@ -114,9 +115,6 @@ export const UsersTable = ({ openSlideOut, openFilter }: IProps) => {
             <Modal visible={!!payment} onClose={() => setPayment(false)}>
                 <PaymentHistory />
             </Modal>
-            <SlideOutMenu isOpen={editStudent} onClose={() => setEditStudent(false)}>
-                <EditMenu student={currentStudent} />
-            </SlideOutMenu>
         </>
     );
 };
