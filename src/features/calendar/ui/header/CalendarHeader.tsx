@@ -11,7 +11,7 @@ import { RootState } from "@/app/store";
 export const CalendarHeader = () => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const weekHeaderStr = formatWeekRangeIntl(currentWeek);
-    const userRole = useSelector((state: RootState) => state.user.user.role);
+    const userRole = useSelector((state: RootState) => state.user.user.roles);
 
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ export const CalendarHeader = () => {
                     </Typography>
                 </div>
             </div>
-            {userRole === "trainer" && (
+            {userRole.includes("Trainer") && (
                 <div className="flex gap-x-[30px]">
                     <Button variant="primary" className="border-white">
                         Дублировать расписание

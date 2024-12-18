@@ -1,20 +1,17 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IUserInfo } from "./user.types";
+import { getUserInfo, signIn } from "@/entities/api/services";
 
 interface UserState {
     isAuth: boolean;
     user: IUser;
     loading: boolean;
     errorMessage: string;
-    token: string;
 }
-
-interface IAuthData {
+export interface IAuthData {
     userName: string;
     password: string;
 }
-
-const URL = "http://85.192.48.165:5001/api";
 
 const initialState: UserState = {
     user: localStorage.getItem("user")
@@ -29,42 +26,13 @@ const initialState: UserState = {
                   email: "apapapa@gmail.com",
                   kyu: 5,
                   phoneNumber: "77777777777"
-              }
+              },
+              token: ""
           },
     loading: false,
     isAuth: false,
-    errorMessage: "",
-    token: ""
+    errorMessage: ""
 };
-
-export const signInUserApi = (data: IAuthData) =>
-    fetch(`${URL}/auth/signin`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify(data)
-    }).then((res) => (res.ok ? res.json() : res.json().then((err) => Promise.reject(err))));
-
-export const getUserInfoApi = (data: string[]) =>
-    fetch(`${URL}/trainer/info?userName=${data[0]}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            Authorization: `Bearer ${data[1]}`
-        }
-    }).then((res) => (res.ok ? res.json() : res.json().then((err) => Promise.reject(err))));
-
-export const signIn = createAsyncThunk("auth/signin", async (data: IAuthData, { dispatch }) => {
-    const response = await signInUserApi(data);
-    dispatch(getUserInfo([response.userName, response.token]));
-    return response;
-});
-
-export const getUserInfo = createAsyncThunk(
-    "auth/getinfo",
-    async (data: string[]) => await getUserInfoApi(data)
-);
 
 const userSlice = createSlice({
     name: "user",
@@ -95,13 +63,16 @@ const userSlice = createSlice({
                 state.loading = true;
             })
             .addCase(signIn.fulfilled, (state, action) => {
-                state.token = action.payload.token;
+                state.user.token = action.payload.token;
                 state.user.roles = action.payload.roles;
                 state.user.userName = action.payload.userName;
                 state.isAuth = true;
+                localStorage.setItem("user", JSON.stringify(state.user));
+                console.log(localStorage.getItem("user"));
             })
             .addCase(signIn.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+                console.log(action);
             })
             //getInfo
             .addCase(getUserInfo.pending, (state) => {
@@ -109,13 +80,15 @@ const userSlice = createSlice({
             })
             .addCase(getUserInfo.fulfilled, (state, action) => {
                 //setInfo(action.payload);
-                state.user.info.email = action.payload.email;
-                state.user.info.kyu = action.payload.kyu;
-                state.user.info.phoneNumber = action.payload.phoneNumber;
-                state.user.info.firstName = action.payload.firstName;
-                state.user.info.lastName = action.payload.lastName;
-                state.user.info.middleName = action.payload.middleName;
+                // state.user.info.email = action.payload.email;
+                // state.user.info.kyu = action.payload.kyu;
+                // state.user.info.phoneNumber = action.payload.phoneNumber;
+                // state.user.info.firstName = action.payload.firstName;я
+                // state.user.info.lastName = action.payload.lastName;
+                // state.user.info.middleName = action.payload.middleName;
+                state.user.info = action.payload;
                 state.loading = false;
+                localStorage.setItem("user", JSON.stringify(state.user));
             })
             .addCase(getUserInfo.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";

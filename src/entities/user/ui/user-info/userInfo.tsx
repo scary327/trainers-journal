@@ -1,7 +1,7 @@
 import { Button, Typography } from "@/shared/ui";
 import * as styles from "./userInfo.module.css";
 
-//import AvatarSVG from "@/shared/icons/avatar.svg";
+import AvatarSVG from "@/shared/icons/avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { useEffect } from "react";
@@ -29,27 +29,22 @@ export const UserInfo = () => {
     const userFullNameItems: string[] = ["Фамилия", "Имя", "Отчество"];
     const userAddData: string[] = [
         user.info.kyu.toString(),
-        user.info.phoneNumber,
-        user.info.email
+        user.info.phoneNumber ?? "не указан",
+        user.info.email ?? "не указан"
     ];
     const userAddDataItems: string[] = ["КЮ", "Телефон", "Почта"];
 
-    const group: JSX.Element | null = user.roles.includes("student") ? (
+    const group: JSX.Element | null = user.roles.includes("Student") ? (
         <div className={styles.group}>
             <Typography variant="text_14_m">Группа РИ-1</Typography>
         </div>
     ) : null;
 
-    const avatar: JSX.Element = (
-        // !loading ? (
-        //     <div>
-        //         {user.avatar ? (
-        //             <img src={user.avatar} className={styles.avatar} />
-        //         ) : (
-        //             <AvatarSVG className={styles.avatar} />
-        //         )}
-        //     </div>
-        // ) :
+    const avatar: JSX.Element = !loading ? (
+        <div>
+            <AvatarSVG className={styles.avatar} />
+        </div>
+    ) : (
         <div className="skeleton w-[124px] h-[124px] rounded-full" />
     );
 

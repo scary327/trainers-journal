@@ -11,9 +11,10 @@
 // }
 
 export interface IUser {
-    roles: string[];
+    roles: string[]; //Trainer | Student
     userName: string;
     info: IUserInfo;
+    token: string;
 }
 export interface IUserInfo {
     firstName: string;

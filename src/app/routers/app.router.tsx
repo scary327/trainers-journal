@@ -10,11 +10,11 @@ export const appRouter = createBrowserRouter([
             ...PublicRoutes,
             ...PrivateTrainerRoutes.map((route) => ({
                 ...route,
-                element: <PrivateRoute currentRole="trainer">{route.element}</PrivateRoute>
+                element: <PrivateRoute currentRole="Trainer">{route.element}</PrivateRoute>
             })),
             ...PrivateStudentRoutes.map((route) => ({
                 ...route,
-                element: <PrivateRoute currentRole="student">{route.element}</PrivateRoute>
+                element: <PrivateRoute currentRole="Student">{route.element}</PrivateRoute>
             }))
         ],
         errorElement: <ErrorElement />

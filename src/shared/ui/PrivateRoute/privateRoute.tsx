@@ -4,12 +4,16 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 interface PrivateRouteProps {
-    currentRole: "trainer" | "student";
+    currentRole: "Trainer" | "Student";
     children: JSX.Element;
 }
 
 export const PrivateRoute = ({ currentRole, children }: PrivateRouteProps) => {
     const user = useSelector((state: RootState) => state.user);
 
-    return user.user.role === currentRole && user.isAuth ? children : <Navigate to={URLS.LOGIN} />;
+    return user.user.roles.includes(currentRole) && user.isAuth ? (
+        children
+    ) : (
+        <Navigate to={URLS.LOGIN} />
+    );
 };

@@ -1,11 +1,15 @@
 import { Button, Input, Modal, Typography } from "@/shared/ui";
 import * as styles from "./auth.module.css";
-import { SyntheticEvent, useState } from "react";
-import { AppDispatch } from "@/app/store";
-import { useDispatch } from "react-redux";
-import { signIn } from "@/entities/user/model/user.reducer";
+import { useState } from "react";
+import { AppDispatch, RootState } from "@/app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { IAuthData } from "@/entities/user/model/user.reducer";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { URLS } from "@/app/routers/app.urls";
+import { signIn } from "@/entities/api/services";
 
-const InlineLogo = () => (
+const InlineLogo = (
     <svg
         width="266"
         height="61"
@@ -56,8 +60,7 @@ export const Auth = () => {
     const [firstModal, setFirstModal] = useState<boolean>(false);
     const [secondModal, setSecondModal] = useState<boolean>(false);
 
-    // const [userName, setUserName] = useState("");
-    // const [password, setPassword] = useState("");
+    const serverError = useSelector((state: RootState) => state.user.errorMessage);
 
     const handleFirstModal = () => {
         setSecondModal(false);
@@ -68,23 +71,56 @@ export const Auth = () => {
         setFirstModal(false);
         setSecondModal(true);
     };
+
+    const { register, handleSubmit, formState } = useForm<IAuthData>();
+    const nameError = formState.errors["userName"]?.message;
+    const passwordError = formState.errors["password"]?.message;
+
     const dispatch = useDispatch<AppDispatch>();
-    const Login = (e: SyntheticEvent) => {
-        e.preventDefault();
-        dispatch(signIn({ userName: "test", password: "test123" }));
+    const navigate = useNavigate();
+    const user = useSelector((state: RootState) => state.user);
+    const Login: SubmitHandler<IAuthData> = (data) => {
+        dispatch(signIn({ userName: data.userName, password: data.password })).then(() => {
+            console.log("THEN -> isAuth =", user.isAuth);
+            if (user.user.roles.includes("Trainer")) {
+                navigate(URLS.PROFILE);
+            } else if (user.user.roles.includes("Student")) {
+                navigate(URLS.STUDENT_PROFILE);
+            }
+        });
     };
+
     return (
         <>
             <div className={styles.container}>
-                <div className="mb-[30px]">
-                    <InlineLogo />
-                </div>
-                <form className={styles.form}>
-                    <Input type="text" label="Логин" />
-                    <Input type="password" label="Пароль" />
-                    <Button type="submit" onClick={Login}>
-                        Войти
-                    </Button>
+                <div className="mb-[30px]">{InlineLogo}</div>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit(Login)(e);
+                    }}
+                    className={styles.form}
+                >
+                    <Input
+                        {...register("userName", { required: "Это поле является обязательным!" })}
+                        type="text"
+                        label="Логин"
+                        isError={!!nameError}
+                        helperText={nameError}
+                    />
+                    <Input
+                        {...register("password", { required: "Это поле является обязательным!" })}
+                        type="password"
+                        label="Пароль"
+                        isError={!!passwordError}
+                        helperText={passwordError}
+                    />
+                    {serverError && (
+                        <Typography variant="text_14_m" className="text-error-red">
+                            {serverError}
+                        </Typography>
+                    )}
+                    <Button type="submit">Войти</Button>
                 </form>
                 <Typography variant="text_12_r" tag="span">
                     Забыли пароль?

@@ -1,39 +1,34 @@
-import { PageTitle } from "@/shared/ui";
+import { Loader, PageTitle } from "@/shared/ui";
 import * as styles from "./groups.module.css";
 import { GroupsWidget } from "@/widgets";
-
-interface IStudent {
-    name: string;
-    kyu: number;
-}
-
-export interface IGroup {
-    name: string;
-    price: number;
-    students: IStudent[];
-}
+import { getGroups } from "@/entities/api/services/";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store";
+import { useEffect, useState } from "react";
 
 export const Groups = () => {
     const title = "Группы";
+    const groups = useSelector((state: RootState) => state.groups.groups);
+    const [loading, setLoading] = useState<boolean>(false);
+    const dispatch = useDispatch<AppDispatch>();
 
-    const groupList = [
-        {
-            name: "Группа 1",
-            price: 1000,
-            students: [{ name: "Иван Иванов", kyu: 6 }]
-        },
-        {
-            name: "Группа 2",
-            price: 2000,
-            students: [{ name: "Петр Петров", kyu: 7 }]
-        }
-    ];
+    const userName = useSelector((state: RootState) => state.user.user.userName);
+
+    useEffect(() => {
+        const fetchGroups = async () => {
+            setLoading(true);
+            dispatch(getGroups(userName));
+            setLoading(false);
+        };
+
+        fetchGroups();
+    }, [dispatch]);
 
     return (
         <div>
             <PageTitle title={title} />
             <div className={styles.main_container}>
-                <GroupsWidget groupList={groupList} />
+                {loading ? <Loader /> : <GroupsWidget groupList={groups} />}
             </div>
         </div>
     );

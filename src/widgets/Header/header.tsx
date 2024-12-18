@@ -34,8 +34,8 @@ export const Header = () => {
         }
     ];
 
-    const currentList = user.roles.includes("trainer") ? navigateTrainerList : navigateStudentList;
-    const currentProfileLink = user.roles.includes("trainer") ? URLS.PROFILE : URLS.STUDENT_PROFILE;
+    const currentList = user.roles.includes("Trainer") ? navigateTrainerList : navigateStudentList;
+    const currentProfileLink = user.roles.includes("Trainer") ? URLS.PROFILE : URLS.STUDENT_PROFILE;
 
     const logout = () => {
         dispatch(clearUser());
