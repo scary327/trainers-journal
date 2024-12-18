@@ -1,6 +1,9 @@
 import { Button, Input, Modal, Typography } from "@/shared/ui";
 import * as styles from "./auth.module.css";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
+import { AppDispatch } from "@/app/store";
+import { useDispatch } from "react-redux";
+import { signIn } from "@/entities/user/model/user.reducer";
 
 const InlineLogo = () => (
     <svg
@@ -53,6 +56,9 @@ export const Auth = () => {
     const [firstModal, setFirstModal] = useState<boolean>(false);
     const [secondModal, setSecondModal] = useState<boolean>(false);
 
+    // const [userName, setUserName] = useState("");
+    // const [password, setPassword] = useState("");
+
     const handleFirstModal = () => {
         setSecondModal(false);
         setFirstModal(true);
@@ -62,7 +68,11 @@ export const Auth = () => {
         setFirstModal(false);
         setSecondModal(true);
     };
-
+    const dispatch = useDispatch<AppDispatch>();
+    const Login = (e: SyntheticEvent) => {
+        e.preventDefault();
+        dispatch(signIn({ userName: "test", password: "test123" }));
+    };
     return (
         <>
             <div className={styles.container}>
@@ -72,7 +82,9 @@ export const Auth = () => {
                 <form className={styles.form}>
                     <Input type="text" label="Логин" />
                     <Input type="password" label="Пароль" />
-                    <Button type="submit">Войти</Button>
+                    <Button type="submit" onClick={Login}>
+                        Войти
+                    </Button>
                 </form>
                 <Typography variant="text_12_r" tag="span">
                     Забыли пароль?

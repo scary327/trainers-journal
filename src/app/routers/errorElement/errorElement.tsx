@@ -1,12 +1,9 @@
-import { useNavigate, useRouteError } from "react-router-dom";
-import { URLS } from "@/app/routers/app.urls";
+import { useRouteError } from "react-router-dom";
 import { Button } from "@/shared/ui";
 
 export const ErrorElement = () => {
     const err = useRouteError();
     console.log(err);
-
-    const navigate = useNavigate();
 
     return (
         <div>

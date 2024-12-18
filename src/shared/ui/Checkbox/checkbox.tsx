@@ -2,7 +2,6 @@ import { classnames } from "@/shared/lib";
 import * as styles from "./checkbox.module.css";
 import CheckSVG from "@/shared/icons/checkbox.svg";
 import CheckMinusSVG from "@/shared/icons/checkboxMinus.svg";
-import { Typography } from "../Typography/typography";
 
 interface ICheckboxProps {
     check: boolean;

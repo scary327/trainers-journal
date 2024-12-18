@@ -1,10 +1,9 @@
-import { Button, Checkbox, Input, Typography } from "@/shared/ui";
+import { Button, Checkbox, Typography } from "@/shared/ui";
 import * as styles from "./filterMenu.module.css";
 import { DateInput } from "@/shared/ui/Fields";
 import { memo, useState } from "react";
 import { DateRange } from "@/shared/types";
 import { classList, genderList, Kyu } from "@/shared/constants";
-import { Radio } from "@/shared/ui/Radio/radio";
 import { classnames } from "@/shared/lib";
 
 export const FilterMenu = memo(() => {

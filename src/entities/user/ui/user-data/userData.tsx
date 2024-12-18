@@ -31,13 +31,13 @@ export const UserData = () => {
                 <Typography variant="text_14_r" className="text-gray-text">
                     Логин
                 </Typography>
-                <Typography variant="text_16_m">{user.login}</Typography>
+                <Typography variant="text_16_m">{user.userName}</Typography>
             </div>
             <div>
                 <Typography variant="text_14_r" className="text-gray-text">
                     Пароль
                 </Typography>
-                <Typography variant="text_16_m">{"*".repeat(user.password.length)}</Typography>
+                <Typography variant="text_16_m">{"*".repeat(5)}</Typography>
             </div>
         </div>
     ) : (

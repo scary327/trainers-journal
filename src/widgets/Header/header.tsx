@@ -9,9 +9,9 @@ import { clearUser } from "@/entities/user/model/user.reducer";
 
 export const Header = () => {
     const user = useSelector((state: RootState) => state.user.user);
-    const userParsedName = formatUserName(user.fullName);
+    const userParsedName = formatUserName(user.info);
     const dispatch = useDispatch();
-
+    const isAuth = useSelector((state: RootState) => state.user.isAuth);
     const navigateList = [
         {
             name: "Пользователи",
@@ -49,7 +49,7 @@ export const Header = () => {
                 </ul>
             </div>
             <div className={styles.header_user}>
-                {user.fullName ? (
+                {isAuth ? (
                     <>
                         <Link
                             className={classnames(styles.header_link, "hover-underline-animation")}

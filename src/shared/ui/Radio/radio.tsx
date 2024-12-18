@@ -1,4 +1,3 @@
-import { classnames } from "@/shared/lib";
 import * as styles from "./radio.module.css";
 
 interface RadioProps {
