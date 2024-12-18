@@ -1,15 +1,23 @@
 import { PageTitle } from "@/shared/ui";
 import * as styles from "./student-profile.module.css";
-import { UserInfo } from "@/entities";
+import { UserContacts, UserData, UserInfo } from "@/entities";
+import { PaymentHistory } from "@/features";
 
 export const StudentProfile = () => {
     const title: string = "Личный кабинет";
 
     return (
-        <div className={styles.container}>
+        <div>
             <PageTitle title={title} />
             <div className={styles.main_container}>
-                <UserInfo />
+                <div className={styles.center_container}>
+                    <UserInfo />
+                    <div className="flex justify-between gap-x-[30px] items-center w-full">
+                        <UserData />
+                        <UserContacts />
+                    </div>
+                </div>
+                <PaymentHistory />
             </div>
         </div>
     );

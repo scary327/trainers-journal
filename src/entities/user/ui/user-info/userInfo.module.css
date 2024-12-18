@@ -1,5 +1,5 @@
 .container {
-    @apply bg-white px-[30px] py-[20px] w-full flex justify-between items-center rounded-[20px];
+    @apply relative bg-white px-[30px] py-[20px] w-full flex justify-between items-center rounded-[20px];
 }
 
 .main_container {
@@ -30,4 +30,10 @@
     @apply self-end text-[16px];
 
     padding: 0;
+}
+
+.group {
+    @apply absolute top-0 right-0 bg-blue-light p-[10px];
+    border: 3px solid #fff;
+    border-radius: 0 10px 0 10px;
 }

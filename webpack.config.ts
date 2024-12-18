@@ -1,6 +1,6 @@
 import webpack from "webpack";
 import { buildWebpack } from "./config/build/buildWebpack";
-import { BuildMode, BuildPaths, BuildPlatform } from "./config/build/types/types";
+import { BuildMode, BuildPaths, BuildPlatform, BuildURL } from "./config/build/types/types";
 import path from "path";
 
 import { register as tsNodeRegister } from "ts-node";
@@ -19,6 +19,7 @@ interface EnvVariables {
     analyzer?: boolean;
     port?: number;
     platform?: BuildPlatform;
+    url?: BuildURL;
 }
 
 export default (env: EnvVariables) => {
@@ -34,7 +35,8 @@ export default (env: EnvVariables) => {
         mode: env.mode ?? (process.env.MODE as BuildMode) ?? "development",
         paths,
         analyzer: env.analyzer ?? process.env.ANALYZER === "true",
-        platform: env.platform ?? (process.env.PLATFORM as BuildPlatform) ?? "desktop"
+        platform: env.platform ?? (process.env.PLATFORM as BuildPlatform) ?? "desktop",
+        url: env.url ?? (process.env.CURRENT_URL as BuildURL) ?? "undefined"
     });
     return config;
 };
