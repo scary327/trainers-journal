@@ -1,0 +1,7 @@
+.container {
+    @apply flex flex-col items-start gap-y-[30px] p-[20px];
+}
+
+.form {
+    @apply flex flex-col items-center gap-y-[20px];
+}

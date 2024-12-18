@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IUserInfo } from "./user.types";
-import { getUserInfo, signIn } from "@/entities/api/services";
+import { getUserInfo, putUserInfo, signIn } from "@/entities/api/services";
 
 interface UserState {
     isAuth: boolean;
@@ -79,18 +79,23 @@ const userSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getUserInfo.fulfilled, (state, action) => {
-                //setInfo(action.payload);
-                // state.user.info.email = action.payload.email;
-                // state.user.info.kyu = action.payload.kyu;
-                // state.user.info.phoneNumber = action.payload.phoneNumber;
-                // state.user.info.firstName = action.payload.firstName;я
-                // state.user.info.lastName = action.payload.lastName;
-                // state.user.info.middleName = action.payload.middleName;
                 state.user.info = action.payload;
                 state.loading = false;
                 localStorage.setItem("user", JSON.stringify(state.user));
             })
             .addCase(getUserInfo.rejected, (state, action) => {
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            //putInfo putUserInfo
+            .addCase(putUserInfo.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(putUserInfo.fulfilled, (state, action) => {
+                state.user.info = action.payload;
+                state.loading = false;
+                localStorage.setItem("user", JSON.stringify(state.user));
+            })
+            .addCase(putUserInfo.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             });
     }

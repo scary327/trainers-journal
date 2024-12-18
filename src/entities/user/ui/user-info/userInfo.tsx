@@ -1,13 +1,14 @@
-import { Button, Typography } from "@/shared/ui";
+import { Button, SlideOutMenu, Typography } from "@/shared/ui";
 import * as styles from "./userInfo.module.css";
 
 import AvatarSVG from "@/shared/icons/avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { classnames } from "@/shared/lib";
 import { setLoading } from "../../model/user.reducer";
 import { IUser } from "../../model/user.types";
+import { EditUserInfoContent } from "./editUserInfoContent/editUserInfoContent";
 
 export const UserInfo = () => {
     const user: IUser = useSelector((state: RootState) => state.user.user);
@@ -24,6 +25,8 @@ export const UserInfo = () => {
 
         fetchUser();
     }, [dispatch]);
+
+    const [openSlideOut, setOpenSlideOut] = useState<boolean>(false);
 
     const userFullName: string[] = [user.info.lastName, user.info.firstName, user.info.middleName];
     const userFullNameItems: string[] = ["Фамилия", "Имя", "Отчество"];
@@ -72,15 +75,24 @@ export const UserInfo = () => {
     );
 
     return (
-        <div className={styles.container}>
-            <div className={styles.main_container}>
-                {avatar}
-                {userList}
+        <>
+            <div className={styles.container}>
+                <div className={styles.main_container}>
+                    {avatar}
+                    {userList}
+                </div>
+                <Button
+                    variant="empty"
+                    onClick={() => setOpenSlideOut(true)}
+                    className={styles.button}
+                >
+                    Изменить
+                </Button>
+                {group}
             </div>
-            <Button variant="empty" className={styles.button}>
-                Изменить
-            </Button>
-            {group}
-        </div>
+            <SlideOutMenu isOpen={openSlideOut} onClose={() => setOpenSlideOut(false)}>
+                <EditUserInfoContent />
+            </SlideOutMenu>
+        </>
     );
 };
