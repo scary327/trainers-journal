@@ -70,7 +70,7 @@ export const CalendarBody = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={classnames(styles.container, "scrollbar-webkit")}>
             <BodyHeader formattedWeek={formattedWeek} />
             <div className={styles.table_content}>
                 {classTime.map((time, index) => (

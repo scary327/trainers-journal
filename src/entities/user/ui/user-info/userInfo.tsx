@@ -1,4 +1,4 @@
-import { Button } from "@/shared/ui";
+import { Button, Typography } from "@/shared/ui";
 import * as styles from "./userInfo.module.css";
 
 //import AvatarSVG from "@/shared/icons/avatar.svg";
@@ -33,6 +33,12 @@ export const UserInfo = () => {
         user.info.email
     ];
     const userAddDataItems: string[] = ["КЮ", "Телефон", "Почта"];
+
+    const group: JSX.Element | null = user.roles.includes("student") ? (
+        <div className={styles.group}>
+            <Typography variant="text_14_m">Группа РИ-1</Typography>
+        </div>
+    ) : null;
 
     const avatar: JSX.Element = (
         // !loading ? (
@@ -79,6 +85,7 @@ export const UserInfo = () => {
             <Button variant="empty" className={styles.button}>
                 Изменить
             </Button>
+            {group}
         </div>
     );
 };

@@ -1,13 +1,15 @@
 import { useRouteError } from "react-router-dom";
-import { Button } from "@/shared/ui";
+import { Button, Typography } from "@/shared/ui";
 
 export const ErrorElement = () => {
     const err = useRouteError();
     console.log(err);
 
     return (
-        <div>
-            <h1>Произошла непредвиденная ошибка</h1>
+        <div className="flex flex-col gap-y-[20px] items-center">
+            <Typography variant="text_24_b" tag="h1">
+                Такой страницы не существует
+            </Typography>
             <Button variant="empty" onClick={() => window.history.back()}>
                 Вернуться
             </Button>

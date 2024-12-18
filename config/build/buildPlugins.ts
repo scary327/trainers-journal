@@ -23,7 +23,8 @@ export function buildPlugins(options: BuildOptions): Configuration["plugins"] {
             title: "Журнал Тренера"
         }),
         new DefinePlugin({
-            __PLATFORM__: JSON.stringify(options.platform)
+            __PLATFORM__: JSON.stringify(options.platform),
+            __URL__: options.url
         })
     ];
 
