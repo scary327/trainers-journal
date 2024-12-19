@@ -3,6 +3,20 @@ import * as styles from "./workout.module.css";
 import { classnames } from "@/shared/lib";
 import { IClass } from "@/shared/types";
 
+export const getClasses = (start: string, end: string) => {
+    const now = new Date();
+    const startTime = new Date(start);
+    const endTime = new Date(end);
+
+    if (now > endTime) {
+        return styles.past;
+    }
+    if (now >= startTime && now <= endTime) {
+        return styles.current;
+    }
+    return styles.upcoming;
+};
+
 interface IWorkoutProps {
     workout: IClass;
 }
@@ -23,20 +37,6 @@ export const Workout = ({ workout }: IWorkoutProps): JSX.Element => {
     };
     const startTime = formatTime(workout.start);
     const endTime = formatTime(workout.end);
-
-    const getClasses = (start: string, end: string) => {
-        const now = new Date();
-        const startTime = new Date(start);
-        const endTime = new Date(end);
-
-        if (now > endTime) {
-            return styles.past;
-        }
-        if (now >= startTime && now <= endTime) {
-            return styles.current;
-        }
-        return styles.upcoming;
-    };
 
     const workoutClass = getClasses(workout.start, workout.end);
 

@@ -27,7 +27,9 @@ export interface IClass {
 }
 
 export interface IStudentHeader {
-    fullName: string;
+    firstName: string;
+    lastName: string;
+    middleName: string;
     group: string;
     balance: string;
     kyu: number;

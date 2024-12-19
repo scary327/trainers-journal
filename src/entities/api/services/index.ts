@@ -6,3 +6,5 @@ export * from "./postGroup";
 export * from "./getUserInfo";
 export * from "./putUserInfo";
 export * from "./putGroup";
+export * from "./getStudents";
+export * from "./postStudents";

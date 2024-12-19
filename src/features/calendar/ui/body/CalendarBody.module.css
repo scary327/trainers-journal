@@ -34,3 +34,16 @@
         border-left: 1px solid #c2c2c2;
     }
 }
+
+.ongoing {
+    @apply w-full h-full bg-blue-light;
+}
+
+.ongoing.past {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+.ongoing.current {
+    @apply bg-blue-light;
+}

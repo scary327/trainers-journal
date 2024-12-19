@@ -1,10 +1,10 @@
-import { IStudentHeader } from "@/shared/types";
 import { Typography } from "@/shared/ui";
+import { IStudent } from "@/widgets";
 
 // import * as styles from "./dropdownHeader.module.css";
 
 interface DropdownHeaderProps {
-    student: IStudentHeader;
+    student: IStudent;
     onPayment: () => void;
     onEdit: () => void;
 }
@@ -13,16 +13,16 @@ export const DropdownHeader = ({ student, onPayment, onEdit }: DropdownHeaderPro
     return (
         <>
             <Typography tag="span" variant="text_14_m">
-                {student.fullName}
+                {student.studentInfoItemDto.lastName} {student.studentInfoItemDto.firstName[0]}.
             </Typography>
             <Typography tag="span" variant="text_14_m">
-                {student.group}
+                {student.groupId}
             </Typography>
             <Typography tag="span" variant="text_14_m">
-                {student.balance} ₽
+                баланс не известен
             </Typography>
             <Typography tag="span" variant="text_14_m">
-                {student.kyu}
+                {student.studentInfoItemDto.kyu}
             </Typography>
             <button
                 onClick={(e) => {

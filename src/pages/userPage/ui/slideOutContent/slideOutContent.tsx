@@ -4,38 +4,68 @@ import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import * as styles from "./slideOutContent.module.css";
-import { IStudents } from "@/widgets";
+import { IContact, IStudent } from "@/widgets";
+import { AppDispatch, RootState } from "@/app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { postStudent } from "@/entities/api/services";
 
 interface IRegisterForm {
-    surname: string;
-    name: string;
-    patronymic: string;
+    lastName: string;
+    firstName: string;
+    middleName: string;
     phoneNumber: string;
     email: string;
-    kyu: string;
-    gender: string;
+    kyu: number;
+    gender: number;
     password: string;
+    group: string;
 }
 
 interface IEditMenuProps {
-    student: IStudents | null;
+    student: IStudent | null;
 }
 
 export const SlideOutContent = ({ student }: IEditMenuProps) => {
     const slideOutTitle: string = student
         ? "Редактирование пользователя"
         : "Регистрация пользователя";
-
+    const buttonTitle: string = student ? "Сохранить" : "Зарегистрировать";
+    const dispatch = useDispatch<AppDispatch>();
     const [kyuValue, setKyuValue] = useState<string>("");
     const [genderValue, setGenderValue] = useState<string>("");
+    const [groupValue, setGroupValue] = useState<string>("");
+
+    //const [optionsValue, setOptionsValue] = useState<{ value: string; label: string }>("");
+
+    // [
+    //     {
+    //       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //       "name": "string",
+    //       "costPractice": 0,
+    //       "numberStudents": 0
+    //     }
+    //   ]
+
+    const groupsOptions = useSelector((state: RootState) =>
+        state.groups.groups.map((group) => ({
+            value: group.id,
+            label: group.name
+        }))
+    );
+
     const inputItems = {
-        surname: "Фамилия",
-        name: "Имя",
-        patronymic: "Отчество",
+        lastName: "Фамилия",
+        firstName: "Имя",
+        middleName: "Отчество",
         phoneNumber: "Телефон",
         email: "Почта"
     };
     const selectItems = [
+        {
+            title: "Группа",
+            options: groupsOptions,
+            value: groupValue
+        },
         {
             title: "КЮ",
             options: [
@@ -45,15 +75,15 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                 { value: "3", label: "3" },
                 { value: "2", label: "2" },
                 { value: "1", label: "1" },
-                { value: "No", label: "Нет" }
+                { value: "0", label: "0" }
             ],
             value: kyuValue
         },
         {
             title: "Пол",
             options: [
-                { value: "male", label: "Мужской" },
-                { value: "female", label: "Женский" }
+                { value: "1", label: "Мужской" },
+                { value: "0", label: "Женский" }
             ],
             value: genderValue
         }
@@ -63,19 +93,72 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
 
     useEffect(() => {
         if (student) {
-            // Если student не null, устанавливаем значения по умолчани
-            reset({
-                surname: "pepega",
-                name: "pepega"
-            });
+            // Если student существует, обновляем значения формы
+            setKyuValue(student.studentInfoItemDto.kyu.toString());
+            setGenderValue(student.studentInfoItemDto.gender.toString());
         } else {
-            reset(); // Сброс значений формы, если student равен null
+            // Если student отсутствует, сбрасываем форму
+            setKyuValue("");
+            setGenderValue("");
         }
     }, [student, reset]);
 
+    const handleCreate = (data: IRegisterForm) => {
+        dispatch(
+            postStudent({
+                groupId: data.group,
+                studentInfoItemDto: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    middleName: data.middleName,
+                    dateOfBirth: "",
+                    kyu: data.kyu,
+                    class: 5,
+                    address: "",
+                    phoneNumber: data.phoneNumber,
+                    email: data.email,
+                    gender: data.gender
+                },
+                contacts: [] as IContact[]
+            } as IStudent)
+        );
+    };
+
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
+        if (!student) handleCreate(data);
         console.log(data);
         reset();
+    };
+
+    // export interface IStudent {
+    //     groupId: string;
+    //     studentInfoItemDto: {
+    //         firstName: string;
+    //         lastName: string;
+    //         middleName: string;
+    //         dateOfBirth: string; //нету
+    //         kyu: number;
+    //         class: number; //нету
+    //         address: string;
+    //         phoneNumber: string;
+    //         email: string;
+    //         gender: number;
+
+    //     };
+    //     contacts?: IContact[];
+    // }
+
+    const switchTitle = (title: string) => {
+        switch (title) {
+            case "КЮ":
+                return "kyu";
+            case "Пол":
+                return "gender";
+            case "Группа":
+                return "group";
+            default:
+                return "kyu";
+        }
     };
 
     return (
@@ -92,6 +175,7 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                         type="text"
                         label={inputItems[item]}
                         {...register(item)}
+                        defaultValue={student?.studentInfoItemDto[item] || ""}
                     />
                 ))}
                 {selectItems.map((item) => (
@@ -100,7 +184,7 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                         label={item.title}
                         options={item.options}
                         value={item.value}
-                        {...register(item.title === "КЮ" ? "kyu" : "gender")}
+                        {...register(switchTitle(item.title))}
                         onChange={function (value: string): void {
                             switch (item.title) {
                                 case "КЮ":
@@ -109,18 +193,15 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                                 case "Пол":
                                     setGenderValue(value);
                                     break;
+                                case "Группа":
+                                    setGroupValue(value);
+                                    break;
                             }
                         }}
                     />
                 ))}
-                <Input
-                    type="password"
-                    className="w-full"
-                    label="Пароль"
-                    {...register("password")}
-                />
                 <Button variant="primary" className="w-[80%]" type="submit">
-                    Зарегистрировать
+                    {buttonTitle}
                 </Button>
             </form>
         </>

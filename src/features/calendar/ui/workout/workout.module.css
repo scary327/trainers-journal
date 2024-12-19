@@ -1,7 +1,5 @@
 .container {
-    @apply flex flex-col gap-y-[5px] items-start w-full bg-blue-light h-[95%];
-
-    border-radius: 0 0 10px 10px;
+    @apply flex flex-col gap-y-[5px] items-start w-full bg-blue-light h-full;
 }
 
 .workout_header {

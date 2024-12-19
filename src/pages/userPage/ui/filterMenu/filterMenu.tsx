@@ -66,7 +66,7 @@ export const FilterMenu = memo(() => {
                     <Typography variant="text_14_b">КЮ</Typography>
                     <div className={classnames(styles.list, "scrollbar-webkit")}>
                         {Kyu.map((item) => (
-                            <div className={styles.check_row}>
+                            <div key={item.id} className={styles.check_row}>
                                 <Checkbox
                                     check={selectedKyu.includes(item.id)}
                                     setCheck={() => toggleSelection("kyu", item.id)}

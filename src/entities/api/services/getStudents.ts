@@ -1,8 +1,24 @@
-// export const getUserInfoApi = async (data: IGetUserInfo): Promise<AxiosResponse<IUserInfo>> => {
-//     return await api.get(`/trainer/info?userName=${data.userName}`);
-// };
+import { AxiosResponse } from "axios";
+import { api } from "../api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { IStudent } from "@/widgets";
 
-// export const getUserInfo = createAsyncThunk("auth/getinfo", async (data: IGetUserInfo) => {
-//     const response = await getUserInfoApi(data);
-//     return response.data;
-// });
+// interface IHeaderStudent
+//     {
+//       userName: "string",
+//       firstName: "string",
+//       lastName: "string",
+//       middleName: "string",
+//       groupName: "string",
+//       walletBalance: 0,
+//       kyu: 0
+//     }
+
+export const getStudentsApi = async (userName: string): Promise<AxiosResponse<IStudent[]>> => {
+    return await api.get(`/students?trainerUserName=${userName}`);
+};
+
+export const getStudents = createAsyncThunk("students/get", async (userName: string) => {
+    const response = await getStudentsApi(userName);
+    return response.data;
+});

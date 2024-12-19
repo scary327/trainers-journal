@@ -4,47 +4,87 @@ import { Button, Modal, Search, Typography } from "@/shared/ui";
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useEffect, useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
-import { IStudentHeader, IStudentDetails } from "@/shared/types";
 
-export interface IStudents {
-    studentInfo: IStudentHeader;
-    studentDetails: IStudentDetails;
+export interface IContact {
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    phoneNumber: string;
+    email: string;
+    relation: string;
 }
+
+export interface IStudent {
+    groupId: string;
+    studentInfoItemDto: {
+        firstName: string;
+        lastName: string;
+        middleName: string;
+        dateOfBirth: string;
+        kyu: number;
+        class: number;
+        address: string;
+        phoneNumber: string;
+        email: string;
+        gender: number;
+        walletBalance: number;
+    };
+    contacts?: IContact[];
+}
+// "userName": "string",
+// "firstName": "string",
+// "lastName": "string",
+// "middleName": "string",
+// "groupName": "string",
+// "walletBalance": 0,
+// "kyu": 0
 interface IProps {
     openFilter?: () => void;
-    openEdit?: (student: IStudents | null) => void;
+    openEdit?: (student: IStudent | null) => void;
 }
 
 export const UsersTable = ({ openFilter, openEdit }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [students, setStudents] = useState<IStudents[]>([]);
+    const students: IStudent[] = [
+        {
+            groupId: "first group",
+            studentInfoItemDto: {
+                firstName: "Алексей",
+                lastName: "Смирнов",
+                middleName: "Александрович",
+                kyu: 6,
+                class: 1,
+                address: "ул. Ленина, д. 20, кв. 15",
+                gender: 1,
+                phoneNumber: "89006007780",
+                email: "apapapa@gmail.com",
+                dateOfBirth: "2024-12-19",
+                walletBalance: 0
+            },
+            contacts: [
+                {
+                    firstName: "Алексей",
+                    lastName: "Смирнов",
+                    middleName: "Александрович",
+                    phoneNumber: "89006007781",
+                    email: "apapapa@gmail.com",
+                    relation: "Папа"
+                }
+            ]
+        }
+    ];
 
-    const [payment, setPayment] = useState<IStudents | boolean>(false);
-    //const [editStudent, setEditStudent] = useState<boolean>(false);
+    const [payment, setPayment] = useState<IStudent | boolean>(false);
 
-    const studentInfo: IStudentHeader = {
-        fullName: "Смирнов Алексей Александрович",
-        group: "Разработка",
-        balance: "300.56",
-        kyu: 6
-    };
-
-    const studentDetails: IStudentDetails = {
-        gender: "Мужской",
-        birthDate: "26.10.2008 (16 лет)",
-        school: "МАОУ СОШ №44",
-        address: "ул. Ленина, д. 20, кв. 15",
-        mother: "Смирнова Мария Александровна +79006007780",
-        father: "Смирнов Алексей Александрович +79006007780"
-    };
+    const [contacts, setContacts] = useState<boolean>(false);
+    const [currentStudent, setCurrentStudent] = useState<IStudent | null>(null);
 
     useEffect(() => {
         const fetchStudents = async () => {
             setLoading(true);
             setTimeout(() => {
-                setStudents([{ studentInfo, studentDetails }]);
                 setLoading(false);
             }, 1000);
         };
@@ -69,10 +109,19 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
                             openEdit?.(student);
                         }}
                         key={index}
-                        student={student.studentInfo}
+                        student={student}
                     />
                 }
-                content={<DropdownContent key={index} studentDetails={student.studentDetails} />}
+                content={
+                    <DropdownContent
+                        openContacts={() => {
+                            setCurrentStudent(student);
+                            setContacts(true);
+                        }}
+                        key={index}
+                        studentDetails={student}
+                    />
+                }
             />
         ))
     );
@@ -114,6 +163,48 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
             </div>
             <Modal visible={!!payment} onClose={() => setPayment(false)}>
                 <PaymentHistory />
+            </Modal>
+            <Modal visible={contacts} onClose={() => setContacts(false)}>
+                {currentStudent && (
+                    <div className="flex flex-col gap-y-[20px]">
+                        <Typography variant="text_18_b" className="text-blue-dark mr-6">
+                            Контакты ученика {currentStudent.studentInfoItemDto.lastName}{" "}
+                            {currentStudent.studentInfoItemDto.firstName}
+                        </Typography>
+                        {currentStudent?.contacts?.map((contact) => (
+                            <div
+                                key={contact.email}
+                                className="flex flex-col items-start gap-y-[10px]"
+                            >
+                                <Typography variant="text_16_b" className="text-gray-text">
+                                    {contact.relation}
+                                </Typography>
+                                <div className="flex gap-x-[10px]">
+                                    <Typography variant="text_14_b">{contact.lastName}</Typography>
+                                    <Typography variant="text_14_b">{contact.firstName}</Typography>
+                                    <Typography variant="text_14_b">
+                                        {contact.middleName}
+                                    </Typography>
+                                </div>
+                                <div className="flex gap-x-[10px]">
+                                    <Typography variant="text_12_b" className="text-gray-text">
+                                        Номер телефона
+                                    </Typography>
+                                    <Typography variant="text_14_b">
+                                        {contact.phoneNumber}
+                                    </Typography>
+                                </div>
+                                <div className="flex gap-x-[10px]">
+                                    <Typography variant="text_12_b" className="text-gray-text">
+                                        Почта
+                                    </Typography>
+                                    <Typography variant="text_14_b">{contact.email}</Typography>
+                                </div>
+                                <div className="w-full h-[2px] bg-gray-text" />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </Modal>
         </>
     );

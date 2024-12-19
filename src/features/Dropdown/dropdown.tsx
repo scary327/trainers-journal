@@ -17,8 +17,11 @@ export const Dropdown = ({ header, content }: DropdownProps) => {
 
     return (
         <>
-            <div onClick={() => toggleDropdown()}>
-                <div className={classnames(styles.dropdown_header, { [styles.open]: isOpen })}>
+            <div>
+                <div
+                    onClick={() => toggleDropdown()}
+                    className={classnames(styles.dropdown_header, { [styles.open]: isOpen })}
+                >
                     {header}
                     <button className={styles.dropdown_button}>
                         {isOpen ? (

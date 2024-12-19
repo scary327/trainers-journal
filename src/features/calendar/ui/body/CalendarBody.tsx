@@ -50,8 +50,8 @@ export const CalendarBody = () => {
 
     const classList: IClass[] = [
         {
-            start: "2024-12-09T11:30:00",
-            end: "2024-12-09T12:30:00",
+            start: "2024-12-19T17:00:00",
+            end: "2024-12-19T18:30:00",
             group: "Йога",
             teacher: "Иван Иванов",
             students: []
@@ -62,11 +62,31 @@ export const CalendarBody = () => {
     const getClassForCell = (day: Date, time: IClassTime) => {
         const filteredClasses = classList.filter((cls) => {
             const startDate = new Date(cls.start);
+            const endDate = new Date(cls.end);
+
             const isSameDay = startDate.toDateString() === day.toDateString();
-            const isSameTime = startDate.toTimeString().slice(0, 5) === time.start;
-            return isSameDay && isSameTime;
+            const isWithinTimeRange =
+                startDate.toTimeString().slice(0, 5) <= time.start &&
+                endDate.toTimeString().slice(0, 5) >= time.start; // Интервал входит в диапазон времени тренировки
+
+            return isSameDay && isWithinTimeRange;
         });
+
         return filteredClasses;
+    };
+
+    const getClasses = (start: string, end: string) => {
+        const now = new Date();
+        const startTime = new Date(start);
+        const endTime = new Date(end);
+
+        if (now > endTime) {
+            return styles.past;
+        }
+        if (now >= startTime && now <= endTime) {
+            return styles.current;
+        }
+        return styles.upcoming;
     };
 
     return (
@@ -89,9 +109,25 @@ export const CalendarBody = () => {
                                     key={dayIndex}
                                 >
                                     {classesForCell.length > 0 ? (
-                                        classesForCell.map((cls, clsIndex) => (
-                                            <Workout workout={cls} key={clsIndex} />
-                                        ))
+                                        classesForCell.map((cls, clsIndex) =>
+                                            time.start ===
+                                            new Date(cls.start).toTimeString().slice(0, 5) ? (
+                                                <Workout workout={cls} key={clsIndex} />
+                                            ) : (
+                                                <div
+                                                    key={clsIndex}
+                                                    className={classnames(
+                                                        styles.ongoing,
+                                                        getClasses(cls.start, cls.end)
+                                                    )}
+                                                >
+                                                    <Typography variant="text_14_m">
+                                                        Идет тренировка
+                                                    </Typography>
+                                                    <span className={styles.arrow_up}>↑</span>
+                                                </div>
+                                            )
+                                        )
                                     ) : (
                                         <Typography variant="text_12_r">--</Typography>
                                     )}

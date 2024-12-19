@@ -11,15 +11,10 @@ export const Groups = () => {
     const groups = useSelector((state: RootState) => state.groups.groups);
     const loading = useSelector((state: RootState) => state.groups.isLoading);
     const dispatch = useDispatch<AppDispatch>();
-
     const userName = useSelector((state: RootState) => state.user.user.userName);
 
     useEffect(() => {
-        const fetchGroups = async () => {
-            dispatch(getGroups(userName));
-        };
-
-        fetchGroups();
+        dispatch(getGroups(userName));
     }, [dispatch]);
 
     return (
