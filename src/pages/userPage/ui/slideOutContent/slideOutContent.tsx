@@ -1,5 +1,5 @@
 import { classnames } from "@/shared/lib";
-import { Typography, Select, Button, Input } from "@/shared/ui";
+import { Typography, Select, Button, Input, Modal } from "@/shared/ui";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -7,7 +7,7 @@ import * as styles from "./slideOutContent.module.css";
 import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { postStudent } from "@/entities/api/services";
+import { getStudents, postStudent } from "@/entities/api/services";
 
 interface IRegisterForm {
     lastName: string;
@@ -19,6 +19,8 @@ interface IRegisterForm {
     gender: number;
     password: string;
     group: string;
+    address: string;
+    class: number;
 }
 
 interface IEditMenuProps {
@@ -57,6 +59,8 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
         lastName: "Фамилия",
         firstName: "Имя",
         middleName: "Отчество",
+        address: "Адресс",
+        class: "Класс",
         phoneNumber: "Телефон",
         email: "Почта"
     };
@@ -103,6 +107,10 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
         }
     }, [student, reset]);
 
+    const userName = useSelector((state: RootState) => state.user.user.userName);
+    const authData = useSelector((state: RootState) => state.students.authData);
+    const [authModal, setAuthModal] = useState<boolean>(false);
+
     const handleCreate = (data: IRegisterForm) => {
         dispatch(
             postStudent({
@@ -113,20 +121,22 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                     middleName: data.middleName,
                     dateOfBirth: "2024-05-19",
                     kyu: Number(kyuValue),
-                    class: 5,
-                    address: "",
+                    class: data.class,
+                    address: data.address,
                     phoneNumber: data.phoneNumber,
                     email: data.email,
                     gender: Number(genderValue)
                 },
                 contacts: [] as IContact[]
             } as IStudent)
-        );
+        ).then(() => {
+            dispatch(getStudents(userName));
+            setAuthModal(true);
+        });
     };
 
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         if (!student) handleCreate(data);
-        console.log(data);
         reset();
     };
 
@@ -154,7 +164,8 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                     <Input
                         className="w-full"
                         key={item}
-                        type="text"
+                        type={item === "class" ? "number" : "text"}
+                        min={1}
                         label={inputItems[item]}
                         {...register(item)}
                         defaultValue={student?.studentInfoItemDto[item] || ""}
@@ -186,6 +197,29 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                     {buttonTitle}
                 </Button>
             </form>
+            <Modal visible={authModal} onClose={() => setAuthModal(false)}>
+                <div>
+                    <Typography variant="text_18_b" className="text-blue-dark">
+                        Данные для входа
+                    </Typography>
+                    <div>
+                        <Typography variant="text_14_m" className="text-gray-text">
+                            Логин
+                        </Typography>
+                        <Typography variant="text_14_b" className="text-black">
+                            {authData?.userName}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant="text_14_m" className="text-gray-text">
+                            Пароль
+                        </Typography>
+                        <Typography variant="text_14_b" className="text-black">
+                            {authData?.password}
+                        </Typography>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 };

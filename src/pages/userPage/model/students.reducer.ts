@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getStudents } from "@/entities/api/services";
+import { getStudents, putStudent } from "@/entities/api/services";
 import { IStudent } from "@/widgets";
 import { postStudent } from "@/entities/api/services/postStudents";
 import { IAuthData } from "@/entities/user/model/user.reducer";
@@ -100,6 +100,17 @@ const studentsSlice = createSlice({
                 state.authData = action.payload;
             })
             .addCase(postStudent.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            // PUT
+            .addCase(putStudent.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(putStudent.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(putStudent.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             });
