@@ -22,6 +22,7 @@ export interface IStudent {
     contacts?: IContact[];
 }
 export interface IStudentInfo {
+    userName?: string;
     firstName: string;
     lastName: string;
     middleName: string;
@@ -33,7 +34,12 @@ export interface IStudentInfo {
     email: string;
     gender: number;
     walletBalance?: number;
-    groupName?: string;
+    groups?: IStudentGroup[];
+}
+
+export interface IStudentGroup {
+    groupId: string;
+    groupName: string;
 }
 // "userName": "string",
 // "firstName": "string",

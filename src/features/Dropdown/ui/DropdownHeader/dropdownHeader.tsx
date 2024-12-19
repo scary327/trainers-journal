@@ -16,7 +16,7 @@ export const DropdownHeader = ({ student, onPayment, onEdit }: DropdownHeaderPro
                 {student.studentInfoItemDto.lastName} {student.studentInfoItemDto.firstName[0]}.
             </Typography>
             <Typography tag="span" variant="text_14_m">
-                {student.studentInfoItemDto.groupName}
+                {student.studentInfoItemDto.groups?.map((group) => group.groupName).join(" ")}
             </Typography>
             <Typography tag="span" variant="text_14_m">
                 баланс не известен

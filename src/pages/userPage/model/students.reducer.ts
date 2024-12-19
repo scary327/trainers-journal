@@ -71,6 +71,7 @@ const studentsSlice = createSlice({
                 state.students = action.payload.map((item) => ({
                     groupId: "", // Предполагается, что groupId есть в item, если нет, нужно будет его добавить
                     studentInfoItemDto: {
+                        userName: item.userName,
                         firstName: item.firstName,
                         lastName: item.lastName,
                         middleName: item.middleName,
@@ -82,7 +83,7 @@ const studentsSlice = createSlice({
                         email: item.email,
                         gender: item.gender,
                         walletBalance: item.walletBalance, // Если есть
-                        groupName: item.groupName // Если есть
+                        groups: item.groups // Если есть
                     },
                     contacts: [] // Если есть, иначе пустой массив
                 }));

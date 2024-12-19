@@ -7,7 +7,7 @@ import * as styles from "./slideOutContent.module.css";
 import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getStudents, postStudent } from "@/entities/api/services";
+import { getStudents, postStudent, putStudent } from "@/entities/api/services";
 
 interface IRegisterForm {
     lastName: string;
@@ -135,8 +135,31 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
         });
     };
 
+    const handleEdit = (data: IRegisterForm) => {
+        dispatch(
+            putStudent({
+                userName: student?.studentInfoItemDto?.userName ?? "defaultUsername",
+                data: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    middleName: data.middleName,
+                    dateOfBirth: "2024-05-19",
+                    kyu: Number(kyuValue),
+                    class: data.class,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,
+                    email: data.email,
+                    gender: Number(genderValue)
+                }
+            })
+        ).then(() => {
+            dispatch(getStudents(userName));
+        });
+    };
+
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         if (!student) handleCreate(data);
+        else handleEdit(data);
         reset();
     };
 
