@@ -4,7 +4,7 @@ import { IStudent, UsersTable } from "@/widgets";
 import { useEffect, useState } from "react";
 import { SlideOutContent } from "./slideOutContent/slideOutContent";
 import { FilterMenu } from "./filterMenu/filterMenu";
-import { getGroups } from "@/entities/api/services";
+import { getGroups, getStudents } from "@/entities/api/services";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
 
@@ -24,6 +24,7 @@ export const UserPage = () => {
 
     useEffect(() => {
         dispatch(getGroups(userName));
+        dispatch(getStudents(userName));
     }, [dispatch]);
 
     return (

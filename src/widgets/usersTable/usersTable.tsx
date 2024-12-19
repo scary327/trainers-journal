@@ -4,6 +4,8 @@ import { Button, Modal, Search, Typography } from "@/shared/ui";
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useEffect, useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export interface IContact {
     firstName: string;
@@ -16,20 +18,22 @@ export interface IContact {
 
 export interface IStudent {
     groupId: string;
-    studentInfoItemDto: {
-        firstName: string;
-        lastName: string;
-        middleName: string;
-        dateOfBirth: string;
-        kyu: number;
-        class: number;
-        address: string;
-        phoneNumber: string;
-        email: string;
-        gender: number;
-        walletBalance: number;
-    };
+    studentInfoItemDto: IStudentInfo;
     contacts?: IContact[];
+}
+export interface IStudentInfo {
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    dateOfBirth: string;
+    kyu: number;
+    class: number;
+    address: string;
+    phoneNumber: string;
+    email: string;
+    gender: number;
+    walletBalance?: number;
+    groupName?: string;
 }
 // "userName": "string",
 // "firstName": "string",
@@ -47,34 +51,38 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
     const [loading, setLoading] = useState<boolean>(false);
-    const students: IStudent[] = [
-        {
-            groupId: "first group",
-            studentInfoItemDto: {
-                firstName: "Алексей",
-                lastName: "Смирнов",
-                middleName: "Александрович",
-                kyu: 6,
-                class: 1,
-                address: "ул. Ленина, д. 20, кв. 15",
-                gender: 1,
-                phoneNumber: "89006007780",
-                email: "apapapa@gmail.com",
-                dateOfBirth: "2024-12-19",
-                walletBalance: 0
-            },
-            contacts: [
-                {
-                    firstName: "Алексей",
-                    lastName: "Смирнов",
-                    middleName: "Александрович",
-                    phoneNumber: "89006007781",
-                    email: "apapapa@gmail.com",
-                    relation: "Папа"
-                }
-            ]
-        }
-    ];
+
+    // const students: IStudent[] = [
+    //     {
+    //         groupId: "first group",
+    //         studentInfoItemDto: {
+    //             firstName: "Алексей",
+    //             lastName: "Смирнов",
+    //             middleName: "Александрович",
+    //             kyu: 6,
+    //             class: 1,
+    //             address: "ул. Ленина, д. 20, кв. 15",
+    //             gender: 1,
+    //             phoneNumber: "89006007780",
+    //             email: "apapapa@gmail.com",
+    //             dateOfBirth: "2024-12-19",
+    //             walletBalance: 0,
+    //             groupName: "pepegas"
+    //         },
+    //         contacts: [
+    //             {
+    //                 firstName: "Алексей",
+    //                 lastName: "Смирнов",
+    //                 middleName: "Александрович",
+    //                 phoneNumber: "89006007781",
+    //                 email: "apapapa@gmail.com",
+    //                 relation: "Папа"
+    //             }
+    //         ]
+    //     }
+    // ];
+
+    const students: IStudent[] = useSelector((state: RootState) => state.students.students);
 
     const [payment, setPayment] = useState<IStudent | boolean>(false);
 

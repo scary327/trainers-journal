@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api } from "../api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IStudent } from "@/widgets";
+import { IStudentInfo } from "@/widgets";
 
 // interface IHeaderStudent
 //     {
@@ -14,7 +14,7 @@ import { IStudent } from "@/widgets";
 //       kyu: 0
 //     }
 
-export const getStudentsApi = async (userName: string): Promise<AxiosResponse<IStudent[]>> => {
+export const getStudentsApi = async (userName: string): Promise<AxiosResponse<IStudentInfo[]>> => {
     return await api.get(`/students?trainerUserName=${userName}`);
 };
 

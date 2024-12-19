@@ -106,18 +106,18 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
     const handleCreate = (data: IRegisterForm) => {
         dispatch(
             postStudent({
-                groupId: data.group,
+                groupId: groupValue,
                 studentInfoItemDto: {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "",
-                    kyu: data.kyu,
+                    dateOfBirth: "2024-05-19",
+                    kyu: Number(kyuValue),
                     class: 5,
                     address: "",
                     phoneNumber: data.phoneNumber,
                     email: data.email,
-                    gender: data.gender
+                    gender: Number(genderValue)
                 },
                 contacts: [] as IContact[]
             } as IStudent)
@@ -129,24 +129,6 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
         console.log(data);
         reset();
     };
-
-    // export interface IStudent {
-    //     groupId: string;
-    //     studentInfoItemDto: {
-    //         firstName: string;
-    //         lastName: string;
-    //         middleName: string;
-    //         dateOfBirth: string; //нету
-    //         kyu: number;
-    //         class: number; //нету
-    //         address: string;
-    //         phoneNumber: string;
-    //         email: string;
-    //         gender: number;
-
-    //     };
-    //     contacts?: IContact[];
-    // }
 
     const switchTitle = (title: string) => {
         switch (title) {

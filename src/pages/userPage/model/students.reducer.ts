@@ -4,15 +4,38 @@ import { IStudent } from "@/widgets";
 import { postStudent } from "@/entities/api/services/postStudents";
 import { IAuthData } from "@/entities/user/model/user.reducer";
 
-// interface ISliceStudent {
-//     "userName": "string",
-//        "firstName": "string",
-//        "lastName": "string",
-//        "middleName": "string",
-//        "groupName": "string",
-//        "walletBalance": 0,
-//        "kyu": 0
+// export interface IStudent {
+//     groupId: string;
+//     studentInfoItemDto: {
+//         firstName: string; +
+//         lastName: string; +
+//         middleName: string; +
+//         dateOfBirth: string; +
+//         kyu: number; +
+//         class: number; +
+//         address: string; +
+//         phoneNumber: string; +
+//         email: string; +
+//         gender: number;
+
+//     };
+//     contacts?: IContact[];
 // }
+// {
+//     "userName": "string", +
+//     "firstName": "string", +
+//     "lastName": "string", +
+//     "middleName": "string", +
+//     "kyu": 0, +
+//     "dateOfBirth": "2024-12-19", +
+//     "class": 0, +
+//     "address": "string", +
+//     "phoneNumber": "string", +
+//     "email": "string", +
+//     "gender": 0, +
+//     "walletBalance": 0, +
+//     "groupName": "string" +
+//   }
 export interface SliceStudent {
     isLoading: boolean;
     errorMessage: string;
@@ -45,7 +68,24 @@ const studentsSlice = createSlice({
             })
             .addCase(getStudents.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.students = action.payload;
+                state.students = action.payload.map((item) => ({
+                    groupId: "", // Предполагается, что groupId есть в item, если нет, нужно будет его добавить
+                    studentInfoItemDto: {
+                        firstName: item.firstName,
+                        lastName: item.lastName,
+                        middleName: item.middleName,
+                        dateOfBirth: item.dateOfBirth,
+                        kyu: item.kyu,
+                        class: item.class,
+                        address: item.address,
+                        phoneNumber: item.phoneNumber,
+                        email: item.email,
+                        gender: item.gender,
+                        walletBalance: item.walletBalance, // Если есть
+                        groupName: item.groupName // Если есть
+                    },
+                    contacts: [] // Если есть, иначе пустой массив
+                }));
             })
             .addCase(getStudents.rejected, (state, action) => {
                 state.isLoading = false;
