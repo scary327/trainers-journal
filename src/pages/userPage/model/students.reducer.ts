@@ -1,65 +1,29 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getStudents, putStudent } from "@/entities/api/services";
-import { IStudent } from "@/widgets";
+import { getStudentContacts, getStudents, putStudent } from "@/entities/api/services";
+import { IContact, IStudent } from "@/widgets";
 import { postStudent } from "@/entities/api/services/postStudents";
 import { IAuthData } from "@/entities/user/model/user.reducer";
 
-// export interface IStudent {
-//     groupId: string;
-//     studentInfoItemDto: {
-//         firstName: string; +
-//         lastName: string; +
-//         middleName: string; +
-//         dateOfBirth: string; +
-//         kyu: number; +
-//         class: number; +
-//         address: string; +
-//         phoneNumber: string; +
-//         email: string; +
-//         gender: number;
-
-//     };
-//     contacts?: IContact[];
-// }
-// {
-//     "userName": "string", +
-//     "firstName": "string", +
-//     "lastName": "string", +
-//     "middleName": "string", +
-//     "kyu": 0, +
-//     "dateOfBirth": "2024-12-19", +
-//     "class": 0, +
-//     "address": "string", +
-//     "phoneNumber": "string", +
-//     "email": "string", +
-//     "gender": 0, +
-//     "walletBalance": 0, +
-//     "groupName": "string" +
-//   }
 export interface SliceStudent {
     isLoading: boolean;
     errorMessage: string;
     students: IStudent[];
     authData: IAuthData | null;
+    currentStudentContacts: IContact[];
 }
 
 const initialState: SliceStudent = {
-    isLoading: false,
+    isLoading: true,
     errorMessage: "",
     students: [],
-    authData: null
+    authData: null,
+    currentStudentContacts: []
 };
 
 const studentsSlice = createSlice({
     name: "students",
     initialState,
-    reducers: {
-        // setUser(state, action: PayloadAction<IUser>) {
-        //     state.user = action.payload;
-        //     localStorage.setItem("user", JSON.stringify(state.user));
-        //     console.log(state.user);
-        // },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             // GET
@@ -69,7 +33,7 @@ const studentsSlice = createSlice({
             .addCase(getStudents.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.students = action.payload.map((item) => ({
-                    groupId: "", // Предполагается, что groupId есть в item, если нет, нужно будет его добавить
+                    groupId: "",
                     studentInfoItemDto: {
                         userName: item.userName,
                         firstName: item.firstName,
@@ -82,10 +46,10 @@ const studentsSlice = createSlice({
                         phoneNumber: item.phoneNumber,
                         email: item.email,
                         gender: item.gender,
-                        walletBalance: item.walletBalance, // Если есть
-                        groups: item.groups // Если есть
+                        walletBalance: item.walletBalance,
+                        groups: item.groups
                     },
-                    contacts: [] // Если есть, иначе пустой массив
+                    contacts: []
                 }));
             })
             .addCase(getStudents.rejected, (state, action) => {
@@ -113,6 +77,13 @@ const studentsSlice = createSlice({
             })
             .addCase(putStudent.rejected, (state, action) => {
                 state.isLoading = false;
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            // GET CONTACTS
+            .addCase(getStudentContacts.fulfilled, (state, action) => {
+                state.currentStudentContacts = action.payload.map((item) => item.contactItem); // [ {contactsItem: IContact, id: string} ]
+            })
+            .addCase(getStudentContacts.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             });
     }

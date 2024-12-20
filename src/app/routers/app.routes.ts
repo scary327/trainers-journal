@@ -9,7 +9,6 @@ const CalendarPage = lazy(() => import("@/pages/calendarPage"));
 const Auth = lazy(() => import("@/pages/auth/"));
 const Groups = lazy(() => import("@/pages/groups/"));
 const StudentProfile = lazy(() => import("@/pages/studentProfile/"));
-const StudentCalendar = lazy(() => import("@/pages/studentCalendar/"));
 
 export const PublicRoutes: Route[] = [
     {
@@ -40,7 +39,7 @@ export const PrivateTrainerRoutes: Route[] = [
 export const PrivateStudentRoutes: Route[] = [
     {
         path: URLS.STUDENT_CALENDAR,
-        element: React.createElement(StudentCalendar)
+        element: React.createElement(CalendarPage)
     },
     {
         path: URLS.STUDENT_PROFILE,

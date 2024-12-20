@@ -19,7 +19,7 @@ export const DropdownHeader = ({ student, onPayment, onEdit }: DropdownHeaderPro
                 {student.studentInfoItemDto.groups?.map((group) => group.groupName).join(" ")}
             </Typography>
             <Typography tag="span" variant="text_14_m">
-                баланс не известен
+                {student.studentInfoItemDto.walletBalance}
             </Typography>
             <Typography tag="span" variant="text_14_m">
                 {student.studentInfoItemDto.kyu}

@@ -9,11 +9,19 @@ export const api = axios.create({
     }
 });
 
-const token = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user") as string).token
-    : "";
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("user")
+            ? JSON.parse(localStorage.getItem("user") as string).token
+            : "";
 
-api.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${token}`;
-    return config;
-});
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);

@@ -1,15 +1,3 @@
-// export interface IUser {
-//     //role: "trainer" | "student";
-//     roles: string[];
-//     fullName: string;
-//     avatar?: string;
-//     email: string;
-//     kyu: number;
-//     phoneNumber: string;
-//     login: string;
-//     password: string;
-// }
-
 export interface IUser {
     roles: string[]; //Trainer | Student
     userName: string;
@@ -23,4 +11,9 @@ export interface IUserInfo {
     kyu: number;
     phoneNumber: string;
     email: string;
+    class?: number;
+    address?: string;
+    dateOfBirth?: string;
+    gender?: number;
+    walletBalance?: number;
 }

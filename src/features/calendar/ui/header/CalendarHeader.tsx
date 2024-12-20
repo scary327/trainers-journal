@@ -7,8 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { nextWeek, prevWeek, selectCurrentWeek } from "../../model/calendar.slice";
 import { formatWeekRangeIntl } from "../../utils";
 import { RootState } from "@/app/store";
-
-export const CalendarHeader = () => {
+interface CalendarHeaderProps {
+    setSlideOutOpen: () => void;
+    openDuplicate: () => void;
+}
+export const CalendarHeader = ({ setSlideOutOpen, openDuplicate }: CalendarHeaderProps) => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const weekHeaderStr = formatWeekRangeIntl(currentWeek);
     const userRole = useSelector((state: RootState) => state.user.user.roles);
@@ -43,10 +46,10 @@ export const CalendarHeader = () => {
             </div>
             {userRole.includes("Trainer") && (
                 <div className="flex gap-x-[30px]">
-                    <Button variant="primary" className="border-white">
+                    <Button variant="primary" className="border-white" onClick={openDuplicate}>
                         Дублировать расписание
                     </Button>
-                    <Button variant="primary" className="border-white">
+                    <Button variant="primary" className="border-white" onClick={setSlideOutOpen}>
                         Добавить тренировку
                     </Button>
                 </div>

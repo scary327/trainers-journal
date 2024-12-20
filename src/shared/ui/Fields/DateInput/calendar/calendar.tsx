@@ -49,10 +49,18 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
                     {format(currentMonth, "LLLL yyyy", { locale: ru })}
                 </Typography>
                 <div className={styles.button_container}>
-                    <button className="hover:text-blue-medium" onClick={handlePreviousMonth}>
+                    <button
+                        type="button"
+                        className="hover:text-blue-medium"
+                        onClick={handlePreviousMonth}
+                    >
                         <ArrowSVG className="rotate-180 w-[24px]" />
                     </button>
-                    <button className="hover:text-blue-medium" onClick={handleNextMonth}>
+                    <button
+                        type="button"
+                        className="hover:text-blue-medium"
+                        onClick={handleNextMonth}
+                    >
                         <ArrowSVG className="w-[24px]" />
                     </button>
                 </div>
@@ -61,6 +69,7 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
                 <div className={styles.year_selector}>
                     {availableYears.map((year) => (
                         <button
+                            type="button"
                             key={year}
                             className={styles.year_button}
                             onClick={() => handleYearClick(year)}
@@ -91,6 +100,7 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
 
                     return (
                         <button
+                            type="button"
                             key={i}
                             className={`${styles.calendar_day} ${
                                 isSelected ? styles.selected : ""

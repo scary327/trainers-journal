@@ -2,7 +2,7 @@ import * as styles from "./usersTable.module.css";
 import { Button, Modal, Search, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
@@ -41,13 +41,7 @@ export interface IStudentGroup {
     groupId: string;
     groupName: string;
 }
-// "userName": "string",
-// "firstName": "string",
-// "lastName": "string",
-// "middleName": "string",
-// "groupName": "string",
-// "walletBalance": 0,
-// "kyu": 0
+
 interface IProps {
     openFilter?: () => void;
     openEdit?: (student: IStudent | null) => void;
@@ -56,89 +50,43 @@ interface IProps {
 export const UsersTable = ({ openFilter, openEdit }: IProps) => {
     const tableItems: string[] = ["ФИО", "Группа", "Баланс", "КЮ", ""];
 
-    const [loading, setLoading] = useState<boolean>(false);
-
-    // const students: IStudent[] = [
-    //     {
-    //         groupId: "first group",
-    //         studentInfoItemDto: {
-    //             firstName: "Алексей",
-    //             lastName: "Смирнов",
-    //             middleName: "Александрович",
-    //             kyu: 6,
-    //             class: 1,
-    //             address: "ул. Ленина, д. 20, кв. 15",
-    //             gender: 1,
-    //             phoneNumber: "89006007780",
-    //             email: "apapapa@gmail.com",
-    //             dateOfBirth: "2024-12-19",
-    //             walletBalance: 0,
-    //             groupName: "pepegas"
-    //         },
-    //         contacts: [
-    //             {
-    //                 firstName: "Алексей",
-    //                 lastName: "Смирнов",
-    //                 middleName: "Александрович",
-    //                 phoneNumber: "89006007781",
-    //                 email: "apapapa@gmail.com",
-    //                 relation: "Папа"
-    //             }
-    //         ]
-    //     }
-    // ];
-
     const students: IStudent[] = useSelector((state: RootState) => state.students.students);
 
     const [payment, setPayment] = useState<IStudent | boolean>(false);
 
     const [contacts, setContacts] = useState<boolean>(false);
+
+    const studentContacts: IContact[] = useSelector(
+        (state: RootState) => state.students.currentStudentContacts
+    );
+
     const [currentStudent, setCurrentStudent] = useState<IStudent | null>(null);
 
-    useEffect(() => {
-        const fetchStudents = async () => {
-            setLoading(true);
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
-        };
-
-        fetchStudents();
-    }, []);
-
-    const tableBody = loading ? (
-        <div className=" flex flex-col gap-y-[20px]">
-            {Array.from({ length: 3 }).map((_, index) => (
-                <div className="skeleton w-full h-[45px] rounded-[10px]" key={index} />
-            ))}
-        </div>
-    ) : (
-        students.map((student, index) => (
-            <Dropdown
-                key={index}
-                header={
-                    <DropdownHeader
-                        onPayment={() => setPayment(student)}
-                        onEdit={() => {
-                            openEdit?.(student);
-                        }}
-                        key={index}
-                        student={student}
-                    />
-                }
-                content={
-                    <DropdownContent
-                        openContacts={() => {
-                            setCurrentStudent(student);
-                            setContacts(true);
-                        }}
-                        key={index}
-                        studentDetails={student}
-                    />
-                }
-            />
-        ))
-    );
+    const tableBody = students.map((student, index) => (
+        <Dropdown
+            key={index}
+            header={
+                <DropdownHeader
+                    onPayment={() => setPayment(student)}
+                    onEdit={() => {
+                        openEdit?.(student);
+                    }}
+                    key={index}
+                    student={student}
+                />
+            }
+            content={
+                <DropdownContent
+                    openContacts={() => {
+                        setCurrentStudent(student);
+                        setContacts(true);
+                    }}
+                    key={index}
+                    studentDetails={student}
+                />
+            }
+        />
+    ));
 
     return (
         <>
@@ -185,7 +133,7 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
                             Контакты ученика {currentStudent.studentInfoItemDto.lastName}{" "}
                             {currentStudent.studentInfoItemDto.firstName}
                         </Typography>
-                        {currentStudent?.contacts?.map((contact) => (
+                        {studentContacts.map((contact) => (
                             <div
                                 key={contact.email}
                                 className="flex flex-col items-start gap-y-[10px]"

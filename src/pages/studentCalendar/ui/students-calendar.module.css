@@ -1,4 +1,0 @@
-.main_container {
-    @apply p-[30px] flex flex-col items-center gap-y-[30px];
-    border-top: 1px solid #999999;
-}

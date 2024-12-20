@@ -1,6 +1,6 @@
 import { Button, Input, Modal, Typography } from "@/shared/ui";
 import * as styles from "./auth.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { IAuthData } from "@/entities/user/model/user.reducer";
@@ -80,15 +80,17 @@ export const Auth = () => {
     const navigate = useNavigate();
     const user = useSelector((state: RootState) => state.user);
     const Login: SubmitHandler<IAuthData> = (data) => {
-        dispatch(signIn({ userName: data.userName, password: data.password })).then(() => {
-            console.log("THEN -> isAuth =", user.isAuth);
-            if (user.user.roles.includes("Trainer")) {
-                navigate(URLS.PROFILE);
-            } else if (user.user.roles.includes("Student")) {
-                navigate(URLS.STUDENT_PROFILE);
-            }
-        });
+        dispatch(signIn({ userName: data.userName, password: data.password }));
     };
+
+    useEffect(() => {
+        console.log("THEN -> isAuth =", user.isAuth);
+        if (user.user.roles.includes("Trainer")) {
+            navigate(URLS.PROFILE);
+        } else if (user.user.roles.includes("Student")) {
+            navigate(URLS.STUDENT_PROFILE);
+        }
+    }, [user.isAuth]);
 
     return (
         <>

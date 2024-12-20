@@ -1,11 +1,5 @@
 .container {
-    @apply w-full flex flex-col px-[30px] py-[20px] bg-white rounded-[20px];
-}
-
-.title {
-    @apply text-[18px] font-inter-bold text-blue-dark;
-
-    margin-bottom: 30px;
+    @apply relative w-full flex flex-col gap-y-[30px] px-[30px] py-[20px] bg-white rounded-[20px];
 }
 
 .table_header {

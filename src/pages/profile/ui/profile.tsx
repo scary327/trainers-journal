@@ -1,4 +1,4 @@
-import { PageTitle } from "@/shared/ui";
+import { Loader, PageTitle } from "@/shared/ui";
 import * as styles from "./profile.module.css";
 import { UserData, UserInfo } from "@/entities/";
 import { PaymentHistory } from "@/features";
@@ -12,10 +12,13 @@ export const Profile = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const userName: string = useSelector((state: RootState) => state.user.user.userName);
+    const infoLoading = useSelector((state: RootState) => state.user.isInfoLoading);
 
     useEffect(() => {
-        dispatch(getUserInfo({ userName }));
-    }, [dispatch]);
+        if (userName) dispatch(getUserInfo({ userName }));
+    }, [dispatch, userName]);
+
+    if (infoLoading) return <Loader />;
 
     return (
         <div className={styles.container}>

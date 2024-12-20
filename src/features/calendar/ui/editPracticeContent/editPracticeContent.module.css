@@ -1,0 +1,5 @@
+.form_container {
+    @apply flex flex-col gap-y-[30px] w-[80%] p-[10px] items-start;
+
+    overflow-y: auto;
+}

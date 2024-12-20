@@ -3,6 +3,7 @@ import * as styles from "./dateInput.module.css";
 import { classnames, useOnClickOutside } from "@/shared/lib";
 import { Typography } from "../../Typography/typography";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { SmallCalendar } from "./calendar/calendar";
 import { DateRange } from "@/shared/types";
 
@@ -37,11 +38,14 @@ export const DateInput = (props: DateInputProps) => {
     };
 
     const formattedDate = selectedRange.start
-        ? `${format(selectedRange.start, "dd.MM.yyyy")}${selectedRange.end ? ` - ${format(selectedRange.end, "dd.MM.yyyy")}` : ""}`
+        ? `${format(
+              toZonedTime(selectedRange.start, "Asia/Yekaterinburg"),
+              "dd.MM.yyyy"
+          )}${selectedRange.end ? ` - ${format(toZonedTime(selectedRange.end, "Asia/Yekaterinburg"), "dd.MM.yyyy")}` : ""}`
         : "";
 
     return (
-        <div className="min-w-[200px] max-w-[300px]" ref={calendarRef}>
+        <div className="min-w-[200px] max-w-[300px] z-50" ref={calendarRef}>
             <button
                 className={classnames(
                     styles.container,
@@ -49,6 +53,7 @@ export const DateInput = (props: DateInputProps) => {
                     open ? styles.container_open : ""
                 )}
                 onClick={() => setOpen(true)}
+                type="button"
             >
                 <div className={styles.input}>
                     <Typography variant="text_14_b">

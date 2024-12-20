@@ -1,5 +1,5 @@
 import { classnames } from "@/shared/lib";
-import { Typography, Select, Button, Input, Modal } from "@/shared/ui";
+import { Typography, Select, Button, Input } from "@/shared/ui";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -7,9 +7,9 @@ import * as styles from "./slideOutContent.module.css";
 import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getStudents, postStudent, putStudent } from "@/entities/api/services";
+import { getStudents, putStudent } from "@/entities/api/services";
 
-interface IRegisterForm {
+export interface IRegisterForm {
     lastName: string;
     firstName: string;
     middleName: string;
@@ -25,9 +25,10 @@ interface IRegisterForm {
 
 interface IEditMenuProps {
     student: IStudent | null;
+    openContacts?: (data: IStudent) => void;
 }
 
-export const SlideOutContent = ({ student }: IEditMenuProps) => {
+export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     const slideOutTitle: string = student
         ? "Редактирование пользователя"
         : "Регистрация пользователя";
@@ -36,17 +37,6 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
     const [kyuValue, setKyuValue] = useState<string>("");
     const [genderValue, setGenderValue] = useState<string>("");
     const [groupValue, setGroupValue] = useState<string>("");
-
-    //const [optionsValue, setOptionsValue] = useState<{ value: string; label: string }>("");
-
-    // [
-    //     {
-    //       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //       "name": "string",
-    //       "costPractice": 0,
-    //       "numberStudents": 0
-    //     }
-    //   ]
 
     const groupsOptions = useSelector((state: RootState) =>
         state.groups.groups.map((group) => ({
@@ -108,32 +98,6 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
     }, [student, reset]);
 
     const userName = useSelector((state: RootState) => state.user.user.userName);
-    const authData = useSelector((state: RootState) => state.students.authData);
-    const [authModal, setAuthModal] = useState<boolean>(false);
-
-    const handleCreate = (data: IRegisterForm) => {
-        dispatch(
-            postStudent({
-                groupId: groupValue,
-                studentInfoItemDto: {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    middleName: data.middleName,
-                    dateOfBirth: "2024-05-19",
-                    kyu: Number(kyuValue),
-                    class: data.class,
-                    address: data.address,
-                    phoneNumber: data.phoneNumber,
-                    email: data.email,
-                    gender: Number(genderValue)
-                },
-                contacts: [] as IContact[]
-            } as IStudent)
-        ).then(() => {
-            dispatch(getStudents(userName));
-            setAuthModal(true);
-        });
-    };
 
     const handleEdit = (data: IRegisterForm) => {
         dispatch(
@@ -143,7 +107,7 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "2024-05-19",
+                    dateOfBirth: "20014-05-19",
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -158,8 +122,25 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
     };
 
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
-        if (!student) handleCreate(data);
+        if (!student)
+            openContacts?.({
+                groupId: groupValue,
+                studentInfoItemDto: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    middleName: data.middleName,
+                    dateOfBirth: "2024-05-19",
+                    kyu: Number(kyuValue),
+                    class: data.class,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,
+                    email: data.email,
+                    gender: Number(genderValue)
+                },
+                contacts: [] as IContact[]
+            } as IStudent);
         else handleEdit(data);
+
         reset();
     };
 
@@ -220,29 +201,6 @@ export const SlideOutContent = ({ student }: IEditMenuProps) => {
                     {buttonTitle}
                 </Button>
             </form>
-            <Modal visible={authModal} onClose={() => setAuthModal(false)}>
-                <div>
-                    <Typography variant="text_18_b" className="text-blue-dark">
-                        Данные для входа
-                    </Typography>
-                    <div>
-                        <Typography variant="text_14_m" className="text-gray-text">
-                            Логин
-                        </Typography>
-                        <Typography variant="text_14_b" className="text-black">
-                            {authData?.userName}
-                        </Typography>
-                    </div>
-                    <div>
-                        <Typography variant="text_14_m" className="text-gray-text">
-                            Пароль
-                        </Typography>
-                        <Typography variant="text_14_b" className="text-black">
-                            {authData?.password}
-                        </Typography>
-                    </div>
-                </div>
-            </Modal>
         </>
     );
 };

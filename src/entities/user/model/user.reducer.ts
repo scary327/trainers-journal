@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IUserInfo } from "./user.types";
-import { getUserInfo, putUserInfo, signIn } from "@/entities/api/services";
+import { getStudentInfo, getUserInfo, putUserInfo, signIn } from "@/entities/api/services";
 
 interface UserState {
     isAuth: boolean;
     user: IUser;
-    loading: boolean;
+    isAuthLoading: boolean;
+    isInfoLoading: boolean;
     errorMessage: string;
 }
 export interface IAuthData {
@@ -14,23 +15,22 @@ export interface IAuthData {
 }
 
 const initialState: UserState = {
-    user: localStorage.getItem("user")
-        ? JSON.parse(localStorage.getItem("user")!)
-        : {
-              roles: ["trainer"],
-              userName: "sanya228",
-              info: {
-                  firstName: "Александр",
-                  lastName: "Коновалов",
-                  middleName: "Александрович",
-                  email: "apapapa@gmail.com",
-                  kyu: 5,
-                  phoneNumber: "77777777777"
-              },
-              token: ""
-          },
-    loading: false,
-    isAuth: localStorage.getItem("user") ? true : false,
+    user: {
+        roles: ["trainer"],
+        userName: "",
+        info: {
+            firstName: "",
+            lastName: "",
+            middleName: "",
+            email: "",
+            kyu: 0,
+            phoneNumber: ""
+        },
+        token: ""
+    },
+    isAuthLoading: true,
+    isInfoLoading: true,
+    isAuth: false,
     errorMessage: ""
 };
 
@@ -49,24 +49,29 @@ const userSlice = createSlice({
             console.log(state.user);
         },
         clearUser(state) {
-            state.user = initialState.user;
             localStorage.removeItem("user");
+            state.user = initialState.user;
+            state.isAuth = false;
         },
-        setLoading(state, action: PayloadAction<boolean>) {
-            state.loading = action.payload;
+        tryGetUser(state, action: PayloadAction<string>) {
+            state.user = JSON.parse(action.payload);
+            state.isAuthLoading = false;
+            state.isAuth = true;
         }
     },
     extraReducers: (builder) => {
         builder
             // signin
             .addCase(signIn.pending, (state) => {
-                state.loading = true;
+                state.isAuthLoading = true;
             })
             .addCase(signIn.fulfilled, (state, action) => {
+                state.isAuth = true;
+                state.isAuthLoading = false;
+                state.isInfoLoading = true;
                 state.user.token = action.payload.token;
                 state.user.roles = action.payload.roles;
                 state.user.userName = action.payload.userName;
-                state.isAuth = true;
                 localStorage.setItem("user", JSON.stringify(state.user));
                 console.log(localStorage.getItem("user"));
             })
@@ -74,32 +79,46 @@ const userSlice = createSlice({
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
                 console.log(action);
             })
-            //getInfo
+            //getInfo Trainer
             .addCase(getUserInfo.pending, (state) => {
-                state.loading = true;
+                state.isInfoLoading = true;
             })
             .addCase(getUserInfo.fulfilled, (state, action) => {
                 state.user.info = action.payload;
-                state.loading = false;
+                state.isInfoLoading = false;
                 localStorage.setItem("user", JSON.stringify(state.user));
             })
             .addCase(getUserInfo.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+                state.isInfoLoading = false;
             })
-            //putInfo putUserInfo
+            //putInfo Trainer
             .addCase(putUserInfo.pending, (state) => {
-                state.loading = true;
+                state.isInfoLoading = true;
             })
             .addCase(putUserInfo.fulfilled, (state, action) => {
                 state.user.info = action.payload;
-                state.loading = false;
+                state.isInfoLoading = false;
                 localStorage.setItem("user", JSON.stringify(state.user));
             })
             .addCase(putUserInfo.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            //putInfo Student
+            .addCase(getStudentInfo.pending, (state) => {
+                state.isInfoLoading = true;
+            })
+            .addCase(getStudentInfo.fulfilled, (state, action) => {
+                state.user.info = action.payload;
+                state.isInfoLoading = false;
+                localStorage.setItem("user", JSON.stringify(state.user));
+            })
+            .addCase(getStudentInfo.rejected, (state, action) => {
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+                state.isInfoLoading = false;
             });
     }
 });
 
-export const { setUser, clearUser, setLoading, setInfo } = userSlice.actions;
+export const { setUser, clearUser, setInfo, tryGetUser } = userSlice.actions;
 export default userSlice.reducer;

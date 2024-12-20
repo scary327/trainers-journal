@@ -2,6 +2,9 @@ import { Button, Typography } from "@/shared/ui";
 import * as styles from "./dropdownContent.module.css";
 import { Item } from "./item/item";
 import { IStudent } from "@/widgets";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store";
+import { getStudentContacts } from "@/entities/api/services";
 
 interface DropdownContentProps {
     studentDetails: IStudent;
@@ -9,6 +12,7 @@ interface DropdownContentProps {
 }
 
 export const DropdownContent = ({ studentDetails, openContacts }: DropdownContentProps) => {
+    const dispatch = useDispatch<AppDispatch>();
     const studentDetailsInfo = {
         gender: "Пол",
         birthDate: "Дата рождения",
@@ -43,8 +47,15 @@ export const DropdownContent = ({ studentDetails, openContacts }: DropdownConten
                             Контакты
                         </Typography>
                         <Button
+                            type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
+                                e.preventDefault();
+                                dispatch(
+                                    getStudentContacts(
+                                        studentDetails.studentInfoItemDto.userName || ""
+                                    )
+                                );
                                 openContacts();
                             }}
                             variant="empty"

@@ -6,10 +6,13 @@ import { Typography } from "@/shared/ui";
 import { classnames } from "@/shared/lib";
 import { Workout } from "../workout/workout";
 import { IClassTime, IClass } from "@/shared/types";
+import { RootState } from "@/app/store";
 
 interface BodyHeaderProps {
     formattedWeek: string[];
 }
+
+export const getNormalTime = (date: string, time: string) => `${date}T${time}`;
 
 const BodyHeader = ({ formattedWeek }: BodyHeaderProps) => {
     return (
@@ -24,7 +27,12 @@ const BodyHeader = ({ formattedWeek }: BodyHeaderProps) => {
     );
 };
 
-export const CalendarBody = () => {
+interface ICalendarBodyProps {
+    onOpenWorkout: () => void;
+    setCurrentWorkout: (workout: IClass) => void;
+}
+
+export const CalendarBody = ({ onOpenWorkout, setCurrentWorkout }: ICalendarBodyProps) => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const formattedWeek = formatWeekDays(currentWeek);
 
@@ -48,21 +56,13 @@ export const CalendarBody = () => {
 
     const classTime: IClassTime[] = generateClassTime();
 
-    const classList: IClass[] = [
-        {
-            start: "2024-12-19T17:00:00",
-            end: "2024-12-19T18:30:00",
-            group: "Йога",
-            teacher: "Иван Иванов",
-            students: []
-        }
-    ];
+    const workoutList: IClass[] = useSelector((state: RootState) => state.practices.practices);
 
     //функция для проверки, попадает ли тренировка в заданный день и время
     const getClassForCell = (day: Date, time: IClassTime) => {
-        const filteredClasses = classList.filter((cls) => {
-            const startDate = new Date(cls.start);
-            const endDate = new Date(cls.end);
+        const filteredClasses = workoutList.filter((cls) => {
+            const startDate = new Date(getNormalTime(cls.date, cls.timeStart));
+            const endDate = new Date(getNormalTime(cls.date, cls.timeEnd));
 
             const isSameDay = startDate.toDateString() === day.toDateString();
             const isWithinTimeRange =
@@ -89,6 +89,11 @@ export const CalendarBody = () => {
         return styles.upcoming;
     };
 
+    const handleWorkoutClick = (workout: IClass) => () => {
+        setCurrentWorkout(workout);
+        onOpenWorkout();
+    };
+
     return (
         <div className={classnames(styles.container, "scrollbar-webkit")}>
             <BodyHeader formattedWeek={formattedWeek} />
@@ -111,14 +116,23 @@ export const CalendarBody = () => {
                                     {classesForCell.length > 0 ? (
                                         classesForCell.map((cls, clsIndex) =>
                                             time.start ===
-                                            new Date(cls.start).toTimeString().slice(0, 5) ? (
-                                                <Workout workout={cls} key={clsIndex} />
+                                            new Date(getNormalTime(cls.date, cls.timeStart))
+                                                .toTimeString()
+                                                .slice(0, 5) ? (
+                                                <Workout
+                                                    onClick={handleWorkoutClick(cls)}
+                                                    workout={cls}
+                                                    key={clsIndex}
+                                                />
                                             ) : (
                                                 <div
                                                     key={clsIndex}
                                                     className={classnames(
                                                         styles.ongoing,
-                                                        getClasses(cls.start, cls.end)
+                                                        getClasses(
+                                                            getNormalTime(cls.date, cls.timeStart),
+                                                            getNormalTime(cls.date, cls.timeEnd)
+                                                        )
                                                     )}
                                                 >
                                                     <Typography variant="text_14_m">

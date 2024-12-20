@@ -19,11 +19,14 @@ export interface IStudentClass {
 }
 
 export interface IClass {
-    group: string;
-    teacher: string;
-    start: string;
-    end: string;
-    students: IStudentClass[];
+    practiceId: string;
+    groupName: string;
+    date: string;
+    timeStart: string;
+    timeEnd: string;
+    trainerFirstName: string;
+    trainerLastName: string;
+    trainerMiddleName: string;
 }
 
 export interface IStudentHeader {

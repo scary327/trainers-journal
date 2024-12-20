@@ -1,9 +1,9 @@
-import { Button, Modal } from "@/shared/ui";
+import { Button, Modal, Typography } from "@/shared/ui";
 import { IPayment } from "../model/payment.types";
 import * as styles from "./paymentRow.module.css";
-import { useEffect, useState } from "react";
-import AcceptSVG from "@/shared/icons/accept.svg";
-import CancelSVG from "@/shared/icons/cancel.svg";
+import { useState } from "react";
+import { RootState } from "@/app/store";
+import { useSelector } from "react-redux";
 
 interface IPaymentRowProps {
     payment: IPayment;
@@ -11,51 +11,65 @@ interface IPaymentRowProps {
 
 export const PaymentRow = ({ payment }: IPaymentRowProps) => {
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [isMobile, setIsMobile] = useState<boolean>(false);
 
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(max-width: 1200px)");
+    const user = useSelector((state: RootState) => state.user.user);
 
-        const handleMediaChange = (e: MediaQueryListEvent) => {
-            setIsMobile(e.matches);
-        };
-        setIsMobile(mediaQuery.matches);
-        mediaQuery.addEventListener("change", handleMediaChange);
-
-        return () => mediaQuery.removeEventListener("change", handleMediaChange);
-    }, []);
+    switch (payment.status) {
+        case 2:
+            payment.status = "На рассмотрении";
+            break;
+        case 1:
+            payment.status = "Отклонен";
+            break;
+        case 0:
+            payment.status = "Одобрен";
+            break;
+    }
 
     return (
         <>
             <div className={styles.container}>
-                <span>{payment.fullName}</span>
-                <span>{payment.group}</span>
+                <span>
+                    {payment.lastName} {payment.firstName} {payment.middleName}
+                </span>
+                {user.roles.includes("Trainer") ? (
+                    <span>{payment.groupsNames?.join(", ") || ""}</span>
+                ) : (
+                    <span />
+                )}
                 <span>{payment.amount} ₽</span>
                 <Button variant="empty" className="p-0" onClick={() => setOpenModal(true)}>
                     Показать чек
                 </Button>
                 <div className="flex gap-x-3 justify-center">
-                    {isMobile ? (
-                        <>
-                            <button>
-                                <AcceptSVG className="text-blue-medium w-[20px] h-[20px]" />
-                            </button>
-                            <button>
-                                <CancelSVG className="text-gray-text w-[20px] h-[20px]" />
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Button variant="cancel">отменить</Button>
-                            <Button variant="primary-small">принять</Button>
-                        </>
+                    {user.roles.includes("Trainer") &&
+                        (payment.status === "На рассмотрении" ? (
+                            <>
+                                <Button
+                                    variant="cancel"
+                                    onClick={() => (payment.status = "Отклонен")}
+                                >
+                                    отменить
+                                </Button>
+                                <Button
+                                    variant="primary-small"
+                                    onClick={() => (payment.status = "Одобрен")}
+                                >
+                                    принять
+                                </Button>
+                            </>
+                        ) : (
+                            <Typography variant="text_14_b">{payment.status}</Typography>
+                        ))}
+                    {user.roles.includes("Student") && (
+                        <Typography variant="text_14_b">{payment.status}</Typography>
                     )}
                 </div>
             </div>
             <Modal visible={openModal} onClose={() => setOpenModal(false)}>
-                {payment.checkPhoto ? (
+                {payment.receiptUrl ? (
                     <img
-                        src={payment.checkPhoto}
+                        src={`http://85.192.48.165:5001${payment.receiptUrl}`}
                         alt="фото чека"
                         className="px-5 py-3 max-h-[80vh]"
                     />

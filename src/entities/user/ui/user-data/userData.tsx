@@ -1,31 +1,17 @@
 import { RootState } from "@/app/store";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { IUser } from "../../model/user.types";
 
 import * as styles from "./userData.module.css";
 import { Button, Typography } from "@/shared/ui";
-import { useEffect } from "react";
-import { setLoading } from "../../model/user.reducer";
 
 export const UserData = () => {
     const title = "Данные для входа";
 
     const user: IUser = useSelector((state: RootState) => state.user.user);
-    const loading: boolean = useSelector((state: RootState) => state.user.loading);
-    const dispatch = useDispatch();
+    const isAuthLoading: boolean = useSelector((state: RootState) => state.user.isAuthLoading);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            dispatch(setLoading(true));
-            setTimeout(() => {
-                dispatch(setLoading(false));
-            }, 1000);
-        };
-
-        fetchUser();
-    }, [dispatch]);
-
-    const content: JSX.Element = !loading ? (
+    const content: JSX.Element = !isAuthLoading ? (
         <div className={styles.content}>
             <div>
                 <Typography variant="text_14_r" className="text-gray-text">
