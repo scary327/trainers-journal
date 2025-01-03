@@ -2,9 +2,12 @@ import { Button, Checkbox, Typography } from "@/shared/ui";
 import * as styles from "./filterMenu.module.css";
 import { DateInput } from "@/shared/ui/Fields";
 import { memo, useState } from "react";
-import { DateRange } from "@/shared/types";
+import { DateRange, IGroup } from "@/shared/types";
 import { classList, genderList, Kyu } from "@/shared/constants";
 import { classnames } from "@/shared/lib";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store";
+import { filterStudents } from "@/entities/api/services";
 
 export const FilterMenu = memo(() => {
     //фильтры на бэкенде делать
@@ -17,6 +20,61 @@ export const FilterMenu = memo(() => {
         start: null,
         end: null
     });
+
+    const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    const userName = useSelector((state: RootState) => state.user.user.userName);
+
+    const groups = useSelector((state: RootState) => state.groups.groups);
+    const [selectedGroups, setSelectedGroups] = useState<IGroup[]>([]);
+
+    //   "classes": [
+    //     0
+    // ],
+    // "startDateOfBirth": "2025-01-03",
+    // "endDDateOfBirth": "2025-01-03",
+    // "kyues": [
+    //   0
+    // ],
+    // "genders": [
+    //   0
+    // ]
+
+    const addOneDay = (date: Date): Date => {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    };
+
+    const handleSubmit = () => {
+        const result = {
+            classes:
+                selectedClasses.length > 0
+                    ? selectedClasses.map((item) => parseInt(item))
+                    : classList.map((item) => parseInt(item.id)),
+            startDateOfBirth: selectedDate.start
+                ? formatDate(addOneDay(selectedDate.start!))
+                : "1950-01-01",
+            endDateOfBirth: selectedDate.end
+                ? formatDate(addOneDay(selectedDate.end!))
+                : "2077-01-01",
+            kyues:
+                selectedKyu.length > 0
+                    ? selectedKyu.map((item) => parseInt(item))
+                    : Kyu.map((item) => parseInt(item.id)),
+            genders:
+                selectedGender.length > 0
+                    ? selectedGender.map((item) => parseInt(item))
+                    : genderList.map((item) => parseInt(item.id)),
+            groupsIds:
+                selectedGroups.length > 0
+                    ? selectedGroups.map((item) => item.id)
+                    : groups.map((item) => item.id)
+        };
+        dispatch(filterStudents({ trainerName: userName, ...result }));
+    };
 
     const toggleSelection = (key: string, id: string) => {
         switch (key) {
@@ -90,8 +148,28 @@ export const FilterMenu = memo(() => {
                         ))}
                     </div>
                 </div>
+                <div className={styles.section}>
+                    <Typography variant="text_14_b">Группы</Typography>
+                    <div className={classnames(styles.list, "scrollbar-webkit")}>
+                        {groups.map((item) => (
+                            <div className={styles.check_row}>
+                                <Checkbox
+                                    check={selectedGroups.includes(item)}
+                                    setCheck={() =>
+                                        setSelectedGroups((prev) =>
+                                            prev.includes(item)
+                                                ? prev.filter((group) => group !== item)
+                                                : [...prev, item]
+                                        )
+                                    }
+                                />
+                                <Typography variant="text_14_r">{item.name}</Typography>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-            <Button variant="primary" className="w-[60%]" type="submit">
+            <Button variant="primary" className="w-[60%]" type="button" onClick={handleSubmit}>
                 Применить
             </Button>
         </div>

@@ -21,3 +21,8 @@ export * from "./getTrainers";
 export * from "./getStudentPayments";
 export * from "./getTrainerPayments";
 export * from "./getWallet";
+export * from "./putPayments";
+export * from "./postPracticeDublicate";
+export * from "./searchStudents";
+export * from "./filterStudents";
+export * from "./searchGroups";

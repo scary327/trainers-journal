@@ -28,7 +28,7 @@ export interface IWorkoutStudent {
 
 export interface INewStatus {
     id: string;
-    status: boolean;
+    isAttend: boolean;
 }
 
 const StudentRow = ({
@@ -72,7 +72,7 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
             setNewStatus(
                 attendance.map((item) => ({
                     id: item.attendanceId,
-                    status: item.status
+                    isAttend: item.status
                 }))
             );
         };
@@ -80,7 +80,6 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
     }, [workout.practiceId]);
 
     const onSubmit = () => {
-        console.log(newStatus);
         const status = putAttendancePractice(newStatus);
         console.log(status);
     };
@@ -88,7 +87,6 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
     const onDelete = () => {
         dispatch(deletePractice(workout.practiceId));
         onClose();
-        console.log("delete");
     };
 
     return (
@@ -140,13 +138,13 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                                 student={student}
                                 check={
                                     newStatus.find((item) => item.id === student.attendanceId)
-                                        ?.status || false
+                                        ?.isAttend || false
                                 }
                                 setNewStatus={() =>
                                     setNewStatus((prev) =>
                                         prev.map((item) =>
                                             item.id === student.attendanceId
-                                                ? { ...item, status: !item.status } // инвертируем статус
+                                                ? { ...item, isAttend: !item.isAttend } // инвертируем статус
                                                 : item
                                         )
                                     )

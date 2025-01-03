@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteGroup, getGroups, postGroup, putGroup } from "@/entities/api/services";
+import { deleteGroup, getGroups, postGroup, putGroup, searchGroups } from "@/entities/api/services";
 import { IGroup } from "@/shared/types";
 
 interface IGroupSlice {
@@ -69,6 +69,14 @@ const groupSlice = createSlice({
             .addCase(putGroup.rejected, (state, action) => {
                 state.errorMessage = action.error.message || "Неизвестная ошибка";
                 state.isLoading = false;
+            })
+            // Search
+            // .addCase(searchGroups.pending, (state) => {
+            //     state.isLoading = true;
+            // })
+            .addCase(searchGroups.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.groups = action.payload;
             });
     }
 });

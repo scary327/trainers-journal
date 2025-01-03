@@ -24,12 +24,6 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
 
     const userName = useSelector((state: RootState) => state.user.user.userName);
     const [tempContacts, setTempContacts] = useState<IForm[]>([]);
-    const handleCreate = () => {
-        dispatch(postStudent({ ...form, contacts: tempContacts })).then(() => {
-            dispatch(getStudents(userName));
-            setAuthModal?.();
-        });
-    };
 
     const addNew: SubmitHandler<IForm> = (data) => {
         setTempContacts((prev) => [...prev, data]);
@@ -44,13 +38,14 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
     };
 
     return (
-        <div className="flex flex-col gap-y-[30px] items-start">
-            <Typography variant="text_18_b">Добавление контактов</Typography>
+        <>
+            <Typography variant="text_16_b">Добавление контактов</Typography>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit(addNew)();
                 }}
+                className="flex flex-col gap-y-[30px] w-[80%] p-[10px] overflow-auto"
             >
                 <Input type="text" {...register("relation")} label="Отношение" />
                 <Input type="text" {...register("lastName")} label="Фамилия" />
@@ -58,7 +53,7 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
                 <Input type="text" {...register("middleName")} label="Отчество" />
                 <Input type="text" {...register("email")} label="Почта" />
                 <Input type="text" {...register("phoneNumber")} label="Номер телефона" />
-                <div>
+                <div className="flex gap-x-[10px] justify-between">
                     <Button variant="primary" type="submit">
                         Добавить еще
                     </Button>
@@ -66,14 +61,23 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
                         variant="secondary"
                         type="button"
                         onClick={() => {
-                            handleSubmit(addNew)();
-                            handleCreate();
+                            handleSubmit((data) => {
+                                const updatedContacts = [...tempContacts, data];
+                                setTempContacts(updatedContacts);
+
+                                dispatch(postStudent({ ...form, contacts: updatedContacts })).then(
+                                    () => {
+                                        dispatch(getStudents(userName));
+                                        setAuthModal?.();
+                                    }
+                                );
+                            })();
                         }}
                     >
                         Сохранить
                     </Button>
                 </div>
             </form>
-        </div>
+        </>
     );
 };

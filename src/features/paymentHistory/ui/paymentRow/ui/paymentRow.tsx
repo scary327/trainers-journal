@@ -4,6 +4,7 @@ import * as styles from "./paymentRow.module.css";
 import { useState } from "react";
 import { RootState } from "@/app/store";
 import { useSelector } from "react-redux";
+import { putPayment } from "@/entities/api/services";
 
 interface IPaymentRowProps {
     payment: IPayment;
@@ -26,6 +27,11 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
             break;
     }
 
+    //0 или 1
+    const handleStatus = (status: number) => {
+        putPayment({ id: payment.paymentId, status: status });
+    };
+
     return (
         <>
             <div className={styles.container}>
@@ -45,16 +51,10 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
                     {user.roles.includes("Trainer") &&
                         (payment.status === "На рассмотрении" ? (
                             <>
-                                <Button
-                                    variant="cancel"
-                                    onClick={() => (payment.status = "Отклонен")}
-                                >
+                                <Button variant="cancel" onClick={() => handleStatus(1)}>
                                     отменить
                                 </Button>
-                                <Button
-                                    variant="primary-small"
-                                    onClick={() => (payment.status = "Одобрен")}
-                                >
+                                <Button variant="primary-small" onClick={() => handleStatus(0)}>
                                     принять
                                 </Button>
                             </>
@@ -69,7 +69,7 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
             <Modal visible={openModal} onClose={() => setOpenModal(false)}>
                 {payment.receiptUrl ? (
                     <img
-                        src={`http://85.192.48.165:5001${payment.receiptUrl}`}
+                        src={payment.receiptUrl}
                         alt="фото чека"
                         className="px-5 py-3 max-h-[80vh]"
                     />

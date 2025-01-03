@@ -20,7 +20,11 @@ interface IForm {
     amount: number;
 }
 
-export const PaymentHistory = () => {
+interface IPaymentHistoryProps {
+    currentUserName?: string;
+}
+
+export const PaymentHistory = ({ currentUserName }: IPaymentHistoryProps) => {
     const [payments, setPayments] = useState<IPayment[]>([]);
 
     const user = useSelector((state: RootState) => state.user.user);
@@ -54,7 +58,9 @@ export const PaymentHistory = () => {
 
         if (user.roles.includes("Trainer")) {
             const fetchPaymentsTrainer = async () => {
-                const paymentsGet = await getTrainerPayments(user.userName);
+                const paymentsGet = currentUserName
+                    ? await getStudentsPayments(currentUserName)
+                    : await getTrainerPayments(user.userName);
                 setPayments(paymentsGet);
             };
             fetchPaymentsTrainer();
@@ -68,13 +74,16 @@ export const PaymentHistory = () => {
 
     const paymentHistory: JSX.Element = (
         <div className={styles.table}>
-            {payments.map((payment, index) => (
-                <PaymentRow payment={payment} key={index} />
-            ))}
+            {payments.length > 0 ? (
+                payments.map((payment, index) => <PaymentRow payment={payment} key={index} />)
+            ) : (
+                <Typography>Нет платежей</Typography>
+            )}
         </div>
     );
 
-    const { register, handleSubmit } = useForm<IForm>();
+    const { register, handleSubmit, formState } = useForm<IForm>();
+    const fileError = formState.errors["file"]?.message;
 
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [currentTrainer, setCurrentTrainer] = useState<string>("");
@@ -121,7 +130,12 @@ export const PaymentHistory = () => {
                     </Typography>
                     <div>
                         <Typography>Загрузите фото чека</Typography>
-                        <Input type="file" {...register("file")} />
+                        <Input
+                            type="file"
+                            {...register("file", { required: "Поле обязательно!" })}
+                            isError={!!fileError}
+                            helperText={fileError}
+                        />
                     </div>
                     <Select
                         options={trainers}

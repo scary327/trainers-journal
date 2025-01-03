@@ -1,5 +1,5 @@
 import { classnames } from "@/shared/lib";
-import { Typography, Select, Button, Input } from "@/shared/ui";
+import { Typography, Select, Button, Input, DateInput } from "@/shared/ui";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -8,6 +8,7 @@ import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudents, putStudent } from "@/entities/api/services";
+import { DateRange } from "@/shared/types";
 
 export interface IRegisterForm {
     lastName: string;
@@ -121,6 +122,8 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         });
     };
 
+    const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         if (!student)
             openContacts?.({
@@ -129,7 +132,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "2024-05-19",
+                    dateOfBirth: formatDate(selectedDate.start!),
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -157,6 +160,11 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         }
     };
 
+    const [selectedDate, setSelectedDate] = useState<DateRange>({
+        start: null,
+        end: null
+    });
+
     return (
         <>
             <Typography variant="text_16_b">{slideOutTitle}</Typography>
@@ -170,11 +178,19 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                         key={item}
                         type={item === "class" ? "number" : "text"}
                         min={1}
+                        max={11}
                         label={inputItems[item]}
                         {...register(item)}
                         defaultValue={student?.studentInfoItemDto[item] || ""}
                     />
                 ))}
+                <DateInput
+                    className="self-start"
+                    selectedRange={selectedDate}
+                    setSelectedRange={setSelectedDate}
+                    onlyOneDate={true}
+                    label="Дата рождения"
+                />
                 {selectItems.map((item) => (
                     <Select
                         key={item.title}

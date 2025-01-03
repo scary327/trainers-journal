@@ -29,5 +29,15 @@
 }
 
 .year_selector {
-    @apply absolute right-0 top-[50px];
+    @apply absolute left-[100px] flex flex-col max-h-[200px] overflow-auto bg-white w-[100px] p-[10px] border-blue-dark border-[2px];
+}
+
+.year_button {
+    @apply hover:bg-blue-light;
+}
+
+.weekdays {
+    @apply grid w-full;
+
+    grid-template-columns: repeat(7, 1fr);
 }
