@@ -84,6 +84,12 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         }
     ];
 
+    const addOneDay = (date: Date): Date => {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    };
+
     const { register, handleSubmit, reset } = useForm<IRegisterForm>();
 
     useEffect(() => {
@@ -108,7 +114,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "20014-05-19",
+                    dateOfBirth: formatDate(addOneDay(selectedDate.start!)),
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -132,7 +138,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: formatDate(selectedDate.start!),
+                    dateOfBirth: formatDate(addOneDay(selectedDate.start!)),
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,

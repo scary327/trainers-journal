@@ -138,6 +138,7 @@ export const PaymentHistory = ({ currentUserName }: IPaymentHistoryProps) => {
                         />
                     </div>
                     <Select
+                        label="Выберите тренера"
                         options={trainers}
                         value={currentTrainer}
                         onChange={setCurrentTrainer}
