@@ -13,7 +13,8 @@ export const DropdownHeader = ({ student, onPayment, onEdit }: DropdownHeaderPro
     return (
         <>
             <Typography tag="span" variant="text_14_m">
-                {student.studentInfoItemDto.lastName} {student.studentInfoItemDto.firstName[0]}.
+                {student.studentInfoItemDto.lastName} {student.studentInfoItemDto.firstName}{" "}
+                {student.studentInfoItemDto.middleName[0]}.
             </Typography>
             <Typography tag="span" variant="text_14_m">
                 {student.studentInfoItemDto.groups?.map((group) => group.groupName).join(" ")}

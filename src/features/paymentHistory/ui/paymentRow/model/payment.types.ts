@@ -1,4 +1,5 @@
 export interface IPayment {
+    paymentId: string;
     date: string;
     firstName: string;
     lastName: string;

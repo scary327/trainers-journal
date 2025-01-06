@@ -80,7 +80,7 @@ export const genderList: IFilterItem[] = [
         title: "Мужской"
     },
     {
-        id: "2",
+        id: "0",
         title: "Женский"
     }
 ];

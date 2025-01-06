@@ -1,4 +1,4 @@
-import { Loader, Modal, PageTitle, SlideOutMenu, Typography } from "@/shared/ui";
+import { Modal, PageTitle, SlideOutMenu, Typography } from "@/shared/ui";
 import * as styles from "./userPage.module.css";
 import { IStudent, UsersTable } from "@/widgets";
 import { useEffect, useState } from "react";
@@ -13,8 +13,6 @@ export const UserPage = () => {
     const title: string = "Пользователи";
     const dispatch = useDispatch<AppDispatch>();
     const userName = useSelector((state: RootState) => state.user.user.userName);
-    const loading = useSelector((state: RootState) => state.students.isLoading);
-    const loadingGroups = useSelector((state: RootState) => state.groups.isLoading);
 
     const authData = useSelector((state: RootState) => state.students.authData);
     const [authModal, setAuthModal] = useState<boolean>(false);
@@ -33,36 +31,31 @@ export const UserPage = () => {
         dispatch(getStudents(userName));
     }, [dispatch]);
 
-    const userTable =
-        loading || loadingGroups ? (
-            <div className="bg-white py-[30px] px-[80px] rounded-[20px]">
-                <Loader />
-            </div>
-        ) : (
-            <UsersTable
-                openFilter={() => {
-                    setSlideOutContent(<FilterMenu />); // Устанавливаем контент фильтра
-                    setSlideOutOpen(true); // Открываем слайд-аут
-                }}
-                openEdit={(student: IStudent | null) => {
-                    setSlideOutContent(
-                        <SlideOutContent
-                            student={student}
-                            openContacts={(data: IStudent) => {
-                                setSlideOutContent(
-                                    <SecondContent
-                                        form={data}
-                                        setAuthModal={() => setAuthModal(true)}
-                                    />
-                                );
-                                setSlideOutOpen(true);
-                            }}
-                        />
-                    ); // Устанавливаем контент редактирования
-                    setSlideOutOpen(true); // Открываем слайд-аут
-                }}
-            />
-        );
+    const userTable = (
+        <UsersTable
+            openFilter={() => {
+                setSlideOutContent(<FilterMenu />); // Устанавливаем контент фильтра
+                setSlideOutOpen(true); // Открываем слайд-аут
+            }}
+            openEdit={(student: IStudent | null) => {
+                setSlideOutContent(
+                    <SlideOutContent
+                        student={student}
+                        openContacts={(data: IStudent) => {
+                            setSlideOutContent(
+                                <SecondContent
+                                    form={data}
+                                    setAuthModal={() => setAuthModal(true)}
+                                />
+                            );
+                            setSlideOutOpen(true);
+                        }}
+                    />
+                ); // Устанавливаем контент редактирования
+                setSlideOutOpen(true); // Открываем слайд-аут
+            }}
+        />
+    );
 
     return (
         <>

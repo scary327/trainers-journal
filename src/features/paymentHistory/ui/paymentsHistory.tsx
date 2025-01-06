@@ -11,7 +11,8 @@ import {
     getTrainerPayments,
     getTrainers,
     getWallet,
-    postPayment
+    postPayment,
+    putPayment
 } from "@/entities/api/services";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -20,32 +21,49 @@ interface IForm {
     amount: number;
 }
 
-export const PaymentHistory = () => {
+interface IPaymentHistoryProps {
+    currentUserName?: string;
+}
+
+export const PaymentHistory = ({ currentUserName }: IPaymentHistoryProps) => {
     const [payments, setPayments] = useState<IPayment[]>([]);
 
     const user = useSelector((state: RootState) => state.user.user);
     const [trainers, setTrainers] = useState<{ value: string; label: string }[]>([]);
     const [wallet, setWallet] = useState<{ balance: number }>({ balance: 100 });
+    const fetchTrainers = async () => {
+        const trainersGet = await getTrainers(user.userName);
+        setTrainers(
+            trainersGet.map((item) => ({
+                value: item.trainerId,
+                label: `${item.lastName} ${item.firstName} ${item.middleName}`
+            }))
+        );
+    };
+    const fetchPayments = async () => {
+        const paymentsGet = await getStudentsPayments(user.userName);
+        setPayments(paymentsGet);
+    };
+
+    const fetchWallet = async () => {
+        const walletGet = await getWallet(user.userName);
+        setWallet(walletGet);
+    };
+
+    const fetchPaymentsTrainer = async () => {
+        const paymentsGet = currentUserName
+            ? await getStudentsPayments(currentUserName)
+            : await getTrainerPayments(user.userName);
+        setPayments(paymentsGet);
+    };
+
+    const handleStatus = async (status: number, payment: IPayment) => {
+        await putPayment({ id: payment.paymentId, status: status });
+        fetchPaymentsTrainer();
+    };
+
     useEffect(() => {
         if (user.roles.includes("Student")) {
-            const fetchTrainers = async () => {
-                const trainersGet = await getTrainers(user.userName);
-                setTrainers(
-                    trainersGet.map((item) => ({
-                        value: item.trainerId,
-                        label: `${item.lastName} ${item.firstName} ${item.middleName}`
-                    }))
-                );
-            };
-            const fetchPayments = async () => {
-                const paymentsGet = await getStudentsPayments(user.userName);
-                setPayments(paymentsGet);
-            };
-
-            const fetchWallet = async () => {
-                const walletGet = await getWallet(user.userName);
-                setWallet(walletGet);
-            };
             fetchWallet();
             fetchPayments();
             fetchTrainers();
@@ -53,10 +71,6 @@ export const PaymentHistory = () => {
         } // Вызов асинхронной функции
 
         if (user.roles.includes("Trainer")) {
-            const fetchPaymentsTrainer = async () => {
-                const paymentsGet = await getTrainerPayments(user.userName);
-                setPayments(paymentsGet);
-            };
             fetchPaymentsTrainer();
             return;
         }
@@ -68,23 +82,48 @@ export const PaymentHistory = () => {
 
     const paymentHistory: JSX.Element = (
         <div className={styles.table}>
-            {payments.map((payment, index) => (
-                <PaymentRow payment={payment} key={index} />
-            ))}
+            {payments.length > 0 ? (
+                payments.map((payment, index) => (
+                    <PaymentRow handleStatus={handleStatus} payment={payment} key={index} />
+                ))
+            ) : (
+                <Typography>Нет платежей</Typography>
+            )}
         </div>
     );
 
-    const { register, handleSubmit } = useForm<IForm>();
+    const { register, handleSubmit, formState, reset } = useForm<IForm>();
+    const fileError = formState.errors["file"]?.message;
+    const numberError = formState.errors["amount"]?.message;
 
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [currentTrainer, setCurrentTrainer] = useState<string>("");
 
     const onSubmit: SubmitHandler<IForm> = async (data) => {
-        const status = postPayment(
-            { TrainerId: currentTrainer, File: data.file[0], Amount: data.amount },
-            user.userName
-        );
-        console.log(status);
+        try {
+            const status = await postPayment(
+                { TrainerId: currentTrainer, File: data.file[0], Amount: data.amount },
+                user.userName
+            );
+            console.log(status);
+
+            // После успешной отправки платежа обновляем данные
+            if (status === 200) {
+                if (user.roles.includes("Student")) {
+                    await fetchPayments();
+                    await fetchWallet();
+                } else if (user.roles.includes("Trainer")) {
+                    await fetchPaymentsTrainer();
+                }
+                setOpenModal(false); // Закрываем модальное окно
+            }
+        } catch (error) {
+            console.error("Ошибка при добавлении платежа:", error);
+        }
+        reset({
+            file: "",
+            amount: undefined
+        });
     };
 
     return (
@@ -121,18 +160,30 @@ export const PaymentHistory = () => {
                     </Typography>
                     <div>
                         <Typography>Загрузите фото чека</Typography>
-                        <Input type="file" {...register("file")} />
+                        <Input
+                            type="file"
+                            {...register("file", { required: "Поле обязательно!" })}
+                            isError={!!fileError}
+                            helperText={fileError}
+                        />
                     </div>
                     <Select
+                        label="Выберите тренера"
                         options={trainers}
                         value={currentTrainer}
                         onChange={setCurrentTrainer}
                     />
                     <Input
                         type="number"
-                        {...register("amount")}
+                        {...register("amount", {
+                            min: {
+                                value: 0,
+                                message: "Сумма должна быть больше 0"
+                            }
+                        })}
                         label="Введите сумму с чека"
-                        min={0}
+                        isError={!!numberError}
+                        helperText={numberError}
                     />
                     <Button variant="primary" onClick={handleSubmit(onSubmit)}>
                         Отправить на проверку

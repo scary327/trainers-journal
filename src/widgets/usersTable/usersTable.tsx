@@ -1,11 +1,12 @@
 import * as styles from "./usersTable.module.css";
-import { Button, Modal, Search, Typography } from "@/shared/ui";
+import { Button, Loader, Modal, Search, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store";
+import { getStudents, searchStudents } from "@/entities/api/services";
 
 export interface IContact {
     firstName: string;
@@ -52,9 +53,13 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
 
     const students: IStudent[] = useSelector((state: RootState) => state.students.students);
 
-    const [payment, setPayment] = useState<IStudent | boolean>(false);
+    const [payment, setPayment] = useState<IStudent | null>(null);
 
     const [contacts, setContacts] = useState<boolean>(false);
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    const userName = useSelector((state: RootState) => state.user.user.userName);
 
     const studentContacts: IContact[] = useSelector(
         (state: RootState) => state.students.currentStudentContacts
@@ -62,12 +67,17 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
 
     const [currentStudent, setCurrentStudent] = useState<IStudent | null>(null);
 
+    const loading = useSelector((state: RootState) => state.students.isLoading);
+    const loadingGroups = useSelector((state: RootState) => state.groups.isLoading);
+
     const tableBody = students.map((student, index) => (
         <Dropdown
             key={index}
             header={
                 <DropdownHeader
-                    onPayment={() => setPayment(student)}
+                    onPayment={() => {
+                        setPayment(student);
+                    }}
                     onEdit={() => {
                         openEdit?.(student);
                     }}
@@ -88,11 +98,20 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
         />
     ));
 
+    const setSearch = (inputValue: string) => {
+        if (!inputValue) {
+            dispatch(getStudents(userName));
+            return;
+        }
+        dispatch(searchStudents({ userName: userName, patternFullName: inputValue }));
+        //searchStudents();
+    };
+
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.filter_container}>
-                    <Search />
+                    <Search setSearch={setSearch} />
                     <Button
                         variant="primary"
                         className="flex items-center gap-x-[10px]"
@@ -108,23 +127,29 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
                         Добавить пользователя
                     </Button>
                 </div>
-                <div className={styles.table_container}>
-                    <div className={styles.table_header}>
-                        {tableItems.map((item, index) => (
-                            <Typography
-                                variant="text_14_r"
-                                key={index}
-                                className="text-gray-text whitespace-nowrap"
-                            >
-                                {item}
-                            </Typography>
-                        ))}
+                {loading || loadingGroups ? (
+                    <div className="w-full flex justify-center">
+                        <Loader />
                     </div>
-                    <div className={styles.table_body}>{tableBody}</div>
-                </div>
+                ) : (
+                    <div className={styles.table_container}>
+                        <div className={styles.table_header}>
+                            {tableItems.map((item, index) => (
+                                <Typography
+                                    variant="text_14_r"
+                                    key={index}
+                                    className="text-gray-text whitespace-nowrap"
+                                >
+                                    {item}
+                                </Typography>
+                            ))}
+                        </div>
+                        <div className={styles.table_body}>{tableBody}</div>
+                    </div>
+                )}
             </div>
-            <Modal visible={!!payment} onClose={() => setPayment(false)}>
-                <PaymentHistory />
+            <Modal visible={!!payment} onClose={() => setPayment(null)}>
+                <PaymentHistory currentUserName={payment?.studentInfoItemDto.userName} />
             </Modal>
             <Modal visible={contacts} onClose={() => setContacts(false)}>
                 {currentStudent && (

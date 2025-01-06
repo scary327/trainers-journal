@@ -7,9 +7,10 @@ import { useSelector } from "react-redux";
 
 interface IPaymentRowProps {
     payment: IPayment;
+    handleStatus: (status: number, payment: IPayment) => void;
 }
 
-export const PaymentRow = ({ payment }: IPaymentRowProps) => {
+export const PaymentRow = ({ payment, handleStatus }: IPaymentRowProps) => {
     const [openModal, setOpenModal] = useState<boolean>(false);
 
     const user = useSelector((state: RootState) => state.user.user);
@@ -45,15 +46,12 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
                     {user.roles.includes("Trainer") &&
                         (payment.status === "На рассмотрении" ? (
                             <>
-                                <Button
-                                    variant="cancel"
-                                    onClick={() => (payment.status = "Отклонен")}
-                                >
+                                <Button variant="cancel" onClick={() => handleStatus(1, payment)}>
                                     отменить
                                 </Button>
                                 <Button
                                     variant="primary-small"
-                                    onClick={() => (payment.status = "Одобрен")}
+                                    onClick={() => handleStatus(0, payment)}
                                 >
                                     принять
                                 </Button>
@@ -69,7 +67,7 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
             <Modal visible={openModal} onClose={() => setOpenModal(false)}>
                 {payment.receiptUrl ? (
                     <img
-                        src={`http://85.192.48.165:5001${payment.receiptUrl}`}
+                        src={payment.receiptUrl}
                         alt="фото чека"
                         className="px-5 py-3 max-h-[80vh]"
                     />

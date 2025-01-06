@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getStudentContacts, getStudents, putStudent } from "@/entities/api/services";
+import {
+    filterStudents,
+    getStudentContacts,
+    getStudents,
+    putStudent,
+    searchStudents
+} from "@/entities/api/services";
 import { IContact, IStudent } from "@/widgets";
 import { postStudent } from "@/entities/api/services/postStudents";
 import { IAuthData } from "@/entities/user/model/user.reducer";
@@ -56,6 +62,60 @@ const studentsSlice = createSlice({
                 state.isLoading = false;
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             })
+
+            //searchStudents
+            .addCase(searchStudents.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(searchStudents.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.students = action.payload.map((item) => ({
+                    groupId: "",
+                    studentInfoItemDto: {
+                        userName: item.userName,
+                        firstName: item.firstName,
+                        lastName: item.lastName,
+                        middleName: item.middleName,
+                        dateOfBirth: item.dateOfBirth,
+                        kyu: item.kyu,
+                        class: item.class,
+                        address: item.address,
+                        phoneNumber: item.phoneNumber,
+                        email: item.email,
+                        gender: item.gender,
+                        walletBalance: item.walletBalance,
+                        groups: item.groups
+                    },
+                    contacts: []
+                }));
+            })
+            //filter
+            .addCase(filterStudents.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(filterStudents.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.students = action.payload.map((item) => ({
+                    groupId: "",
+                    studentInfoItemDto: {
+                        userName: item.userName,
+                        firstName: item.firstName,
+                        lastName: item.lastName,
+                        middleName: item.middleName,
+                        dateOfBirth: item.dateOfBirth,
+                        kyu: item.kyu,
+                        class: item.class,
+                        address: item.address,
+                        phoneNumber: item.phoneNumber,
+                        email: item.email,
+                        gender: item.gender,
+                        walletBalance: item.walletBalance,
+                        groups: item.groups
+                    },
+                    contacts: []
+                }));
+            })
+
             // POST
             .addCase(postStudent.pending, (state) => {
                 state.isLoading = true;

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import * as styles from "./calendar.module.css";
-import { addMonths, format, setYear, subMonths } from "date-fns";
+import { addMonths, format, setYear, subMonths, startOfMonth, getDay } from "date-fns";
 import { ru } from "date-fns/locale";
 import ArrowSVG from "@/shared/icons/arrowDown.svg";
 import { Typography } from "@/shared/ui/Typography/typography";
+import { classnames } from "@/shared/lib";
 
 interface SmallCalendarProps {
     selectedRange: { start: Date | null; end: Date | null };
@@ -13,11 +14,14 @@ interface SmallCalendarProps {
 export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps) => {
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
     const [isYearSelectorOpen, setYearSelectorOpen] = useState<boolean>(false);
+
     const daysInMonth = new Date(
         currentMonth.getFullYear(),
         currentMonth.getMonth() + 1,
         0
     ).getDate();
+
+    const startDayOfMonth = (getDay(startOfMonth(currentMonth)) + 6) % 7; // День недели начала месяца (0 - Воскресенье, 6 - Суббота)
 
     const handlePreviousMonth = () => {
         setCurrentMonth((prev) => subMonths(prev, 1));
@@ -28,7 +32,6 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
     };
 
     const toggleYearSelector = () => {
-        console.log(123);
         setYearSelectorOpen((prev) => !prev);
     };
 
@@ -42,12 +45,23 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
         (_, i) => new Date().getFullYear() - 100 + i
     );
 
+    // Генерация дней месяца по неделям
+    const days = Array.from({ length: 42 }, (_, i) => {
+        const dayIndex = i - startDayOfMonth + 1; // Сдвиг для начала месяца
+        return dayIndex > 0 && dayIndex <= daysInMonth
+            ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayIndex)
+            : null; // null для пустых ячеек
+    });
+
     return (
         <div className={styles.calendar}>
             <div className={styles.calendar_header}>
-                <Typography onClick={toggleYearSelector} variant="text_14_b">
-                    {format(currentMonth, "LLLL yyyy", { locale: ru })}
-                </Typography>
+                <button type="button" onClick={toggleYearSelector}>
+                    <Typography variant="text_14_b">
+                        {format(currentMonth, "LLLL yyyy", { locale: ru })}
+                    </Typography>
+                </button>
+
                 <div className={styles.button_container}>
                     <button
                         type="button"
@@ -66,7 +80,7 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
                 </div>
             </div>
             {isYearSelectorOpen && (
-                <div className={styles.year_selector}>
+                <div className={classnames(styles.year_selector, "scrollbar-webkit")}>
                     {availableYears.map((year) => (
                         <button
                             type="button"
@@ -79,20 +93,25 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
                     ))}
                 </div>
             )}
+            <div className={styles.weekdays}>
+                {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => (
+                    <div key={day} className={styles.weekday}>
+                        {day}
+                    </div>
+                ))}
+            </div>
             <div className={styles.calendar_grid}>
-                {Array.from({ length: daysInMonth }, (_, i) => {
-                    const date = new Date(
-                        currentMonth.getFullYear(),
-                        currentMonth.getMonth(),
-                        i + 1
-                    );
+                {days.map((date, i) => {
                     const isSelected =
-                        (selectedRange.start &&
+                        date &&
+                        ((selectedRange.start &&
                             format(date, "yyyy-MM-dd") ===
                                 format(selectedRange.start, "yyyy-MM-dd")) ||
-                        (selectedRange.end &&
-                            format(date, "yyyy-MM-dd") === format(selectedRange.end, "yyyy-MM-dd"));
+                            (selectedRange.end &&
+                                format(date, "yyyy-MM-dd") ===
+                                    format(selectedRange.end, "yyyy-MM-dd")));
                     const isInRange =
+                        date &&
                         selectedRange.start &&
                         selectedRange.end &&
                         date > (selectedRange.start as Date) &&
@@ -102,12 +121,16 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
                         <button
                             type="button"
                             key={i}
-                            className={`${styles.calendar_day} ${
-                                isSelected ? styles.selected : ""
-                            } ${isInRange ? styles.in_range : ""}`}
-                            onClick={() => onDateClick(date)}
+                            className={classnames(
+                                styles.calendar_day,
+                                isSelected ? styles.selected : "",
+                                isInRange ? styles.in_range : "",
+                                !date ? styles.empty_day : ""
+                            )}
+                            onClick={() => date && onDateClick(date)}
+                            disabled={!date}
                         >
-                            {i + 1}
+                            {date ? date.getDate() : ""}
                         </button>
                     );
                 })}

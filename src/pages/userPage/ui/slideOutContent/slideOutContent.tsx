@@ -1,5 +1,5 @@
 import { classnames } from "@/shared/lib";
-import { Typography, Select, Button, Input } from "@/shared/ui";
+import { Typography, Select, Button, Input, DateInput } from "@/shared/ui";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -8,6 +8,7 @@ import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudents, putStudent } from "@/entities/api/services";
+import { DateRange } from "@/shared/types";
 
 export interface IRegisterForm {
     lastName: string;
@@ -46,13 +47,13 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     );
 
     const inputItems = {
-        lastName: "Фамилия",
-        firstName: "Имя",
-        middleName: "Отчество",
-        address: "Адресс",
-        class: "Класс",
+        lastName: "Фамилия*",
+        firstName: "Имя*",
+        middleName: "Отчество*",
+        address: "Адрес",
+        class: "Класс*",
         phoneNumber: "Телефон",
-        email: "Почта"
+        email: "Почта*"
     };
     const selectItems = [
         {
@@ -83,7 +84,13 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         }
     ];
 
-    const { register, handleSubmit, reset } = useForm<IRegisterForm>();
+    const addOneDay = (date: Date): Date => {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    };
+
+    const { register, handleSubmit, reset, formState } = useForm<IRegisterForm>();
 
     useEffect(() => {
         if (student) {
@@ -100,6 +107,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     const userName = useSelector((state: RootState) => state.user.user.userName);
 
     const handleEdit = (data: IRegisterForm) => {
+        if (!student) return;
         dispatch(
             putStudent({
                 userName: student?.studentInfoItemDto?.userName ?? "defaultUsername",
@@ -107,7 +115,9 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "2014-05-19",
+                    dateOfBirth: selectedDate.start
+                        ? formatDate(addOneDay(selectedDate.start!))
+                        : student.studentInfoItemDto.dateOfBirth,
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -121,15 +131,17 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         });
     };
 
+    const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         if (!student)
             openContacts?.({
-                groupId: groupValue,
+                groupId: groupValue ? groupValue : groupsOptions[0].value,
                 studentInfoItemDto: {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "2024-05-19",
+                    dateOfBirth: formatDate(addOneDay(selectedDate.start!)),
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -157,6 +169,11 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         }
     };
 
+    const [selectedDate, setSelectedDate] = useState<DateRange>({
+        start: null,
+        end: null
+    });
+
     return (
         <>
             <Typography variant="text_16_b">{slideOutTitle}</Typography>
@@ -164,17 +181,46 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                 className={classnames(styles.form_container, "scrollbar-webkit")}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {Object.keys(inputItems).map((item: keyof typeof inputItems) => (
-                    <Input
-                        className="w-full"
-                        key={item}
-                        type={item === "class" ? "number" : "text"}
-                        min={1}
-                        label={inputItems[item]}
-                        {...register(item)}
-                        defaultValue={student?.studentInfoItemDto[item] || ""}
+                {Object.keys(inputItems).map((item: keyof typeof inputItems) => {
+                    const errors = formState.errors[item];
+                    const isRequired = [
+                        "lastName",
+                        "firstName",
+                        "middleName",
+                        "class",
+                        "email"
+                    ].includes(item);
+                    const isClass = item === "class";
+
+                    return (
+                        <Input
+                            className="w-full"
+                            key={item}
+                            type="text"
+                            label={inputItems[item]}
+                            {...register(item, {
+                                ...(isRequired && { required: "Это поле обязательно" }),
+                                ...(isClass && {
+                                    pattern: {
+                                        value: /^[1-9]$|^10$|^11$/,
+                                        message: "Введите число от 1 до 11"
+                                    }
+                                })
+                            })}
+                            isError={!!errors}
+                            helperText={errors?.message}
+                            defaultValue={student?.studentInfoItemDto[item] || ""}
+                        />
+                    );
+                })}
+                <div className="self-start z-50">
+                    <DateInput
+                        selectedRange={selectedDate}
+                        setSelectedRange={setSelectedDate}
+                        onlyOneDate={true}
+                        label="Дата рождения*"
                     />
-                ))}
+                </div>
                 {selectItems.map((item) => (
                     <Select
                         key={item.title}

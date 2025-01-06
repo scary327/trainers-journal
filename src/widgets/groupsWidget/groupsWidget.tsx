@@ -4,9 +4,9 @@ import { classnames } from "@/shared/lib";
 import { IGroup } from "@/shared/types";
 import { useState } from "react";
 import { NewGroupContent } from "./newGroupContent/newGroupContent";
-import { deleteGroup } from "@/entities/api/services";
-import { AppDispatch } from "@/app/store";
-import { useDispatch } from "react-redux";
+import { deleteGroup, getGroups, searchGroups } from "@/entities/api/services";
+import { AppDispatch, RootState } from "@/app/store";
+import { useDispatch, useSelector } from "react-redux";
 import { EditGroup } from "./editGroup/editGroup";
 
 interface GroupsWidgetProps {
@@ -27,11 +27,21 @@ export const GroupsWidget = ({ groupList }: GroupsWidgetProps) => {
         dispatch(deleteGroup(id));
     };
 
+    const userName = useSelector((state: RootState) => state.user.user.userName);
+
+    const setSearch = (inputValue: string) => {
+        if (!inputValue) {
+            dispatch(getGroups(userName));
+            return;
+        }
+        dispatch(searchGroups({ userName: userName, patternSearch: inputValue }));
+    };
+
     return (
         <>
             <div className={styles.container}>
                 <div className="flex justify-between items-center">
-                    <Search />
+                    <Search setSearch={setSearch} />
                     <Button onClick={() => setOpenSlideOut(true)}>{buttonDesc}</Button>
                 </div>
                 <div className={styles.table}>

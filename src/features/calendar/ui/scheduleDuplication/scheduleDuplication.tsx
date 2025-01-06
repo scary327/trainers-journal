@@ -1,6 +1,9 @@
+import { RootState } from "@/app/store";
+import { postPracticeDublicate } from "@/entities/api/services";
 import { DateRange } from "@/shared/types";
 import { Button, DateInput, Typography } from "@/shared/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const ScheduleDuplication = () => {
     const [insertionRage, setInsertionRage] = useState<DateRange>({
@@ -13,8 +16,32 @@ export const ScheduleDuplication = () => {
         end: null
     });
 
+    const userName = useSelector((state: RootState) => state.user.user.userName);
+
+    const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+
+    let helperText: string = "";
+
+    useEffect(() => {}, [helperText]);
+
     const onSubmit = () => {
-        console.log(insertionRage, duplicationRage);
+        if (
+            !duplicationRage.start ||
+            !duplicationRage.end ||
+            !insertionRage.start ||
+            !insertionRage.end
+        ) {
+            helperText = "Выберите диапозоны дублирования и вставки";
+            return;
+        }
+        const result = {
+            dateStartCopy: formatDate(duplicationRage.start!),
+            dateEndCopy: formatDate(duplicationRage.end!),
+            dateStartPaste: formatDate(insertionRage.start!),
+            dateEndPaste: formatDate(insertionRage.end!)
+        };
+        postPracticeDublicate({ userName: userName, ...result });
+        console.log(result);
     };
 
     return (
@@ -35,6 +62,11 @@ export const ScheduleDuplication = () => {
                     <DateInput selectedRange={insertionRage} setSelectedRange={setInsertionRage} />
                 </div>
             </div>
+            {helperText && (
+                <Typography variant="text_14_m" className="text-error-red">
+                    {helperText}
+                </Typography>
+            )}
             <Button variant="primary" className="self-end mt-auto" onClick={() => onSubmit()}>
                 Создать
             </Button>

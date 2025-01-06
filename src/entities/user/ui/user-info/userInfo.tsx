@@ -1,4 +1,4 @@
-import { Button, SlideOutMenu, Typography } from "@/shared/ui";
+import { Button, SlideOutMenu } from "@/shared/ui";
 import * as styles from "./userInfo.module.css";
 
 import AvatarSVG from "@/shared/icons/avatar.svg";
@@ -44,12 +44,6 @@ export const UserInfo = memo(() => {
         user.info.dateOfBirth?.toString() ?? "не указан"
     ];
     const userStudentDataItems: string[] = ["Адрес", "Класс", "Дата рождения"];
-
-    const group: JSX.Element | null = user.roles.includes("Student") ? (
-        <div className={styles.group}>
-            <Typography variant="text_14_m">Группа РИ-1</Typography>
-        </div>
-    ) : null;
 
     const avatar: JSX.Element = !loading ? (
         <div>
@@ -114,7 +108,6 @@ export const UserInfo = memo(() => {
                 >
                     Изменить
                 </Button>
-                {group}
             </div>
             <SlideOutMenu isOpen={openSlideOut} onClose={() => setOpenSlideOut(false)}>
                 {user.roles.includes("Trainer") ? (

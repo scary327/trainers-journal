@@ -10,16 +10,21 @@ interface SearchProps {
 export const Search = ({ setSearch, delay = 500 }: SearchProps) => {
     const [inputValue, setInputValue] = useState<string>("");
     const inputRef = useRef<HTMLInputElement>(null);
+    const prevInputValue = useRef<string>("");
 
     useEffect(() => {
         if (!setSearch) return;
 
         const handler = setTimeout(() => {
-            setSearch(inputValue);
+            // Проверяем, изменилось ли значение
+            if (inputValue !== prevInputValue.current) {
+                setSearch(inputValue); // Вызываем setSearch только при изменении
+                prevInputValue.current = inputValue; // Обновляем предыдущее значение
+            }
         }, delay);
 
         return () => clearTimeout(handler);
-    }, [inputValue, setSearch, delay]);
+    }, [inputValue, setSearch]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
