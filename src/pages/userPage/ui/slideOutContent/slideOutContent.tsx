@@ -53,7 +53,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         address: "Адрес",
         class: "Класс*",
         phoneNumber: "Телефон",
-        email: "Почта*"
+        email: "Почта"
     };
     const selectItems = [
         {
@@ -183,13 +183,9 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
             >
                 {Object.keys(inputItems).map((item: keyof typeof inputItems) => {
                     const errors = formState.errors[item];
-                    const isRequired = [
-                        "lastName",
-                        "firstName",
-                        "middleName",
-                        "class",
-                        "email"
-                    ].includes(item);
+                    const isRequired = ["lastName", "firstName", "middleName", "class"].includes(
+                        item
+                    );
                     const isClass = item === "class";
 
                     return (
