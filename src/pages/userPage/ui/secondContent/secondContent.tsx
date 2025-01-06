@@ -31,8 +31,8 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
         });
     };
 
-    const addNew: SubmitHandler<IForm> = (data) => {
-        setTempContacts((prev) => [...prev, data]);
+    const addNew: SubmitHandler<IForm> = async (data) => {
+        await setTempContacts((prev) => [...prev, data]);
         reset({
             firstName: "",
             lastName: "",
@@ -65,9 +65,8 @@ export const SecondContent = ({ form, setAuthModal }: SecondContentProps) => {
                     <Button
                         variant="secondary"
                         type="button"
-                        onClick={() => {
-                            handleSubmit(addNew)();
-                            handleCreate();
+                        onClick={async () => {
+                            await handleSubmit(addNew)().then(() => handleCreate());
                         }}
                     >
                         Сохранить

@@ -107,7 +107,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: "20014-05-19",
+                    dateOfBirth: "2014-05-19",
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
