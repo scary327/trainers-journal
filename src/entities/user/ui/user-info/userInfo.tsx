@@ -117,7 +117,10 @@ export const UserInfo = memo(() => {
                         student={
                             {
                                 groupId: "defoultValue",
-                                studentInfoItemDto: user.info as IStudentInfo
+                                studentInfoItemDto: {
+                                    userName: user.userName,
+                                    ...(user.info as IStudentInfo)
+                                }
                             } as IStudent
                         }
                     />
