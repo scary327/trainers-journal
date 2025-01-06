@@ -27,6 +27,8 @@ export interface IClass {
     trainerFirstName: string;
     trainerLastName: string;
     trainerMiddleName: string;
+    cost: number;
+    isAttend: boolean;
 }
 
 export interface IStudentHeader {

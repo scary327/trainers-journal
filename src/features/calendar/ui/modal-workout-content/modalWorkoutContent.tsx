@@ -120,6 +120,14 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                         {workout.trainerMiddleName}
                     </Typography>
                 </div>
+                <div>
+                    <Typography variant="text_14_r" className="text-gray-text">
+                        Стоимость
+                    </Typography>
+                    <Typography variant="text_14_m" className="text-black">
+                        {workout.cost} ₽
+                    </Typography>
+                </div>
             </div>
             {user.roles.includes("Trainer") && (
                 <>
@@ -166,7 +174,9 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                 </>
             )}
             {user.roles.includes("Student") && (
-                <Typography variant="text_16_m">Вас ждут на этом занятии!</Typography>
+                <Typography variant="text_16_m">
+                    {workout.isAttend ? "Вы уже посетили это занятие" : "Вас ждут на этом занятии"}
+                </Typography>
             )}
         </div>
     );

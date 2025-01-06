@@ -4,13 +4,13 @@ import * as styles from "./paymentRow.module.css";
 import { useState } from "react";
 import { RootState } from "@/app/store";
 import { useSelector } from "react-redux";
-import { putPayment } from "@/entities/api/services";
 
 interface IPaymentRowProps {
     payment: IPayment;
+    handleStatus: (status: number, payment: IPayment) => void;
 }
 
-export const PaymentRow = ({ payment }: IPaymentRowProps) => {
+export const PaymentRow = ({ payment, handleStatus }: IPaymentRowProps) => {
     const [openModal, setOpenModal] = useState<boolean>(false);
 
     const user = useSelector((state: RootState) => state.user.user);
@@ -26,11 +26,6 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
             payment.status = "Одобрен";
             break;
     }
-
-    //0 или 1
-    const handleStatus = (status: number) => {
-        putPayment({ id: payment.paymentId, status: status });
-    };
 
     return (
         <>
@@ -51,10 +46,13 @@ export const PaymentRow = ({ payment }: IPaymentRowProps) => {
                     {user.roles.includes("Trainer") &&
                         (payment.status === "На рассмотрении" ? (
                             <>
-                                <Button variant="cancel" onClick={() => handleStatus(1)}>
+                                <Button variant="cancel" onClick={() => handleStatus(1, payment)}>
                                     отменить
                                 </Button>
-                                <Button variant="primary-small" onClick={() => handleStatus(0)}>
+                                <Button
+                                    variant="primary-small"
+                                    onClick={() => handleStatus(0, payment)}
+                                >
                                     принять
                                 </Button>
                             </>

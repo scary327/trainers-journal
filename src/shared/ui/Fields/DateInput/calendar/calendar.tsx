@@ -21,7 +21,7 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
         0
     ).getDate();
 
-    const startDayOfMonth = getDay(startOfMonth(currentMonth)); // День недели начала месяца (0 - Воскресенье, 6 - Суббота)
+    const startDayOfMonth = (getDay(startOfMonth(currentMonth)) + 6) % 7; // День недели начала месяца (0 - Воскресенье, 6 - Суббота)
 
     const handlePreviousMonth = () => {
         setCurrentMonth((prev) => subMonths(prev, 1));
@@ -47,7 +47,7 @@ export const SmallCalendar = ({ selectedRange, onDateClick }: SmallCalendarProps
 
     // Генерация дней месяца по неделям
     const days = Array.from({ length: 42 }, (_, i) => {
-        const dayIndex = i - startDayOfMonth + 2; // Сдвиг для начала месяца
+        const dayIndex = i - startDayOfMonth + 1; // Сдвиг для начала месяца
         return dayIndex > 0 && dayIndex <= daysInMonth
             ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayIndex)
             : null; // null для пустых ячеек

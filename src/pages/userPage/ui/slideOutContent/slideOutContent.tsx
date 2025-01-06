@@ -47,13 +47,13 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     );
 
     const inputItems = {
-        lastName: "Фамилия",
-        firstName: "Имя",
-        middleName: "Отчество",
-        address: "Адресс",
-        class: "Класс",
+        lastName: "Фамилия*",
+        firstName: "Имя*",
+        middleName: "Отчество*",
+        address: "Адрес",
+        class: "Класс*",
         phoneNumber: "Телефон",
-        email: "Почта"
+        email: "Почта*"
     };
     const selectItems = [
         {
@@ -90,7 +90,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         return newDate;
     };
 
-    const { register, handleSubmit, reset } = useForm<IRegisterForm>();
+    const { register, handleSubmit, reset, formState } = useForm<IRegisterForm>();
 
     useEffect(() => {
         if (student) {
@@ -107,6 +107,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     const userName = useSelector((state: RootState) => state.user.user.userName);
 
     const handleEdit = (data: IRegisterForm) => {
+        if (!student) return;
         dispatch(
             putStudent({
                 userName: student?.studentInfoItemDto?.userName ?? "defaultUsername",
@@ -114,7 +115,9 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     middleName: data.middleName,
-                    dateOfBirth: formatDate(addOneDay(selectedDate.start!)),
+                    dateOfBirth: selectedDate.start
+                        ? formatDate(addOneDay(selectedDate.start!))
+                        : student.studentInfoItemDto.dateOfBirth,
                     kyu: Number(kyuValue),
                     class: data.class,
                     address: data.address,
@@ -133,7 +136,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
     const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
         if (!student)
             openContacts?.({
-                groupId: groupValue,
+                groupId: groupValue ? groupValue : groupsOptions[0].value,
                 studentInfoItemDto: {
                     firstName: data.firstName,
                     lastName: data.lastName,
@@ -178,25 +181,46 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                 className={classnames(styles.form_container, "scrollbar-webkit")}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {Object.keys(inputItems).map((item: keyof typeof inputItems) => (
-                    <Input
-                        className="w-full"
-                        key={item}
-                        type={item === "class" ? "number" : "text"}
-                        min={1}
-                        max={11}
-                        label={inputItems[item]}
-                        {...register(item)}
-                        defaultValue={student?.studentInfoItemDto[item] || ""}
+                {Object.keys(inputItems).map((item: keyof typeof inputItems) => {
+                    const errors = formState.errors[item];
+                    const isRequired = [
+                        "lastName",
+                        "firstName",
+                        "middleName",
+                        "class",
+                        "email"
+                    ].includes(item);
+                    const isClass = item === "class";
+
+                    return (
+                        <Input
+                            className="w-full"
+                            key={item}
+                            type="text"
+                            label={inputItems[item]}
+                            {...register(item, {
+                                ...(isRequired && { required: "Это поле обязательно" }),
+                                ...(isClass && {
+                                    pattern: {
+                                        value: /^[1-9]$|^10$|^11$/,
+                                        message: "Введите число от 1 до 11"
+                                    }
+                                })
+                            })}
+                            isError={!!errors}
+                            helperText={errors?.message}
+                            defaultValue={student?.studentInfoItemDto[item] || ""}
+                        />
+                    );
+                })}
+                <div className="self-start z-50">
+                    <DateInput
+                        selectedRange={selectedDate}
+                        setSelectedRange={setSelectedDate}
+                        onlyOneDate={true}
+                        label="Дата рождения*"
                     />
-                ))}
-                <DateInput
-                    className="self-start"
-                    selectedRange={selectedDate}
-                    setSelectedRange={setSelectedDate}
-                    onlyOneDate={true}
-                    label="Дата рождения"
-                />
+                </div>
                 {selectItems.map((item) => (
                     <Select
                         key={item.title}
