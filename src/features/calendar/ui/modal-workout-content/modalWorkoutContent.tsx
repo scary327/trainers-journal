@@ -10,7 +10,6 @@ import {
 } from "@/entities/api/services";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
-import { setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
 
 interface IProps {
     onClose: () => void;
@@ -173,7 +172,6 @@ export const ModalWorkoutContent = ({ onClose, setSlideOutOpen }: IProps) => {
                             className="p-0"
                             onClick={() => {
                                 setSlideOutOpen();
-                                dispatch(setCurrentWorkout(workout));
                             }}
                         >
                             Редактировать

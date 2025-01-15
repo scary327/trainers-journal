@@ -2,16 +2,20 @@ import { useState } from "react";
 import { CalendarBody } from "./body/CalendarBody";
 import { CalendarHeader } from "./header/CalendarHeader";
 import { Modal, SlideOutMenu } from "@/shared/ui";
+import { IClass } from "@/shared/types";
 import { ModalWorkoutContent } from "./modal-workout-content/modalWorkoutContent";
 import { EditPracticeContent } from "./editPracticeContent/editPracticeContent";
 import { ScheduleDuplication } from "./scheduleDuplication/scheduleDuplication";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store";
+import { setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
 
 export const Calendar = () => {
     const [openWorkout, setOpenWorkout] = useState<boolean>(false);
 
     const [slideOutOpen, setSlideOutOpen] = useState<boolean>(false);
     const [slideOutContent, setSlideOutContent] = useState<JSX.Element>(<></>);
-
+    const dispatch = useDispatch<AppDispatch>();
     const [openDuplicate, setOpenDuplicate] = useState<boolean>(false);
 
     return (
@@ -24,7 +28,10 @@ export const Calendar = () => {
                         setSlideOutContent(<EditPracticeContent isEdit={false} />);
                     }}
                 />
-                <CalendarBody onOpenWorkout={() => setOpenWorkout(true)} />
+                <CalendarBody
+                    onOpenWorkout={() => setOpenWorkout(true)}
+                    setCurrentWorkout={(workout: IClass) => dispatch(setCurrentWorkout(workout))}
+                />
             </div>
             <Modal visible={openDuplicate} onClose={() => setOpenDuplicate(false)}>
                 <ScheduleDuplication />
