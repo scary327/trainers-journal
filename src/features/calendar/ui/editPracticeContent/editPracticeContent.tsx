@@ -79,6 +79,7 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
                 })
             ).then(() => {
                 dispatch(getPractices(user));
+                reset();
             });
         } else {
             // Edit Practice
@@ -102,8 +103,6 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
                 );
             });
         }
-
-        reset();
     };
 
     return (
