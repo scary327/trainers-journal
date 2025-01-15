@@ -49,12 +49,14 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
 
     const workout = useSelector((state: RootState) => state.practices.currentWorkout);
 
+    const error = useSelector((state: RootState) => state.practices.errorMessage);
+
     useEffect(() => {
-        if (workout) {
+        if (isEdit) {
             // Если student существует, обновляем значения формы
-            setGroupValue((groups.find((g) => g.name === workout.groupName) as IGroup).id);
+            setGroupValue((groups.find((g) => g.name === workout!.groupName) as IGroup).id);
             // setGenderValue(student.studentInfoItemDto.gender.toString());
-            setDate({ start: new Date(workout.date), end: null });
+            setDate({ start: new Date(workout!.date), end: null });
         } else {
             // Если student отсутствует, сбрасываем форму
             setGroupValue("");
@@ -68,7 +70,7 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
         }
         const todayISO = new Date(date.start).toLocaleDateString("en-CA");
 
-        if (!workout) {
+        if (!isEdit) {
             // Create Practice
             dispatch(
                 postPractice({
@@ -87,14 +89,14 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
                 putPractice({
                     timeEnd: data.timeEnd,
                     timeStart: data.timeStart,
-                    practiceId: workout.practiceId,
+                    practiceId: workout!.practiceId,
                     date: todayISO
                 })
             ).then(() => {
                 dispatch(getPractices(user));
                 dispatch(
                     setCurrentWorkout({
-                        ...workout,
+                        ...workout!,
                         timeEnd: data.timeEnd,
                         timeStart: data.timeStart,
                         date: todayISO,
@@ -130,7 +132,7 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
                     {...register("timeStart")}
                     min="06:00"
                     max="23:00"
-                    defaultValue={workout?.timeStart}
+                    defaultValue={isEdit ? workout?.timeStart : ""}
                 />
                 <Input
                     className="w-full"
@@ -138,8 +140,13 @@ export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
                     {...register("timeEnd")}
                     min="06:00"
                     max="23:00"
-                    defaultValue={workout?.timeEnd}
+                    defaultValue={isEdit ? workout?.timeEnd : ""}
                 />
+                {error && (
+                    <Typography variant="text_14_m" className="text-error-red">
+                        {error}
+                    </Typography>
+                )}
                 <Button variant="primary" className="w-[100%]" type="submit">
                     {buttonTitle}
                 </Button>
