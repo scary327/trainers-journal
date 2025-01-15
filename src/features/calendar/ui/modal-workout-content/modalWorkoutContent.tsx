@@ -135,8 +135,7 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
             </div>
             {user.roles.includes("Trainer") && (
                 <>
-                    <div
-                        className="flex flex-col items-center w-full gap-y-[10px] p-[10px] max-h-[300px] overflow-auto rounded-[10px] bg-white">
+                    <div className="flex flex-col items-center w-full gap-y-[10px] p-[10px] max-h-[300px] overflow-auto rounded-[10px] bg-white">
                         <div className="grid w-full gap-x-[10px] grid-cols-[3fr_1fr]">
                             <Typography variant="text_14_r" className="text-gray-text">
                                 Студент
@@ -157,7 +156,7 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                                     setNewStatus((prev) =>
                                         prev.map((item) =>
                                             item.id === student.attendanceId
-                                                ? {...item, isAttend: !item.isAttend} // инвертируем статус
+                                                ? { ...item, isAttend: !item.isAttend } // инвертируем статус
                                                 : item
                                         )
                                     )

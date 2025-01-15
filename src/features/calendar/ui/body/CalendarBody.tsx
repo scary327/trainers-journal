@@ -1,11 +1,11 @@
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import * as styles from "./CalendarBody.module.css";
-import {selectCurrentWeek} from "../../model/calendar.slice";
-import {formatWeekDays} from "../../utils";
-import {Typography} from "@/shared/ui";
-import {classnames} from "@/shared/lib";
-import {IClass} from "@/shared/types";
-import {RootState} from "@/app/store";
+import { selectCurrentWeek } from "../../model/calendar.slice";
+import { formatWeekDays } from "../../utils";
+import { Typography } from "@/shared/ui";
+import { classnames } from "@/shared/lib";
+import { IClass } from "@/shared/types";
+import { RootState } from "@/app/store";
 
 interface BodyHeaderProps {
     formattedWeek: string[];
@@ -13,10 +13,10 @@ interface BodyHeaderProps {
 
 export const getNormalTime = (date: string, time: string) => `${date}T${time}`;
 
-const BodyHeader = ({formattedWeek}: BodyHeaderProps) => {
+const BodyHeader = ({ formattedWeek }: BodyHeaderProps) => {
     return (
         <div className={classnames(styles.table_grid, styles.table_header)}>
-            <div/>
+            <div />
             {formattedWeek.map((day, index) => (
                 <Typography className={styles.table_item} variant="text_14_r" key={index}>
                     {day}
@@ -31,12 +31,12 @@ interface ICalendarBodyProps {
     setCurrentWorkout: (workout: IClass) => void;
 }
 
-export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyProps) => {
+export const CalendarBody = ({ onOpenWorkout, setCurrentWorkout }: ICalendarBodyProps) => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const formattedWeek = formatWeekDays(currentWeek);
     const workoutList: IClass[] = useSelector((state: RootState) => state.practices.practices);
 
-    const hours = Array.from({length: 18}, (_, i) => `${i + 6}:00`);
+    const hours = Array.from({ length: 18 }, (_, i) => `${i + 6}:00`);
 
     const getWorkoutStyle = (workout: IClass) => {
         const startHour = parseInt(workout.timeStart.split(":")[0], 10);
@@ -54,7 +54,7 @@ export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyPr
 
         return {
             top: `${top}%`,
-            height: `${height}%`,
+            height: `${height}%`
         };
     };
 
@@ -64,11 +64,11 @@ export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyPr
         const endDate = new Date(getNormalTime(workout.date, workout.timeEnd));
 
         if (now > endDate) {
-            return 'past';
+            return "past";
         } else if (now >= startDate && now <= endDate) {
-            return 'current';
+            return "current";
         }
-        return 'upcoming';
+        return "upcoming";
     };
 
     const handleWorkoutClick = (workout: IClass) => () => {
@@ -76,11 +76,11 @@ export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyPr
         onOpenWorkout();
     };
 
-    const todayISO = new Date().toLocaleDateString('en-CA');
+    const todayISO = new Date().toLocaleDateString("en-CA");
 
     return (
         <div className={classnames(styles.container, "scrollbar-webkit")}>
-            <BodyHeader formattedWeek={formattedWeek}/>
+            <BodyHeader formattedWeek={formattedWeek} />
             <div className={styles.body}>
                 <div className={styles.timeColumn}>
                     {hours.map((hour) => (
@@ -90,14 +90,14 @@ export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyPr
                     ))}
                 </div>
                 {formattedWeek.map((day, dayIndex) => {
-                    const dayISO = currentWeek[dayIndex].toLocaleDateString('en-CA');
+                    const dayISO = currentWeek[dayIndex].toLocaleDateString("en-CA");
                     const isToday = dayISO === todayISO;
 
                     return (
                         <div
                             key={dayIndex}
                             className={classnames(styles.dayColumn, {
-                                [styles.currentDay]: isToday,
+                                [styles.currentDay]: isToday
                             })}
                         >
                             {workoutList
@@ -109,17 +109,25 @@ export const CalendarBody = ({onOpenWorkout, setCurrentWorkout}: ICalendarBodyPr
                                     return (
                                         <div
                                             key={workout.practiceId}
-                                            className={classnames(styles.workout, styles[workoutState])}
+                                            className={classnames(
+                                                styles.workout,
+                                                styles[workoutState]
+                                            )}
                                             style={getWorkoutStyle(workout)}
                                             onClick={handleWorkoutClick(workout)}
                                         >
                                             <div className="content">
                                                 <div className="time">
-                                                    {workout.timeStart.slice(0, 5)} - {workout.timeEnd.slice(0, 5)}
+                                                    {workout.timeStart.slice(0, 5)} -{" "}
+                                                    {workout.timeEnd.slice(0, 5)}
                                                 </div>
 
-                                                <Typography variant="text_14_m"
-                                                            className="groupName">{workout.groupName}</Typography>
+                                                <Typography
+                                                    variant="text_14_m"
+                                                    className="groupName"
+                                                >
+                                                    {workout.groupName}
+                                                </Typography>
 
                                                 <Typography variant="text_12_r" className="text">
                                                     {trainerFullName}
