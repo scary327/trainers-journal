@@ -1,49 +1,91 @@
 .container {
-    @apply flex flex-col items-center w-full bg-white max-h-[65vh] overflow-auto;
-
-    border-radius: 0 0 10px 10px;
-}
-
-.table_grid {
-    @apply grid w-full items-center text-center;
-
-    grid-template-columns: 80px repeat(7, 1fr);
-    border-bottom: 1px solid #c2c2c2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: white;
 }
 
 .table_header {
-    border-bottom: 1px solid #3358d4;
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
 }
 
-.table_content {
-    @apply w-full flex flex-col items-center;
-
-    & .table_item {
-        @apply h-[80px] text-center;
-    }
-}
-
-.table_last_grid {
-    @apply w-full h-[20px];
-
-    border-radius: 0 0 10px 10px;
+.timeHeader {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
 }
 
 .table_item {
-    &:not(:first-child) {
-        border-left: 1px solid #c2c2c2;
-    }
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
-.ongoing {
-    @apply w-full h-full bg-blue-light;
+.body {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr); /* 80px для столбца времени, остальные равны */
+    height: 100%;
+    overflow-y: auto;
 }
 
-.ongoing.past {
-    background-color: #f9f9f9;
-    color: #999;
+.timeColumn {
+    grid-column: 1 / 2;
+    background: #fafafa;
+    border-right: 1px solid #ddd;
 }
 
-.ongoing.current {
-    @apply bg-blue-light;
+.timeRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+    padding: 13px;
+}
+
+.dayColumn {
+    position: relative;
+    border-right: 1px solid #ddd;
+}
+
+.currentDay {
+    background-color: rgba(225, 233, 255, 0.5);
+}
+
+.workout {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    padding: 2px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.workout:hover {
+    transform: scale(1.05);
+}
+
+.past {
+    background-color: #d3d3d3;
+}
+
+.current {
+    background-color: #4caf50;
+}
+
+.upcoming {
+    background-color: #2196f3;
 }

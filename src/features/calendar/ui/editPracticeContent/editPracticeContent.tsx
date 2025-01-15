@@ -93,7 +93,6 @@ export const EditPracticeContent = () => {
                     {...register("timeStart")}
                     min="06:00"
                     max="23:00"
-                    step={1800}
                 />
                 <Input
                     className="w-full"
@@ -101,7 +100,6 @@ export const EditPracticeContent = () => {
                     {...register("timeEnd")}
                     min="06:00"
                     max="23:00"
-                    step={1800}
                 />
                 <Button variant="primary" className="w-[80%]" type="submit">
                     {buttonTitle}
