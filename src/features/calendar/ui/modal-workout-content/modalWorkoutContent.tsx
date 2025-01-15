@@ -94,44 +94,49 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
             <Typography variant="text_24_b" className="text-blue-dark mr-[30px]">
                 Информация о тренировке
             </Typography>
-            <div className="flex flex-col w-full gap-y-[10px] p-[10px] bg-blue-light rounded-[20px]">
-                <div>
-                    <Typography variant="text_14_r" className="text-gray-text">
-                        Группа
-                    </Typography>
-                    <Typography variant="text_14_m" className="text-black">
-                        {workout.groupName}
-                    </Typography>
+            <div className="grid grid-cols-2 gap-x-[20px] w-full p-[10px] bg-blue-light rounded-[20px]">
+                <div className="flex flex-col gap-y-[10px] p-[10px]">
+                    <div>
+                        <Typography variant="text_14_r" className="text-gray-text">
+                            Группа
+                        </Typography>
+                        <Typography variant="text_14_m" className="text-black">
+                            {workout.groupName}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant="text_14_r" className="text-gray-text">
+                            Продолжительность
+                        </Typography>
+                        <Typography variant="text_14_m" className="text-black">
+                            {startTime} - {endTime}
+                        </Typography>
+                    </div>
                 </div>
-                <div>
-                    <Typography variant="text_14_r" className="text-gray-text">
-                        Продолжительность
-                    </Typography>
-                    <Typography variant="text_14_m" className="text-black">
-                        {startTime} - {endTime}
-                    </Typography>
-                </div>
-                <div>
-                    <Typography variant="text_14_r" className="text-gray-text">
-                        Тренер
-                    </Typography>
-                    <Typography variant="text_14_m" className="text-black">
-                        {workout.trainerLastName} {workout.trainerFirstName}{" "}
-                        {workout.trainerMiddleName}
-                    </Typography>
-                </div>
-                <div>
-                    <Typography variant="text_14_r" className="text-gray-text">
-                        Стоимость
-                    </Typography>
-                    <Typography variant="text_14_m" className="text-black">
-                        {workout.cost} ₽
-                    </Typography>
+                <div className="flex flex-col gap-y-[10px] p-[10px]">
+                    <div>
+                        <Typography variant="text_14_r" className="text-gray-text">
+                            Тренер
+                        </Typography>
+                        <Typography variant="text_14_m" className="text-black">
+                            {workout.trainerLastName} {workout.trainerFirstName}{" "}
+                            {workout.trainerMiddleName}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant="text_14_r" className="text-gray-text">
+                            Стоимость
+                        </Typography>
+                        <Typography variant="text_14_m" className="text-black">
+                            {workout.cost} ₽
+                        </Typography>
+                    </div>
                 </div>
             </div>
             {user.roles.includes("Trainer") && (
                 <>
-                    <div className="flex flex-col items-center w-full gap-y-[10px] p-[10px] max-h-[300px] overflow-auto rounded-[10px] bg-white border-blue-dark border-[1px]">
+                    <div
+                        className="flex flex-col items-center w-full gap-y-[10px] p-[10px] max-h-[300px] overflow-auto rounded-[10px] bg-white">
                         <div className="grid w-full gap-x-[10px] grid-cols-[3fr_1fr]">
                             <Typography variant="text_14_r" className="text-gray-text">
                                 Студент
@@ -152,7 +157,7 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                                     setNewStatus((prev) =>
                                         prev.map((item) =>
                                             item.id === student.attendanceId
-                                                ? { ...item, isAttend: !item.isAttend } // инвертируем статус
+                                                ? {...item, isAttend: !item.isAttend} // инвертируем статус
                                                 : item
                                         )
                                     )
