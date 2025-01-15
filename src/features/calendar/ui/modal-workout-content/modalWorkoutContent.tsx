@@ -1,5 +1,3 @@
-import { IClass } from "@/shared/types";
-
 // import * as styles from "./modalWorkoutContent.module.css";
 import { Button, Checkbox, Typography } from "@/shared/ui";
 import { formatTime } from "../workout/workout";
@@ -12,10 +10,11 @@ import {
 } from "@/entities/api/services";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
+import { setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
 
 interface IProps {
-    workout: IClass;
     onClose: () => void;
+    setSlideOutOpen: () => void;
 }
 
 export interface IWorkoutStudent {
@@ -52,7 +51,8 @@ const StudentRow = ({
     );
 };
 
-export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
+export const ModalWorkoutContent = ({ onClose, setSlideOutOpen }: IProps) => {
+    const workout = useSelector((state: RootState) => state.practices.currentWorkout!);
     const startTime = formatTime(getNormalTime(workout.date, workout.timeStart));
     const endTime = formatTime(getNormalTime(workout.date, workout.timeEnd));
 
@@ -168,7 +168,14 @@ export const ModalWorkoutContent = ({ workout, onClose }: IProps) => {
                         <Button variant="cancel" onClick={() => onDelete()}>
                             Удалить
                         </Button>
-                        <Button variant="empty" className="p-0">
+                        <Button
+                            variant="empty"
+                            className="p-0"
+                            onClick={() => {
+                                setSlideOutOpen();
+                                dispatch(setCurrentWorkout(workout));
+                            }}
+                        >
                             Редактировать
                         </Button>
                         <Button variant="primary-small" onClick={() => onSubmit()}>

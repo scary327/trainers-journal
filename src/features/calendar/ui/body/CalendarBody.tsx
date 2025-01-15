@@ -28,10 +28,9 @@ const BodyHeader = ({ formattedWeek }: BodyHeaderProps) => {
 
 interface ICalendarBodyProps {
     onOpenWorkout: () => void;
-    setCurrentWorkout: (workout: IClass) => void;
 }
 
-export const CalendarBody = ({ onOpenWorkout, setCurrentWorkout }: ICalendarBodyProps) => {
+export const CalendarBody = ({ onOpenWorkout }: ICalendarBodyProps) => {
     const currentWeek = useSelector(selectCurrentWeek).map((date) => new Date(date));
     const formattedWeek = formatWeekDays(currentWeek);
     const workoutList: IClass[] = useSelector((state: RootState) => state.practices.practices);
@@ -71,8 +70,7 @@ export const CalendarBody = ({ onOpenWorkout, setCurrentWorkout }: ICalendarBody
         return "upcoming";
     };
 
-    const handleWorkoutClick = (workout: IClass) => () => {
-        setCurrentWorkout(workout);
+    const handleWorkoutClick = () => () => {
         onOpenWorkout();
     };
 
@@ -114,7 +112,7 @@ export const CalendarBody = ({ onOpenWorkout, setCurrentWorkout }: ICalendarBody
                                                 styles[workoutState]
                                             )}
                                             style={getWorkoutStyle(workout)}
-                                            onClick={handleWorkoutClick(workout)}
+                                            onClick={handleWorkoutClick()}
                                         >
                                             <div className="content">
                                                 <div className="time">

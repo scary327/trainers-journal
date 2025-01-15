@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { deletePractice, getPractices, postPractice } from "@/entities/api/services";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { deletePractice, getPractices, postPractice, putPractice } from "@/entities/api/services";
 import { IAuthData } from "@/entities/user/model/user.reducer";
 import { IClass } from "@/shared/types";
 
@@ -8,6 +8,7 @@ export interface PracticeSlice {
     errorMessage: string;
     practices: IClass[];
     authData: IAuthData | null;
+    currentWorkout?: IClass;
 }
 
 const initialState: PracticeSlice = {
@@ -20,7 +21,16 @@ const initialState: PracticeSlice = {
 const practiceSlice = createSlice({
     name: "practices",
     initialState,
-    reducers: {},
+    reducers: {
+        // Редьюсер для установки текущей тренировки
+        setCurrentWorkout: (state, action: PayloadAction<IClass>) => {
+            state.currentWorkout = action.payload;
+        },
+        // Редьюсер для очистки текущей тренировки
+        clearCurrentWorkout: (state) => {
+            state.currentWorkout = undefined;
+        }
+    },
     extraReducers: (builder) => {
         builder
             // GET
@@ -46,6 +56,17 @@ const practiceSlice = createSlice({
                 state.isLoading = false;
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             })
+            // PUT
+            .addCase(putPractice.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(putPractice.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(putPractice.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
             // DELETE
             .addCase(deletePractice.pending, (state) => {
                 state.isLoading = true;
@@ -62,5 +83,5 @@ const practiceSlice = createSlice({
             });
     }
 });
-
+export const { setCurrentWorkout, clearCurrentWorkout } = practiceSlice.actions;
 export default practiceSlice.reducer;

@@ -1,25 +1,30 @@
 import { classnames } from "@/shared/lib";
 import { Typography, Select, Button, Input, DateInput } from "@/shared/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import * as styles from "./editPracticeContent.module.css";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getPractices, postPractice } from "@/entities/api/services";
-import { DateRange } from "@/shared/types";
+import { getPractices, postPractice, putPractice } from "@/entities/api/services";
+import { DateRange, IGroup } from "@/shared/types";
+import { setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
 
 export interface IPracticeForm {
-    groupId: string;
+    groupId?: string;
     practiceId?: string;
     date?: string;
     timeStart: string;
     timeEnd: string;
 }
 
-export const EditPracticeContent = () => {
-    const slideOutTitle: string = "Создание занятия";
-    const buttonTitle: string = "Создать";
+interface IEditPracticeContentProps {
+    isEdit: boolean;
+}
+
+export const EditPracticeContent = ({ isEdit }: IEditPracticeContentProps) => {
+    const slideOutTitle: string = !isEdit ? "Создание занятия" : "Редактирование занятия";
+    const buttonTitle: string = !isEdit ? "Создать" : "Сохранить";
 
     const dispatch = useDispatch<AppDispatch>();
     const [groupValue, setGroupValue] = useState<string>("");
@@ -31,6 +36,8 @@ export const EditPracticeContent = () => {
         }))
     );
 
+    const groups = useSelector((state: RootState) => state.groups.groups);
+
     const { register, handleSubmit, reset } = useForm<IPracticeForm>();
 
     const [date, setDate] = useState<DateRange>({
@@ -40,30 +47,61 @@ export const EditPracticeContent = () => {
 
     const user = useSelector((state: RootState) => state.user.user);
 
-    const addOneDay = (date: Date): Date => {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + 1);
-        return newDate;
-    };
+    const workout = useSelector((state: RootState) => state.practices.currentWorkout);
+
+    useEffect(() => {
+        if (workout) {
+            // Если student существует, обновляем значения формы
+            setGroupValue((groups.find((g) => g.name === workout.groupName) as IGroup).id);
+            // setGenderValue(student.studentInfoItemDto.gender.toString());
+            setDate({ start: new Date(workout.date), end: null });
+        } else {
+            // Если student отсутствует, сбрасываем форму
+            setGroupValue("");
+        }
+    }, []);
 
     const onSubmit: SubmitHandler<IPracticeForm> = (data) => {
         if (!date.start) {
             console.error("Дата не выбрана"); // Логирование ошибки
             return; // Прерываем выполнение, если дата отсутствует
         }
+        const todayISO = new Date(date.start).toLocaleDateString("en-CA");
 
-        const adjustedDate = addOneDay(date.start)?.toISOString().split("T")[0];
-
-        dispatch(
-            postPractice({
-                timeEnd: data.timeEnd + ":00",
-                timeStart: data.timeStart + ":00",
-                groupId: groupValue,
-                date: adjustedDate
-            })
-        ).then(() => {
-            dispatch(getPractices(user));
-        });
+        if (!workout) {
+            // Create Practice
+            dispatch(
+                postPractice({
+                    timeEnd: data.timeEnd,
+                    timeStart: data.timeStart,
+                    groupId: groupValue,
+                    date: todayISO
+                })
+            ).then(() => {
+                dispatch(getPractices(user));
+            });
+        } else {
+            // Edit Practice
+            dispatch(
+                putPractice({
+                    timeEnd: data.timeEnd,
+                    timeStart: data.timeStart,
+                    practiceId: workout.practiceId,
+                    date: todayISO
+                })
+            ).then(() => {
+                dispatch(getPractices(user));
+                dispatch(
+                    setCurrentWorkout({
+                        ...workout,
+                        timeEnd: data.timeEnd,
+                        timeStart: data.timeStart,
+                        date: todayISO,
+                        groupName: groups.find((g) => g.id === groupValue)!.name
+                    })
+                );
+            });
+        }
 
         reset();
     };
@@ -93,6 +131,7 @@ export const EditPracticeContent = () => {
                     {...register("timeStart")}
                     min="06:00"
                     max="23:00"
+                    defaultValue={workout?.timeStart}
                 />
                 <Input
                     className="w-full"
@@ -100,8 +139,9 @@ export const EditPracticeContent = () => {
                     {...register("timeEnd")}
                     min="06:00"
                     max="23:00"
+                    defaultValue={workout?.timeEnd}
                 />
-                <Button variant="primary" className="w-[80%]" type="submit">
+                <Button variant="primary" className="w-[100%]" type="submit">
                     {buttonTitle}
                 </Button>
             </form>

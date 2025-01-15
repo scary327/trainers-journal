@@ -12,6 +12,7 @@ export * from "./putStudent";
 export * from "./getStudentInfo";
 export * from "./getPractices";
 export * from "./postPractice";
+export * from "./putPractice";
 export * from "./getAttendancePractice";
 export * from "./putAttendancePractice";
 export * from "./deletePractice";
