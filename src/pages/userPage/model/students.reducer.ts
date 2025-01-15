@@ -3,10 +3,12 @@ import {
     filterStudents,
     getStudentContacts,
     getStudents,
+    IGetContacts,
     putStudent,
+    putStudentContacts,
     searchStudents
 } from "@/entities/api/services";
-import { IContact, IStudent } from "@/widgets";
+import { IStudent } from "@/widgets";
 import { postStudent } from "@/entities/api/services/postStudents";
 import { IAuthData } from "@/entities/user/model/user.reducer";
 
@@ -15,7 +17,8 @@ export interface SliceStudent {
     errorMessage: string;
     students: IStudent[];
     authData: IAuthData | null;
-    currentStudentContacts: IContact[];
+    // currentStudentContacts: IContact[];
+    currentStudentContacts: IGetContacts[];
 }
 
 const initialState: SliceStudent = {
@@ -141,9 +144,16 @@ const studentsSlice = createSlice({
             })
             // GET CONTACTS
             .addCase(getStudentContacts.fulfilled, (state, action) => {
-                state.currentStudentContacts = action.payload.map((item) => item.contactItem); // [ {contactsItem: IContact, id: string} ]
+                state.currentStudentContacts = action.payload;
             })
             .addCase(getStudentContacts.rejected, (state, action) => {
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            // PUT CONTACTS
+            // .addCase(putStudentContacts.fulfilled, (state, action) => {
+            //     state.currentStudentContacts = action.payload;
+            // })
+            .addCase(putStudentContacts.rejected, (state, action) => {
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             });
     }

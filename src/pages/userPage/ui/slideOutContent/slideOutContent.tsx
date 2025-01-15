@@ -7,7 +7,7 @@ import * as styles from "./slideOutContent.module.css";
 import { IContact, IStudent } from "@/widgets";
 import { AppDispatch, RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getStudents, putStudent } from "@/entities/api/services";
+import { getStudentInfo, getStudents, putStudent } from "@/entities/api/services";
 import { DateRange } from "@/shared/types";
 
 export interface IRegisterForm {
@@ -104,7 +104,7 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
         }
     }, [student, reset]);
 
-    const userName = useSelector((state: RootState) => state.user.user.userName);
+    const user = useSelector((state: RootState) => state.user.user);
 
     const handleEdit = (data: IRegisterForm) => {
         if (!student) return;
@@ -127,7 +127,8 @@ export const SlideOutContent = ({ student, openContacts }: IEditMenuProps) => {
                 }
             })
         ).then(() => {
-            dispatch(getStudents(userName));
+            if (user.roles.includes("Trainer")) dispatch(getStudents(user.userName));
+            else dispatch(getStudentInfo(user.userName));
         });
     };
 

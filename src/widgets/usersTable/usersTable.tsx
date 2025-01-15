@@ -1,12 +1,19 @@
 import * as styles from "./usersTable.module.css";
-import { Button, Loader, Modal, Search, Typography } from "@/shared/ui";
+import { Button, Loader, Modal, Search, SlideOutMenu, Typography } from "@/shared/ui";
 
 import FilterSVG from "@/shared/icons/filter.svg";
 import { useState } from "react";
 import { Dropdown, DropdownContent, DropdownHeader, PaymentHistory } from "@/features";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
-import { getStudents, searchStudents } from "@/entities/api/services";
+import {
+    deleteStudentContacts,
+    getStudentContacts,
+    getStudents,
+    IGetContacts,
+    searchStudents
+} from "@/entities/api/services";
+import { SecondContent } from "@/pages/userPage/ui/secondContent/secondContent";
 
 export interface IContact {
     firstName: string;
@@ -61,7 +68,10 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
 
     const userName = useSelector((state: RootState) => state.user.user.userName);
 
-    const studentContacts: IContact[] = useSelector(
+    const [slideOutOpen, setSlideOutOpen] = useState<boolean>(false);
+    const [slideOutContent, setSlideOutContent] = useState<JSX.Element>(<></>);
+
+    const studentContacts: IGetContacts[] = useSelector(
         (state: RootState) => state.students.currentStudentContacts
     );
 
@@ -152,44 +162,121 @@ export const UsersTable = ({ openFilter, openEdit }: IProps) => {
                 <PaymentHistory currentUserName={payment?.studentInfoItemDto.userName} />
             </Modal>
             <Modal visible={contacts} onClose={() => setContacts(false)}>
+                <SlideOutMenu
+                    isOpen={slideOutOpen}
+                    onClose={() => {
+                        setSlideOutContent(<></>);
+                        setSlideOutOpen(false);
+                    }}
+                >
+                    {slideOutContent}
+                </SlideOutMenu>
                 {currentStudent && (
                     <div className="flex flex-col gap-y-[20px]">
                         <Typography variant="text_18_b" className="text-blue-dark mr-6">
                             Контакты ученика {currentStudent.studentInfoItemDto.lastName}{" "}
                             {currentStudent.studentInfoItemDto.firstName}
                         </Typography>
-                        {studentContacts.map((contact) => (
-                            <div
-                                key={contact.email}
-                                className="flex flex-col items-start gap-y-[10px]"
-                            >
-                                <Typography variant="text_16_b" className="text-gray-text">
-                                    {contact.relation}
-                                </Typography>
-                                <div className="flex gap-x-[10px]">
-                                    <Typography variant="text_14_b">{contact.lastName}</Typography>
-                                    <Typography variant="text_14_b">{contact.firstName}</Typography>
-                                    <Typography variant="text_14_b">
-                                        {contact.middleName}
-                                    </Typography>
+                        {studentContacts.length === 0 ? (
+                            <Typography variant="text_16_b" className="text-gray-text">
+                                Нет контактов
+                            </Typography>
+                        ) : (
+                            studentContacts.map((contact) => (
+                                <div
+                                    key={contact.contactItem.email}
+                                    className="flex flex-col items-start gap-y-[10px]"
+                                >
+                                    <div className="flex w-full gap-x-[10px] justify-between items-center">
+                                        <Typography variant="text_16_b" className="text-gray-text">
+                                            {contact.contactItem.relation}
+                                        </Typography>
+                                        <div>
+                                            {" "}
+                                            <Button
+                                                variant="empty"
+                                                type="button"
+                                                onClick={() => {
+                                                    setSlideOutOpen(true);
+                                                    setSlideOutContent(
+                                                        <SecondContent
+                                                            form={currentStudent}
+                                                            isEdit={true}
+                                                            editContact={contact}
+                                                            isRegiseter={false}
+                                                        />
+                                                    );
+                                                }}
+                                            >
+                                                Изменить
+                                            </Button>
+                                            <Button
+                                                variant="cancel"
+                                                type="button"
+                                                onClick={() =>
+                                                    dispatch(deleteStudentContacts(contact)).then(
+                                                        () =>
+                                                            dispatch(
+                                                                getStudentContacts(
+                                                                    currentStudent
+                                                                        .studentInfoItemDto
+                                                                        .userName!
+                                                                )
+                                                            )
+                                                    )
+                                                }
+                                            >
+                                                Удалить
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-x-[10px]">
+                                        <Typography variant="text_14_b">
+                                            {contact.contactItem.lastName}
+                                        </Typography>
+                                        <Typography variant="text_14_b">
+                                            {contact.contactItem.firstName}
+                                        </Typography>
+                                        <Typography variant="text_14_b">
+                                            {contact.contactItem.middleName}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex gap-x-[10px]">
+                                        <Typography variant="text_12_b" className="text-gray-text">
+                                            Номер телефона
+                                        </Typography>
+                                        <Typography variant="text_14_b">
+                                            {contact.contactItem.phoneNumber}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex gap-x-[10px]">
+                                        <Typography variant="text_12_b" className="text-gray-text">
+                                            Почта
+                                        </Typography>
+                                        <Typography variant="text_14_b">
+                                            {contact.contactItem.email}
+                                        </Typography>
+                                    </div>
+                                    <div className="w-full h-[2px] bg-gray-text" />
                                 </div>
-                                <div className="flex gap-x-[10px]">
-                                    <Typography variant="text_12_b" className="text-gray-text">
-                                        Номер телефона
-                                    </Typography>
-                                    <Typography variant="text_14_b">
-                                        {contact.phoneNumber}
-                                    </Typography>
-                                </div>
-                                <div className="flex gap-x-[10px]">
-                                    <Typography variant="text_12_b" className="text-gray-text">
-                                        Почта
-                                    </Typography>
-                                    <Typography variant="text_14_b">{contact.email}</Typography>
-                                </div>
-                                <div className="w-full h-[2px] bg-gray-text" />
-                            </div>
-                        ))}
+                            ))
+                        )}
+                        <Button
+                            variant="primary"
+                            type="button"
+                            onClick={() => {
+                                setSlideOutOpen(true);
+                                setSlideOutContent(
+                                    <SecondContent
+                                        form={currentStudent}
+                                        isEdit={false}
+                                        isRegiseter={false}
+                                    />
+                                );
+                            }}
+                        >
+                            Добавить Контакты
+                        </Button>
                     </div>
                 )}
             </Modal>

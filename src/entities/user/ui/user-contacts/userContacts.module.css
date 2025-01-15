@@ -1,5 +1,5 @@
 .container {
-    @apply flex flex-col gap-y-[10px] items-start w-full py-[24.5px] px-[30px] bg-white rounded-[20px];
+    @apply flex h-[187.5px] flex-col gap-y-[10px] items-start w-full py-[24.5px] px-[30px] bg-white rounded-[20px];
 }
 
 .modal_container {
@@ -7,7 +7,7 @@
 }
 
 .modal_item {
-    @apply flex gap-x-[10px] items-center;
+    @apply flex w-full gap-x-[10px] items-center;
 }
 .modal_item_info {
     @apply flex flex-col gap-y-[5px] p-[10px] items-end justify-between;

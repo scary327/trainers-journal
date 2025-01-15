@@ -1,9 +1,9 @@
-import { RootState } from "@/app/store";
-import { postPracticeDublicate } from "@/entities/api/services";
+import { AppDispatch, RootState } from "@/app/store";
+import { getPractices, postPracticeDublicate } from "@/entities/api/services";
 import { DateRange } from "@/shared/types";
 import { Button, DateInput, Typography } from "@/shared/ui";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ScheduleDuplication = () => {
     const [insertionRage, setInsertionRage] = useState<DateRange>({
@@ -21,6 +21,8 @@ export const ScheduleDuplication = () => {
     const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 
     let helperText: string = "";
+    const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector((state: RootState) => state.user.user);
 
     useEffect(() => {}, [helperText]);
 
@@ -40,8 +42,9 @@ export const ScheduleDuplication = () => {
             dateStartPaste: formatDate(insertionRage.start!),
             dateEndPaste: formatDate(insertionRage.end!)
         };
-        postPracticeDublicate({ userName: userName, ...result });
-        console.log(result);
+        postPracticeDublicate({ userName: userName, ...result }).then(() =>
+            dispatch(getPractices(user))
+        );
     };
 
     return (

@@ -46,6 +46,8 @@ export const UserPage = () => {
                                 <SecondContent
                                     form={data}
                                     setAuthModal={() => setAuthModal(true)}
+                                    isEdit={false}
+                                    isRegiseter={true}
                                 />
                             );
                             setSlideOutOpen(true);

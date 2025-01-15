@@ -3,7 +3,7 @@ import { api } from "../api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IContact } from "@/widgets";
 
-interface IGetContacts {
+export interface IGetContacts {
     contactId: string;
     contactItem: IContact;
 }
