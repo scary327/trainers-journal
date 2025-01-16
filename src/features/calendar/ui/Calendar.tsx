@@ -8,7 +8,7 @@ import { EditPracticeContent } from "./editPracticeContent/editPracticeContent";
 import { ScheduleDuplication } from "./scheduleDuplication/scheduleDuplication";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store";
-import { setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
+import { clearMessages, setCurrentWorkout } from "@/pages/calendarPage/model/calendar.reducer";
 
 export const Calendar = () => {
     const [openWorkout, setOpenWorkout] = useState<boolean>(false);
@@ -38,7 +38,10 @@ export const Calendar = () => {
             </Modal>
             <Modal visible={openWorkout} onClose={() => setOpenWorkout(false)}>
                 <ModalWorkoutContent
-                    onClose={() => setOpenWorkout(false)}
+                    onClose={() => {
+                        setOpenWorkout(false);
+                        dispatch(clearMessages());
+                    }}
                     setSlideOutOpen={() => {
                         setSlideOutOpen(true);
                         setSlideOutContent(<EditPracticeContent isEdit={true} />);
@@ -50,6 +53,7 @@ export const Calendar = () => {
                 onClose={() => {
                     setSlideOutContent(<></>);
                     setSlideOutOpen(false);
+                    dispatch(clearMessages());
                 }}
             >
                 {slideOutContent}

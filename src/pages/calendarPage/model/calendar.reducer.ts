@@ -37,6 +37,10 @@ const practiceSlice = createSlice({
         // Редьюсер для очистки текущей тренировки
         clearCurrentWorkout: (state) => {
             state.currentWorkout = undefined;
+        },
+        clearMessages: (state) => {
+            state.errorMessage = "";
+            state.successMessage = "";
         }
     },
     extraReducers: (builder) => {
@@ -106,5 +110,5 @@ const practiceSlice = createSlice({
             });
     }
 });
-export const { setCurrentWorkout, clearCurrentWorkout } = practiceSlice.actions;
+export const { setCurrentWorkout, clearCurrentWorkout, clearMessages } = practiceSlice.actions;
 export default practiceSlice.reducer;
