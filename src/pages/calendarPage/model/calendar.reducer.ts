@@ -1,11 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { deletePractice, getPractices, postPractice, putPractice } from "@/entities/api/services";
+import {
+    deletePractice,
+    getPractices,
+    postPractice,
+    postPracticeDublicate,
+    putPractice
+} from "@/entities/api/services";
 import { IAuthData } from "@/entities/user/model/user.reducer";
 import { IClass } from "@/shared/types";
 
 export interface PracticeSlice {
     isLoading: boolean;
     errorMessage: string;
+    successMessage: string;
     practices: IClass[];
     authData: IAuthData | null;
     currentWorkout?: IClass;
@@ -14,6 +21,7 @@ export interface PracticeSlice {
 const initialState: PracticeSlice = {
     isLoading: false,
     errorMessage: "",
+    successMessage: "",
     practices: [],
     authData: null
 };
@@ -51,6 +59,7 @@ const practiceSlice = createSlice({
             })
             .addCase(postPractice.fulfilled, (state) => {
                 state.isLoading = false;
+                state.errorMessage = "";
             })
             .addCase(postPractice.rejected, (state, action) => {
                 state.isLoading = false;
@@ -62,6 +71,7 @@ const practiceSlice = createSlice({
             })
             .addCase(putPractice.fulfilled, (state) => {
                 state.isLoading = false;
+                state.errorMessage = "";
             })
             .addCase(putPractice.rejected, (state, action) => {
                 state.isLoading = false;
@@ -78,6 +88,19 @@ const practiceSlice = createSlice({
                 );
             })
             .addCase(deletePractice.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errorMessage = action.error.message ?? "Неизвестная ошибка";
+            })
+            // Dublicate
+            .addCase(postPracticeDublicate.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(postPracticeDublicate.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.errorMessage = "";
+                state.successMessage = action.payload.data;
+            })
+            .addCase(postPracticeDublicate.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errorMessage = action.error.message ?? "Неизвестная ошибка";
             });

@@ -1,6 +1,6 @@
 import { api } from "../api";
 import { AxiosResponse } from "axios";
-import { IPracticeForm } from "@/features/calendar/ui/editPracticeContent/editPracticeContent";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 interface IDublicate {
     userName: string;
@@ -12,11 +12,16 @@ interface IDublicate {
 
 export const postPracticeDublicateApi = async (
     data: IDublicate
-): Promise<AxiosResponse<IPracticeForm>> => {
+): Promise<AxiosResponse<string>> => {
     return await api.post(`practices/duplicate?userName=${data.userName}`, data);
 };
 
-export const postPracticeDublicate = async (data: IDublicate) => {
-    const response = await postPracticeDublicateApi(data);
-    return response.data;
-};
+export const postPracticeDublicate = createAsyncThunk(
+    "practice/dublicate",
+    async (data: IDublicate) => {
+        const response = await postPracticeDublicateApi(data).catch((error) => {
+            throw new Error(error.response.data);
+        });
+        return response;
+    }
+);

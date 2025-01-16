@@ -24,6 +24,9 @@ export const ScheduleDuplication = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.user.user);
 
+    const error = useSelector((state: RootState) => state.practices.errorMessage);
+    const success = useSelector((state: RootState) => state.practices.successMessage);
+
     useEffect(() => {}, [helperText]);
 
     const onSubmit = () => {
@@ -42,7 +45,7 @@ export const ScheduleDuplication = () => {
             dateStartPaste: formatDate(insertionRage.start!),
             dateEndPaste: formatDate(insertionRage.end!)
         };
-        postPracticeDublicate({ userName: userName, ...result }).then(() =>
+        dispatch(postPracticeDublicate({ userName: userName, ...result })).then(() =>
             dispatch(getPractices(user))
         );
     };
@@ -68,6 +71,16 @@ export const ScheduleDuplication = () => {
             {helperText && (
                 <Typography variant="text_14_m" className="text-error-red">
                     {helperText}
+                </Typography>
+            )}
+            {error && (
+                <Typography variant="text_14_m" className="text-error-red">
+                    {error}
+                </Typography>
+            )}
+            {success && (
+                <Typography variant="text_14_m" className="text-error">
+                    {success}
                 </Typography>
             )}
             <Button variant="primary" className="self-end mt-auto" onClick={() => onSubmit()}>
