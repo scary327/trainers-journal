@@ -31,3 +31,4 @@ export * from "./searchStudents";
 export * from "./filterStudents";
 export * from "./searchGroups";
 export * from "./postChangePassword";
+export * from "./deleteStudent";

@@ -2,9 +2,9 @@ import { Button, Typography } from "@/shared/ui";
 import * as styles from "./dropdownContent.module.css";
 import { Item } from "./item/item";
 import { IStudent } from "@/widgets";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/app/store";
-import { getStudentContacts } from "@/entities/api/services";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store";
+import { deleteStudent, getStudentContacts, getStudents } from "@/entities/api/services";
 
 interface DropdownContentProps {
     studentDetails: IStudent;
@@ -21,6 +21,7 @@ export const DropdownContent = ({ studentDetails, openContacts }: DropdownConten
         mother: "Мама",
         father: "Папа"
     };
+    const userName = useSelector((state: RootState) => state.user.user.userName);
 
     const studentGender = () => {
         switch (studentDetails.studentInfoItemDto.gender) {
@@ -74,6 +75,22 @@ export const DropdownContent = ({ studentDetails, openContacts }: DropdownConten
                         item_name={studentDetailsInfo.address}
                         item_value={studentDetails.studentInfoItemDto.address ?? "не указано"}
                     />
+                    <div className="w-[60px]">
+                        <Button
+                            type="button"
+                            variant="empty"
+                            className="p-0 text-error-red font-inter-bold"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                dispatch(
+                                    deleteStudent(studentDetails.studentInfoItemDto.userName!)
+                                ).then(() => dispatch(getStudents(userName)));
+                            }}
+                        >
+                            Удалить
+                        </Button>
+                    </div>
                 </div>
             </div>
         </>
